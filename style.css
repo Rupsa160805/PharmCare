@@ -1,0 +1,117 @@
+/* ============================
+   Global Styles for All Pages
+=============================== */
+body {
+    font-family: "Poppins", Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #001f3f; /* Prussian Blue */
+    color: #fff;
+}
+
+/* Navigation Menu */
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    background-color: #003366;
+    padding: 10px 0;
+}
+
+nav ul li a {
+    text-decoration: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 8px;
+    background-color: #ffea00; /* Neon Yellow */
+    color: #000;
+    box-shadow: 0 0 12px #ffd700, 0 0 20px #ffd700;
+    transition: all 0.3s ease;
+}
+
+/* Glow Effect on Hover */
+nav ul li a:hover {
+    box-shadow: 0 0 25px #ffd700;
+    background-color: #ffe100;
+}
+
+/* Main Content */
+main {
+    padding: 20px;
+    text-align: center;
+}
+
+/* Headings & Paragraphs */
+h1, h2, p {
+    color: #ffea00;
+    text-shadow: 0 0 10px #ffd700;
+}
+
+/* Flex Box (Prussian Blue with Gold Flex) */
+.flex-box {
+    background-color: #001f3f;
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 12px;
+    box-shadow: 0 0 15px #ffd700; /* Gold Flex */
+    max-width: 800px;
+    text-align: center;
+    border: 2px solid #ffd700;
+}
+
+/* Footer */
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    width: 100%;
+}
+
+/* Center-align the last line in all pages */
+footer p {
+    text-align: center;
+}
+
+/* ============================
+     Chatbot Button (Index)
+=============================== */
+#chatbot-btn {
+    display: inline-block;
+    background-color: #ffea00;
+    color: #000;
+    padding: 12px 24px;
+    border-radius: 50px;
+    box-shadow: 0 0 15px #ffd700, 0 0 25px #ffd700;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+/* Hover Effect for Chatbot Button */
+#chatbot-btn:hover {
+    box-shadow: 0 0 25px #ffd700;
+    background-color: #ffe100;
+    transform: scale(1.05);
+}
+
+/* ============================
+       Chatbot Styles
+=============================== */
+.chat-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    background: linear-gradient(135deg, #001f3f, #003366);
+    border-radius: 20px;
+    box-shadow: 0 0 20px #ffd700;
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Header with Gradient */
+.chat-header {
+    background: linear-gradient(90deg, #ffea00, #ffd700);
+    padding:
