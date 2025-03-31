@@ -36,10 +36,10 @@ main {
 
 .doctor-img {
     display: block;
-    margin: 15px auto;
-    width: 55%; /* Adjust as needed */
+    margin: 18px auto;
+    width: 60%; /* Adjust as needed */
     height: auto;
-    border-radius: 10px;
+    border-radius: 15px;
     box-shadow: 0 0 15px #ffd700, 0 0 25px #ffd700;
     transition: transform 0.3s ease-in-out;
 }
