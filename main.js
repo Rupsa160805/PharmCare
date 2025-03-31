@@ -18,37 +18,7 @@ const responses = {
         "ask_disease": "Please mention your disease or symptoms so I can suggest suitable doctors and hospitals.",
         "default": "I'm sorry, I didn't understand that. Can you please rephrase?",
         "take_care": "Take care! Let me know if you need any assistance.",
-        "checkup": "Consider scheduling a health checkup and consultation for better care."
-    },
-    "hi": {
-        "hello": "नमस्ते! आज मैं आपकी किस प्रकार सहायता कर सकता हूँ?",
-        "hi": "हाय! मैं आपकी किस प्रकार मदद कर सकता हूँ?",
-        "thanks": "आपका स्वागत है! अगर आपको और सहायता चाहिए तो बताएं।",
-        "thank you": "कोई बात नहीं! स्वस्थ रहें।",
-        "sorry": "कोई बात नहीं! मैं आपकी कैसे सहायता कर सकता हूँ?",
-        "location": "कृपया अपना स्थान साझा करें ताकि हम निकटतम क्लिनिक या अस्पताल खोज सकें।",
-        "clinic": "मैं आपके स्थान के पास क्लिनिक खोज रहा हूँ। कृपया प्रतीक्षा करें...",
-        "language": "मैं कई भाषाओं में आपकी सहायता कर सकता हूँ। आप कौन सी भाषा पसंद करते हैं? (अंग्रेजी, हिंदी, बंगाली आदि)",
-        "hospital": "चिकित्सा परीक्षण और स्वास्थ्य जांच के लिए निकटतम अस्पताल खोज रहा हूँ...",
-        "ask_disease": "कृपया अपनी बीमारी या लक्षण बताएं ताकि मैं उचित डॉक्टर और अस्पताल सुझा सकूँ।",
-        "default": "मुझे क्षमा करें, मैंने समझा नहीं। कृपया दोबारा प्रयास करें।",
-        "take_care": "ख्याल रखना! अगर आपको और सहायता चाहिए तो बताएं।",
-        "checkup": "बेहतर देखभाल के लिए एक स्वास्थ्य परीक्षण और परामर्श शेड्यूल करने पर विचार करें।"
-    },
-    "bn": {
-        "hello": "হ্যালো! আজ আমি কীভাবে আপনার সহায়তা করতে পারি?",
-        "hi": "হাই! আমি কীভাবে আপনাকে সাহায্য করতে পারি?",
-        "thanks": "আপনাকে স্বাগতম! যদি আরও সহায়তা লাগে, আমাকে জানান।",
-        "thank you": "আপনাকে স্বাগতম! সুস্থ থাকুন।",
-        "sorry": "কোনো সমস্যা নেই! আমি কিভাবে সাহায্য করতে পারি?",
-        "location": "নিকটবর্তী ক্লিনিক বা হাসপাতাল খুঁজতে দয়া করে আপনার বর্তমান অবস্থান শেয়ার করুন।",
-        "clinic": "আপনার অবস্থানের কাছাকাছি ক্লিনিক খুঁজছি। অনুগ্রহ করে অপেক্ষা করুন...",
-        "language": "আমি আপনাকে বিভিন্ন ভাষায় সহায়তা করতে পারি। আপনি কোন ভাষা পছন্দ করবেন? (ইংরেজি, হিন্দি, বাংলা ইত্যাদি)",
-        "hospital": "চিকিৎসা পরীক্ষা এবং স্বাস্থ্য পরীক্ষার জন্য কাছাকাছি হাসপাতাল খুঁজছি...",
-        "ask_disease": "অনুগ্রহ করে আপনার রোগ বা লক্ষণগুলি বলুন যাতে আমি উপযুক্ত ডাক্তার ও হাসপাতাল সুপারিশ করতে পারি।",
-        "default": "আমি দুঃখিত, আমি এটি বুঝতে পারিনি। দয়া করে আবার বলুন।",
-        "take_care": "সাবধানে থাকুন! আমাকে জানান যদি আপনার কোনো সাহায্যের প্রয়োজন হয়।",
-        "checkup": "ভাল যত্নের জন্য একটি স্বাস্থ্য পরীক্ষা এবং পরামর্শ নির্ধারণ করুন।"
+        "checkup": "You should consider scheduling a health checkup along with consultation for better care."
     }
 };
 
@@ -171,24 +141,26 @@ function capitalizeFirstLetter(string) {
 function checkForDisease(userMessage) {
     const diseaseKeywords = {
         "heart": "cardiology",
+        "hearts": "cardiology",
         "cardiology": "cardiology",
         "cancer": "cancer",
         "diabetes": "diabetes",
         "brain": "neurology",
         "neurology": "neurology",
         "bones": "orthopedics",
-        "orthopedics": "orthopedics",
+        "orthopedic": "orthopedics",
         "urology": "urology",
         "gynecology": "gynecology",
         "lungs": "pulmonology",
-        "pulmonology": "pulmonology",
+        "pulmonary": "pulmonology",
         "stomach": "gastroenterology",
-        "gastroenterology": "gastroenterology",
+        "gastro": "gastroenterology",
         "checkup": "general checkup"
     };
 
+    // Check for matching disease keywords
     const matchedDisease = Object.keys(diseaseKeywords).find(disease =>
-        userMessage.includes(disease)
+        new RegExp(`\\b${disease}\\b`).test(userMessage)
     );
 
     if (matchedDisease) {
@@ -207,11 +179,7 @@ function findDoctorsForSpecialty(specialty) {
 
     if (recommendedHospitals.length > 0) {
         displayMessage(
-            userLanguage === "hi"
-                ? "यहाँ आपके रोग के लिए उपयुक्त अस्पताल और डॉक्टर हैं:"
-                : userLanguage === "bn"
-                ? "আপনার রোগের জন্য উপযুক্ত হাসপাতাল এবং ডাক্তারগুলি এখানে রয়েছে:"
-                : "Here are some hospitals and doctors specializing in your condition:",
+            "Here are some hospitals and doctors specializing in your condition:",
             "bot"
         );
 
@@ -226,11 +194,7 @@ function findDoctorsForSpecialty(specialty) {
         displayMessage(responses[userLanguage]["take_care"], "bot");
     } else {
         displayMessage(
-            userLanguage === "hi"
-                ? "मुझे उस बीमारी के लिए कोई उपयुक्त अस्पताल नहीं मिला।"
-                : userLanguage === "bn"
-                ? "আমি সেই রোগের জন্য কোনও উপযুক্ত হাসপাতাল খুঁজে পাইনি।"
-                : "I'm sorry, I couldn't find a suitable hospital for that condition.",
+            "I'm sorry, I couldn't find a suitable hospital for that condition.",
             "bot"
         );
     }
