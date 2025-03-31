@@ -19,7 +19,10 @@ const responses = {
         "default": "I'm sorry, I didn't understand that. Can you please rephrase?",
         "take_care": "Take care! Let me know if you need any assistance.",
         "checkup": "You should consider scheduling a health checkup along with consultation for better care.",
-        "location_confirm": "Got it! I'll find hospitals and clinics near your location. Please wait a moment..."
+        "location_confirm": "Got it! I'll find hospitals and clinics near your location. Please wait a moment...",
+        "language_changed": "Language updated successfully! How can I assist you?",
+        "ask_specialty": "What kind of doctor are you looking for? Please mention your symptoms or specialty.",
+        "no_location": "I couldn’t detect your location. Please enter it by saying: 'Location [your city]'."
     }
 };
 
@@ -155,6 +158,16 @@ function checkForDisease(userMessage) {
     }
 }
 
+// Handle Language Change
+function changeLanguage(newLang) {
+    if (languageOptions[newLang.toLowerCase()]) {
+        userLanguage = languageOptions[newLang.toLowerCase()];
+        displayMessage(responses[userLanguage]["language_changed"], "bot");
+    } else {
+        displayMessage("Sorry, I can't assist in that language yet.", "bot");
+    }
+}
+
 // Handle Send Button Click
 sendBtn.addEventListener("click", () => {
     processUserInput();
@@ -179,6 +192,65 @@ function processUserInput() {
     if (userMessage.startsWith("location")) {
         userLocation = userMessage.split(" ")[1];
         displayMessage(responses[userLanguage]["location_confirm"], "bot");
+    }
+    // Change Language
+    else if (userMessage.startsWith("language")) {
+        const newLang = userMessage.split(" ")[1];
+        changeLanguage(newLang);
+    }
+    // Check for Disease or Symptom
+    else {
+        checkForDisease(userMessage);
+    }
+}
+
+// Handle Small Talk and Polite Conversation
+function handleSmallTalk(userMessage) {
+    const smallTalkResponses = {
+        "hello": responses[userLanguage]["hello"],
+        "hi": responses[userLanguage]["hi"],
+        "thanks": responses[userLanguage]["thanks"],
+        "thank you": responses[userLanguage]["thank you"],
+        "sorry": responses[userLanguage]["sorry"],
+        "take care": responses[userLanguage]["take_care"],
+        "bye": "Goodbye! Stay safe and healthy.",
+        "how are you": "I'm doing great! How can I assist you today?",
+        "what can you do": "I can help you find doctors, suggest nearby hospitals, and provide assistance with telemedicine. How may I assist?"
+    };
+
+    const matchedTalk = Object.keys(smallTalkResponses).find(talk =>
+        new RegExp(`\\b${talk}\\b`, "i").test(userMessage)
+    );
+
+    if (matchedTalk) {
+        displayMessage(smallTalkResponses[matchedTalk], "bot");
+        return true;
+    }
+    return false;
+}
+
+// Enhanced Input Processing
+function processUserInput() {
+    const userMessage = userInput.value.trim().toLowerCase();
+    if (!userMessage) return;
+
+    displayMessage(userMessage, "user");
+    userInput.value = "";
+
+    // Handle Small Talk
+    if (handleSmallTalk(userMessage)) {
+        return;
+    }
+
+    // Handle Location Input
+    if (userMessage.startsWith("location")) {
+        userLocation = userMessage.split(" ")[1];
+        displayMessage(responses[userLanguage]["location_confirm"], "bot");
+    }
+    // Handle Language Change
+    else if (userMessage.startsWith("language")) {
+        const newLang = userMessage.split(" ")[1];
+        changeLanguage(newLang);
     }
     // Check for Disease or Symptom
     else {
