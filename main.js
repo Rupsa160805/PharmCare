@@ -71,8 +71,7 @@ const responses = {
 const languageOptions = {
     "english": "en",
     "hindi": "hi",
-    "bengali": "bn",
-    "bangla": "bn"
+    "bengali": "bn"
 };
 
 // Default Language
@@ -81,59 +80,13 @@ let userLanguage = "en";
 // Store User Specialty
 let userSpecialty = "";
 
-// Dummy Data for Hospitals and Doctors with Coordinates
-const hospitalData = [
-    {
-        name: "Apollo Hospital",
-        address: "Salt Lake, Kolkata",
-        specialties: ["cardiology", "orthopedics", "neurology", "dermatology"],
-        doctors: {
-            "cardiology": "Dr. Anil Sharma",
-            "orthopedics": "Dr. Rakesh Gupta",
-            "neurology": "Dr. Rajeev Nair",
-            "dermatology": "Dr. Priya Mukherjee"
-        },
-        coordinates: { lat: 22.5726, lon: 88.3639 }
-    },
-    {
-        name: "Fortis Hospital",
-        address: "Rajarhat, Kolkata",
-        specialties: ["cardiology", "cancer", "gastroenterology"],
-        doctors: {
-            "cardiology": "Dr. Suresh Patel",
-            "cancer": "Dr. Pooja Mehta",
-            "gastroenterology": "Dr. Alok Sen"
-        },
-        coordinates: { lat: 22.5958, lon: 88.4791 }
-    },
-    {
-        name: "Medica Super Specialty Hospital",
-        address: "Mukundapur, Kolkata",
-        specialties: ["orthopedics", "neurology", "cancer"],
-        doctors: {
-            "orthopedics": "Dr. Kunal Roy",
-            "neurology": "Dr. Amit Dutta",
-            "cancer": "Dr. Ananya Basu"
-        },
-        coordinates: { lat: 22.5018, lon: 88.3966 }
-    }
+// Pattern Matching for Language Switching
+const languagePatterns = [
+    /switch to (\w+)/i,
+    /change language to (\w+)/i,
+    /speak in (\w+)/i,
+    /use (\w+)/i
 ];
-
-// Disease-to-Specialty Mapping
-const diseaseKeywords = {
-    "heart": "cardiology",
-    "cardiology": "cardiology",
-    "cancer": "cancer",
-    "brain": "neurology",
-    "nerves": "neurology",
-    "neurology": "neurology",
-    "bones": "orthopedics",
-    "orthopedic": "orthopedics",
-    "stomach": "gastroenterology",
-    "gastro": "gastroenterology",
-    "skin": "dermatology",
-    "checkup": "general checkup"
-};
 
 // Display User and Bot Messages
 function displayMessage(message, sender) {
@@ -144,74 +97,19 @@ function displayMessage(message, sender) {
     chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll to bottom
 }
 
-// Get User's Live Location Using Geolocation API
-function getUserLocation() {
-    if (navigator.geolocation) {
-        displayMessage(responses[userLanguage]["location"], "bot");
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
-                findNearestDoctors(latitude, longitude);
-            },
-            () => {
-                displayMessage(responses[userLanguage]["location_error"], "bot");
-            }
-        );
-    } else {
-        displayMessage(responses[userLanguage]["location_error"], "bot");
-    }
-}
-
-// Haversine Formula to Calculate Distance Between Two Points
-function calculateDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371; // Radius of the Earth in km
-    const dLat = (lat2 - lat1) * (Math.PI / 180);
-    const dLon = (lon2 - lon1) * (Math.PI / 180);
-    const a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
-        Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
-}
-
-// Find Nearest Hospitals and Suggest Doctors Based on User's Location
-function findNearestDoctors(userLat, userLon) {
-    let nearbyHospitals = [];
-
-    hospitalData.forEach((hospital) => {
-        if (
-            hospital.specialties.includes(userSpecialty.toLowerCase())
-        ) {
-            const distance = calculateDistance(
-                userLat,
-                userLon,
-                hospital.coordinates.lat,
-                hospital.coordinates.lon
-            );
-            nearbyHospitals.push({ ...hospital, distance });
-        }
-    });
-
-    // Sort hospitals by distance (nearest first)
-    nearbyHospitals.sort((a, b) => a.distance - b.distance);
-
-    if (nearbyHospitals.length > 0) {
-        let response = `${responses[userLanguage]["doctors_found"]}\n\n`;
-        nearbyHospitals.forEach((hospital) => {
-            response += `🏥 *${hospital.name}*\n📍 ${hospital.address}\n👩‍⚕️ Doctor: ${hospital.doctors[userSpecialty]}\n📏 Distance: ${hospital.distance.toFixed(2)} km\n\n`;
-        });
-        displayMessage(response, "bot");
-    } else {
-        displayMessage(responses[userLanguage]["default"], "bot");
-    }
-}
-
 // Switch Language Based on User Input
 function switchLanguage(userMessage) {
-    const selectedLanguage = userMessage.split(" ").slice(-1)[0]?.toLowerCase();
-    if (languageOptions[selectedLanguage]) {
+    let selectedLanguage = null;
+
+    for (const pattern of languagePatterns) {
+        const match = userMessage.match(pattern);
+        if (match && match[1]) {
+            selectedLanguage = match[1].toLowerCase();
+            break;
+        }
+    }
+
+    if (selectedLanguage && languageOptions[selectedLanguage]) {
         userLanguage = languageOptions[selectedLanguage];
         displayMessage(responses[userLanguage]["switch_language"], "bot");
     } else {
@@ -242,8 +140,8 @@ function processUserInput() {
     displayMessage(userMessage, "user");
     userInput.value = "";
 
-    // Handle language switching
-    if (userMessage.startsWith("switch to") || userMessage.includes("change language")) {
+    // Check for language switching
+    if (languagePatterns.some((pattern) => pattern.test(userMessage))) {
         switchLanguage(userMessage);
     }
     // Handle basic responses
