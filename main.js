@@ -18,7 +18,8 @@ const responses = {
         "ask_disease": "Please mention your disease or symptoms so I can suggest suitable doctors and hospitals.",
         "default": "I'm sorry, I didn't understand that. Can you please rephrase?",
         "take_care": "Take care! Let me know if you need any assistance.",
-        "checkup": "You should consider scheduling a health checkup along with consultation for better care."
+        "checkup": "You should consider scheduling a health checkup along with consultation for better care.",
+        "location_confirm": "Got it! I'll find hospitals and clinics near your location. Please wait a moment..."
     }
 };
 
@@ -32,11 +33,15 @@ const languageOptions = {
 // Default Language
 let userLanguage = "en";
 
+// Store User Location
+let userLocation = "";
+
 // Predefined List of Hospitals and Doctors
 const hospitalData = [
     {
         name: "Apollo Hospital",
         address: "Kolkata, West Bengal",
+        location: "kolkata",
         specialties: ["cardiology", "orthopedics", "neurology", "general checkup"],
         doctors: {
             "cardiology": "Dr. R. Sharma (Cardiologist)",
@@ -47,6 +52,7 @@ const hospitalData = [
     {
         name: "Fortis Hospital",
         address: "Kolkata, West Bengal",
+        location: "kolkata",
         specialties: ["cancer", "cardiology", "gastroenterology"],
         doctors: {
             "cancer": "Dr. P. Mehta (Oncologist)",
@@ -57,6 +63,7 @@ const hospitalData = [
     {
         name: "AMRI Hospital",
         address: "Dhakuria, Kolkata",
+        location: "kolkata",
         specialties: ["orthopedics", "neurology", "urology", "general checkup"],
         doctors: {
             "orthopedics": "Dr. T. Sen (Orthopedic)",
@@ -67,11 +74,23 @@ const hospitalData = [
     {
         name: "Ruby General Hospital",
         address: "Kolkata, West Bengal",
+        location: "kolkata",
         specialties: ["diabetes", "gynecology", "pulmonology", "general checkup"],
         doctors: {
             "diabetes": "Dr. S. Bose (Diabetologist)",
             "gynecology": "Dr. N. Banerjee (Gynecologist)",
             "pulmonology": "Dr. A. Dasgupta (Pulmonologist)"
+        }
+    },
+    {
+        name: "Narayana Hospital",
+        address: "Delhi, India",
+        location: "delhi",
+        specialties: ["cardiology", "cancer", "neurology", "general checkup"],
+        doctors: {
+            "cardiology": "Dr. P. Rao (Cardiologist)",
+            "cancer": "Dr. R. Iyer (Oncologist)",
+            "neurology": "Dr. M. Singh (Neurologist)"
         }
     }
 ];
@@ -101,8 +120,17 @@ function processInput(userMessage) {
         askForLanguage();
     } else if (checkLanguage(userMessage)) {
         setLanguage(userMessage);
+    } else if (userMessage.includes("location") || userMessage.includes("address")) {
+        askForLocation();
+    } else if (isLocation(userMessage)) {
+        userLocation = userMessage;
+        displayMessage(responses[userLanguage]["location_confirm"], "bot");
     } else if (userMessage.includes("hospital") || userMessage.includes("clinic") || userMessage.includes("checkup")) {
-        displayMessage(responses[userLanguage]["ask_disease"], "bot");
+        if (userLocation) {
+            findNearbyHospitals(userLocation);
+        } else {
+            displayMessage(responses[userLanguage]["location"], "bot");
+        }
     } else if (userMessage in responses[userLanguage]) {
         displayMessage(responses[userLanguage][userMessage], "bot");
     } else {
@@ -130,6 +158,17 @@ function setLanguage(lang) {
 // Ask for Preferred Language
 function askForLanguage() {
     displayMessage(responses[userLanguage]["language"], "bot");
+}
+
+// Ask for User Location
+function askForLocation() {
+    displayMessage(responses[userLanguage]["location"], "bot");
+}
+
+// Check if User Provided a Location
+function isLocation(message) {
+    const locationKeywords = ["kolkata", "delhi", "mumbai", "chennai", "bangalore"];
+    return locationKeywords.some(location => message.includes(location));
 }
 
 // Capitalize First Letter of Text
@@ -197,5 +236,24 @@ function findDoctorsForSpecialty(specialty) {
             "I'm sorry, I couldn't find a suitable hospital for that condition.",
             "bot"
         );
+    }
+}
+
+// Find Nearby Hospitals Based on Location
+function findNearbyHospitals(location) {
+    const nearbyHospitals = hospitalData.filter(hospital =>
+        hospital.location.includes(location.toLowerCase())
+    );
+
+    if (nearbyHospitals.length > 0) {
+        displayMessage(`✅ Here are some hospitals and clinics near ${capitalizeFirstLetter(location)}:`, "bot");
+
+        nearbyHospitals.forEach(hospital => {
+            displayMessage(`🏥 ${hospital.name} - ${hospital.address}`, "bot");
+        });
+
+        displayMessage(responses[userLanguage]["checkup"], "bot");
+    } else {
+        displayMessage(`❗ Sorry, no hospitals found near ${capitalizeFirstLetter(location)}.`, "bot");
     }
 }
