@@ -17,7 +17,8 @@ const responses = {
         "hospital": "Searching for nearby hospitals for medical tests and checkups...",
         "ask_disease": "Please mention your disease or symptoms so I can suggest suitable doctors and hospitals.",
         "default": "I'm sorry, I didn't understand that. Can you please rephrase?",
-        "take_care": "Take care! Let me know if you need any assistance."
+        "take_care": "Take care! Let me know if you need any assistance.",
+        "checkup": "You should consider scheduling a health checkup along with consultation for better care."
     },
     "hi": {
         "hello": "नमस्ते! आज मैं आपकी किस प्रकार सहायता कर सकता हूँ?",
@@ -31,7 +32,8 @@ const responses = {
         "hospital": "चिकित्सा परीक्षण और स्वास्थ्य जांच के लिए निकटतम अस्पताल खोज रहा हूँ...",
         "ask_disease": "कृपया अपनी बीमारी या लक्षण बताएं ताकि मैं उचित डॉक्टर और अस्पताल सुझा सकूँ।",
         "default": "मुझे क्षमा करें, मैंने समझा नहीं। कृपया दोबारा प्रयास करें।",
-        "take_care": "ख्याल रखना! अगर आपको और सहायता चाहिए तो बताएं।"
+        "take_care": "ख्याल रखना! अगर आपको और सहायता चाहिए तो बताएं।",
+        "checkup": "बेहतर देखभाल के लिए एक स्वास्थ्य परीक्षण और परामर्श शेड्यूल करने पर विचार करें।"
     },
     "bn": {
         "hello": "হ্যালো! আজ আমি কীভাবে আপনার সহায়তা করতে পারি?",
@@ -45,7 +47,8 @@ const responses = {
         "hospital": "চিকিৎসা পরীক্ষা এবং স্বাস্থ্য পরীক্ষার জন্য কাছাকাছি হাসপাতাল খুঁজছি...",
         "ask_disease": "অনুগ্রহ করে আপনার রোগ বা লক্ষণগুলি বলুন যাতে আমি উপযুক্ত ডাক্তার ও হাসপাতাল সুপারিশ করতে পারি।",
         "default": "আমি দুঃখিত, আমি এটি বুঝতে পারিনি। দয়া করে আবার বলুন।",
-        "take_care": "সাবধানে থাকুন! আমাকে জানান যদি আপনার কোনো সাহায্যের প্রয়োজন হয়।"
+        "take_care": "সাবধানে থাকুন! আমাকে জানান যদি আপনার কোনো সাহায্যের প্রয়োজন হয়।",
+        "checkup": "ভাল যত্নের জন্য একটি স্বাস্থ্য পরীক্ষা এবং পরামর্শ নির্ধারণ করুন।"
     }
 };
 
@@ -61,10 +64,30 @@ let userLanguage = "en";
 
 // Predefined List of Hospitals and Doctors
 const hospitalData = [
-    { name: "Apollo Hospital", address: "Kolkata, West Bengal", lat: 22.5726, lng: 88.3639, specialties: ["cardiology", "orthopedics", "neurology"], doctors: ["Dr. R. Sharma (Cardiologist)", "Dr. A. Das (Orthopedic)", "Dr. M. Roy (Neurologist)"] },
-    { name: "Fortis Hospital", address: "Kolkata, West Bengal", lat: 22.5795, lng: 88.4336, specialties: ["cancer", "cardiology", "gastroenterology"], doctors: ["Dr. P. Mehta (Oncologist)", "Dr. S. Ghosh (Cardiologist)", "Dr. B. Kumar (Gastroenterologist)"] },
-    { name: "AMRI Hospital", address: "Dhakuria, Kolkata", lat: 22.5124, lng: 88.3709, specialties: ["orthopedics", "neurology", "urology"], doctors: ["Dr. T. Sen (Orthopedic)", "Dr. K. Gupta (Neurologist)", "Dr. R. Chakraborty (Urologist)"] },
-    { name: "Ruby General Hospital", address: "Kolkata, West Bengal", lat: 22.5154, lng: 88.4076, specialties: ["diabetes", "gynecology", "pulmonology"], doctors: ["Dr. S. Bose (Diabetologist)", "Dr. N. Banerjee (Gynecologist)", "Dr. A. Dasgupta (Pulmonologist)"] }
+    {
+        name: "Apollo Hospital",
+        address: "Kolkata, West Bengal",
+        specialties: ["cardiology", "orthopedics", "neurology", "general checkup"],
+        doctors: ["Dr. R. Sharma (Cardiologist)", "Dr. A. Das (Orthopedic)", "Dr. M. Roy (Neurologist)"]
+    },
+    {
+        name: "Fortis Hospital",
+        address: "Kolkata, West Bengal",
+        specialties: ["cancer", "cardiology", "gastroenterology"],
+        doctors: ["Dr. P. Mehta (Oncologist)", "Dr. S. Ghosh (Cardiologist)", "Dr. B. Kumar (Gastroenterologist)"]
+    },
+    {
+        name: "AMRI Hospital",
+        address: "Dhakuria, Kolkata",
+        specialties: ["orthopedics", "neurology", "urology", "general checkup"],
+        doctors: ["Dr. T. Sen (Orthopedic)", "Dr. K. Gupta (Neurologist)", "Dr. R. Chakraborty (Urologist)"]
+    },
+    {
+        name: "Ruby General Hospital",
+        address: "Kolkata, West Bengal",
+        specialties: ["diabetes", "gynecology", "pulmonology", "general checkup"],
+        doctors: ["Dr. S. Bose (Diabetologist)", "Dr. N. Banerjee (Gynecologist)", "Dr. A. Dasgupta (Pulmonologist)"]
+    }
 ];
 
 // Handle Send Button Click
@@ -92,7 +115,7 @@ function processInput(userMessage) {
         askForLanguage();
     } else if (checkLanguage(userMessage)) {
         setLanguage(userMessage);
-    } else if (userMessage.includes("hospital") || userMessage.includes("clinic") || userMessage.includes("test")) {
+    } else if (userMessage.includes("hospital") || userMessage.includes("clinic") || userMessage.includes("checkup")) {
         displayMessage(responses[userLanguage]["ask_disease"], "bot");
     } else if (userMessage in responses[userLanguage]) {
         displayMessage(responses[userLanguage][userMessage], "bot");
@@ -132,7 +155,7 @@ function capitalizeFirstLetter(string) {
 function checkForDisease(userMessage) {
     const diseaseKeywords = [
         "cardiology", "heart", "cancer", "oncology", "diabetes", "neurology", "brain", "orthopedics", "bones",
-        "urology", "gynecology", "lungs", "pulmonology", "gastroenterology", "stomach"
+        "urology", "gynecology", "lungs", "pulmonology", "gastroenterology", "stomach", "general checkup", "checkup"
     ];
 
     const matchedDisease = diseaseKeywords.find(disease => userMessage.includes(disease));
@@ -161,12 +184,13 @@ function findHospitalsForDisease(disease) {
         );
 
         recommendedHospitals.forEach(hospital => {
-            displayMessage(`${hospital.name} - ${hospital.address}`, "bot");
+            displayMessage(`🏥 ${hospital.name} - ${hospital.address}`, "bot");
             hospital.doctors.forEach(doctor => {
                 displayMessage(`👨‍⚕️ ${doctor}`, "bot");
             });
         });
 
+        displayMessage(responses[userLanguage]["checkup"], "bot");
         displayMessage(responses[userLanguage]["take_care"], "bot");
     } else {
         displayMessage(
