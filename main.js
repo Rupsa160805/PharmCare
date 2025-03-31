@@ -11,7 +11,7 @@ const responses = {
         "thanks": "You're welcome! Let me know if you need further assistance.",
         "thank you": "You're welcome! Stay healthy.",
         "sorry": "No worries! How can I assist you?",
-        "location": "Please share your current location to find the nearest clinic or hospital.",
+        "location": "I'm fetching your current location to find the nearest clinic or hospital.",
         "clinic": "I’m searching for clinics near your location. Please wait a moment...",
         "language": "I can assist you in multiple languages. Which language do you prefer? (English, Hindi, Bengali, etc.)",
         "hospital": "Searching for nearby hospitals for medical tests and checkups...",
@@ -19,8 +19,9 @@ const responses = {
         "default": "I'm sorry, I didn't understand that. Can you please rephrase?",
         "take_care": "Take care! Let me know if you need any assistance.",
         "checkup": "You should consider scheduling a health checkup along with consultation for better care.",
-        "location_confirm": "Got it! I'll find hospitals and clinics near your location. Please wait a moment...",
-        "doctors_found": "Here are the doctors and hospitals I found based on your condition."
+        "location_confirm": "Got it! I'm fetching nearby hospitals and clinics now. Please wait a moment...",
+        "doctors_found": "Here are the doctors and hospitals I found based on your condition.",
+        "location_error": "I'm unable to retrieve your location. Please allow location access."
     }
 };
 
@@ -34,8 +35,7 @@ const languageOptions = {
 // Default Language
 let userLanguage = "en";
 
-// Store User Location and Specialty
-let userLocation = "";
+// Store User Specialty
 let userSpecialty = "";
 
 // Dummy Data for Doctors and Hospitals
@@ -119,19 +119,54 @@ function detectLanguageSwitch(userMessage) {
     return false;
 }
 
+// Get User’s Live Location Using Geolocation API
+function getUserLocation() {
+    if (navigator.geolocation) {
+        displayMessage(responses[userLanguage]["location"], "bot");
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                reverseGeocode(latitude, longitude);
+            },
+            () => {
+                displayMessage(responses[userLanguage]["location_error"], "bot");
+            }
+        );
+    } else {
+        displayMessage(responses[userLanguage]["location_error"], "bot");
+    }
+}
+
+// Reverse Geocode: Convert Latitude and Longitude to Location Name
+function reverseGeocode(latitude, longitude) {
+    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
+
+    fetch(url)
+        .then((response) => response.json())
+        .then((data) => {
+            if (data && data.address && data.address.city) {
+                const city = data.address.city.toLowerCase();
+                displayMessage(`Location detected: ${city.charAt(0).toUpperCase() + city.slice(1)}`, "bot");
+                findDoctorsForSpecialtyAndLocation(userSpecialty, city);
+            } else {
+                displayMessage("Unable to detect your exact location. Please mention your city manually.", "bot");
+            }
+        })
+        .catch(() => {
+            displayMessage("Error fetching location details. Please enter your location manually.", "bot");
+        });
+}
+
 // Check for Disease or Symptoms and Suggest Doctors & Hospitals
 function checkForDisease(userMessage) {
-    const matchedDisease = Object.keys(diseaseKeywords).find(disease =>
+    const matchedDisease = Object.keys(diseaseKeywords).find((disease) =>
         userMessage.includes(disease.toLowerCase())
     );
 
     if (matchedDisease) {
         userSpecialty = diseaseKeywords[matchedDisease];
-        if (userLocation) {
-            findDoctorsForSpecialtyAndLocation(userSpecialty, userLocation);
-        } else {
-            displayMessage(responses[userLanguage]["location"], "bot");
-        }
+        getUserLocation(); // Automatically get location to suggest nearby doctors
     } else {
         displayMessage(responses[userLanguage]["ask_disease"], "bot");
     }
@@ -139,14 +174,15 @@ function checkForDisease(userMessage) {
 
 // Find Doctors for Specialty and Location
 function findDoctorsForSpecialtyAndLocation(specialty, location) {
-    const matchingHospitals = hospitalData.filter(hospital =>
-        hospital.location.toLowerCase() === location.toLowerCase() &&
-        hospital.specialties.map(s => s.toLowerCase()).includes(specialty.toLowerCase())
+    const matchingHospitals = hospitalData.filter(
+        (hospital) =>
+            hospital.location.toLowerCase() === location.toLowerCase() &&
+            hospital.specialties.map((s) => s.toLowerCase()).includes(specialty.toLowerCase())
     );
 
     if (matchingHospitals.length > 0) {
         let response = `${responses[userLanguage]["doctors_found"]}\n\n`;
-        matchingHospitals.forEach(hospital => {
+        matchingHospitals.forEach((hospital) => {
             response += `${hospital.name} - ${hospital.address}\nDoctor: ${hospital.doctors[specialty]}\n\n`;
         });
         displayMessage(response, "bot");
@@ -177,17 +213,8 @@ function processUserInput() {
     // Handle basic responses
     if (responses[userLanguage][userMessage]) {
         displayMessage(responses[userLanguage][userMessage], "bot");
-    }
-    // Handle location input
-    else if (userMessage.startsWith("location")) {
-        userLocation = userMessage.slice(9).trim();
-        if (userLocation) {
-            displayMessage(responses[userLanguage]["location_confirm"], "bot");
-        } else {
-            displayMessage(responses[userLanguage]["location"], "bot");
-        }
-    }
-    // Check for disease/specialty and suggest doctors
+    } 
+    // Check for disease/specialty and get live location
     else {
         checkForDisease(userMessage);
     }
