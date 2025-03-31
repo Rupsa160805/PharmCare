@@ -20,7 +20,7 @@ const responses = {
         "take_care": "Take care! Let me know if you need any assistance.",
         "checkup": "You should consider scheduling a health checkup along with consultation for better care.",
         "location_confirm": "Got it! I'm fetching nearby hospitals and clinics now. Please wait a moment...",
-        "doctors_found": "Here are the doctors and hospitals I found based on your condition.",
+        "doctors_found": "Here are the doctors and hospitals I found based on your condition:",
         "location_error": "I'm unable to retrieve your location. Please allow location access."
     }
 };
@@ -38,7 +38,7 @@ let userLanguage = "en";
 // Store User Specialty
 let userSpecialty = "";
 
-// Dummy Data for Doctors and Hospitals
+// Dummy Data for Doctors and Hospitals (with approximate coordinates for matching)
 const hospitalData = [
     {
         name: "Apollo Hospital",
@@ -50,7 +50,8 @@ const hospitalData = [
             "orthopedics": "Dr. Rakesh Gupta",
             "neurology": "Dr. Rajeev Nair",
             "dermatology": "Dr. Priya Mukherjee"
-        }
+        },
+        coordinates: { lat: 22.5726, lon: 88.3639 }
     },
     {
         name: "Fortis Hospital",
@@ -61,7 +62,8 @@ const hospitalData = [
             "cardiology": "Dr. Suresh Patel",
             "cancer": "Dr. Pooja Mehta",
             "gastroenterology": "Dr. Alok Sen"
-        }
+        },
+        coordinates: { lat: 22.5958, lon: 88.4791 }
     },
     {
         name: "Medica Super Specialty Hospital",
@@ -72,7 +74,8 @@ const hospitalData = [
             "orthopedics": "Dr. Kunal Roy",
             "neurology": "Dr. Amit Dutta",
             "cancer": "Dr. Ananya Basu"
-        }
+        },
+        coordinates: { lat: 22.5018, lon: 88.3966 }
     }
 ];
 
@@ -101,24 +104,6 @@ function displayMessage(message, sender) {
     chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll to bottom
 }
 
-// Detect Language Switch Requests
-function detectLanguageSwitch(userMessage) {
-    if (userMessage.includes("hindi") || userMessage.includes("हिंदी")) {
-        userLanguage = "hi";
-        displayMessage("ठीक है! अब मैं हिंदी में आपकी सहायता करूंगा।", "bot");
-        return true;
-    } else if (userMessage.includes("bengali") || userMessage.includes("bangla") || userMessage.includes("বাংলা")) {
-        userLanguage = "bn";
-        displayMessage("ঠিক আছে! এখন থেকে আমি বাংলায় কথা বলব।", "bot");
-        return true;
-    } else if (userMessage.includes("english") || userMessage.includes("अंग्रेजी") || userMessage.includes("ইংরেজি")) {
-        userLanguage = "en";
-        displayMessage("Okay! I will now assist you in English.", "bot");
-        return true;
-    }
-    return false;
-}
-
 // Get User’s Live Location Using Geolocation API
 function getUserLocation() {
     if (navigator.geolocation) {
@@ -127,7 +112,7 @@ function getUserLocation() {
             (position) => {
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
-                reverseGeocode(latitude, longitude);
+                findNearestLocation(latitude, longitude);
             },
             () => {
                 displayMessage(responses[userLanguage]["location_error"], "bot");
@@ -138,24 +123,39 @@ function getUserLocation() {
     }
 }
 
-// Reverse Geocode: Convert Latitude and Longitude to Location Name
-function reverseGeocode(latitude, longitude) {
-    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
+// Find the Nearest City/Location Based on Lat-Long
+function findNearestLocation(latitude, longitude) {
+    let nearestHospital = null;
+    let minDistance = Number.MAX_VALUE;
 
-    fetch(url)
-        .then((response) => response.json())
-        .then((data) => {
-            if (data && data.address && data.address.city) {
-                const city = data.address.city.toLowerCase();
-                displayMessage(`Location detected: ${city.charAt(0).toUpperCase() + city.slice(1)}`, "bot");
-                findDoctorsForSpecialtyAndLocation(userSpecialty, city);
-            } else {
-                displayMessage("Unable to detect your exact location. Please mention your city manually.", "bot");
-            }
-        })
-        .catch(() => {
-            displayMessage("Error fetching location details. Please enter your location manually.", "bot");
-        });
+    // Calculate distance between user and each hospital
+    hospitalData.forEach((hospital) => {
+        const distance = calculateDistance(latitude, longitude, hospital.coordinates.lat, hospital.coordinates.lon);
+        if (distance < minDistance) {
+            minDistance = distance;
+            nearestHospital = hospital.location.toLowerCase();
+        }
+    });
+
+    if (nearestHospital) {
+        displayMessage(`Location detected near: ${nearestHospital.charAt(0).toUpperCase() + nearestHospital.slice(1)}`, "bot");
+        findDoctorsForSpecialtyAndLocation(userSpecialty, nearestHospital);
+    } else {
+        displayMessage("Unable to detect nearby hospitals. Please enter your location manually.", "bot");
+    }
+}
+
+// Calculate Distance Using Haversine Formula
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Radius of Earth in kilometers
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
 }
 
 // Check for Disease or Symptoms and Suggest Doctors & Hospitals
@@ -187,7 +187,10 @@ function findDoctorsForSpecialtyAndLocation(specialty, location) {
         });
         displayMessage(response, "bot");
     } else {
-        displayMessage(responses[userLanguage]["default"], "bot");
+        displayMessage(
+            `I'm sorry, I couldn't find any ${specialty} specialists near your location. Please try another condition.`,
+            "bot"
+        );
     }
 }
 
@@ -199,21 +202,10 @@ function processUserInput() {
     displayMessage(userMessage, "user");
     userInput.value = "";
 
-    // Check if language switch is requested
-    if (detectLanguageSwitch(userMessage)) {
-        return;
-    }
-
-    // Check if user wants to know about available languages
-    if (userMessage.includes("language") || userMessage.includes("bhasha") || userMessage.includes("ভাষা")) {
-        displayMessage(responses[userLanguage]["language"], "bot");
-        return;
-    }
-
     // Handle basic responses
     if (responses[userLanguage][userMessage]) {
         displayMessage(responses[userLanguage][userMessage], "bot");
-    } 
+    }
     // Check for disease/specialty and get live location
     else {
         checkForDisease(userMessage);
