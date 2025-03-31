@@ -1,24 +1,12 @@
 /* ============================
    Global Styles for All Pages
 =============================== */
-/* Logo Styles */
-/* Logo as Fixed Position */
-
-
-/* Header Styles */
-header {
-    position: relative;
-    width: 100%;
-    height: 60px;
-    background-color: #001f3f; /* Prussian Blue Background */
-}
-
 body {
     font-family: "Poppins", Arial, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #001f3f; /* Prussian Blue */
-    color: #fff;
+    color: #ffea00; /* Gold Text */
 }
 
 /* Navigation Menu */
@@ -38,7 +26,7 @@ nav ul li a {
     padding: 12px 24px;
     font-size: 16px;
     border-radius: 8px;
-    background-color: #ffea00; /* Neon Yellow */
+    background-color: #ffea00; /* Gold */
     color: #000;
     box-shadow: 0 0 12px #ffd700, 0 0 20px #ffd700;
     transition: all 0.3s ease;
@@ -62,34 +50,23 @@ h1, h2, p {
     text-shadow: 0 0 10px #ffd700;
 }
 
-/* Flex Box (Prussian Blue with Gold Flex) */
-.flex-box {
-    background-color: #001f3f;
-    padding: 20px;
-    margin: 20px auto;
-    border-radius: 12px;
-    box-shadow: 0 0 15px #ffd700; /* Gold Flex */
-    max-width: 800px;
-    text-align: center;
-    border: 2px solid #ffd700;
-}
-
-/* Footer */
-footer {
-    background-color: #333;
-    color: #fff;
-    text-align: center;
-    padding: 10px 0;
+/* ============================
+   Prussian Blue Input Fields 
+   with Gold Accents
+=============================== */
+input, textarea {
     width: 100%;
-}
-
-/* Center-align the last line in all pages */
-footer p {
-    text-align: center;
+    padding: 12px;
+    border: 2px solid #ffea00;
+    border-radius: 8px;
+    background-color: #001f3f;
+    color: #ffea00;
+    font-size: 14px;
+    box-shadow: 0 0 12px #ffd700;
 }
 
 /* ============================
-     Chatbot Button (Index)
+   Chatbot Button (Index)
 =============================== */
 #chatbot-btn {
     display: inline-block;
@@ -111,19 +88,170 @@ footer p {
 }
 
 /* ============================
-       Chatbot Styles
+   Chatbot Page (Enhanced)
 =============================== */
 .chat-container {
-    max-width: 600px;
+    max-width: 700px;
     margin: 40px auto;
     padding: 20px;
     background: linear-gradient(135deg, #001f3f, #003366);
     border-radius: 20px;
-    box-shadow: 0 0 20px #ffd700;
+    box-shadow: 0 0 25px #ffd700;
     animation: fadeIn 1s ease-in-out;
 }
 
-/* Header with Gradient */
+/* Chat Header with Gold Gradient */
 .chat-header {
     background: linear-gradient(90deg, #ffea00, #ffd700);
-    padding:
+    padding: 12px;
+    border-radius: 12px 12px 0 0;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #000;
+    box-shadow: 0 0 20px #ffd700;
+}
+
+/* Messages */
+.bot-message, .user-message {
+    padding: 12px 15px;
+    border-radius: 12px;
+    margin: 10px 0;
+    max-width: 80%;
+    font-size: 14px;
+    word-wrap: break-word;
+}
+
+/* Bot Message */
+.bot-message {
+    background-color: #ffea00;
+    color: #000;
+    text-align: left;
+    box-shadow: 0 0 15px #ffd700;
+}
+
+/* User Message */
+.user-message {
+    background-color: #001f3f;
+    color: #ffea00;
+    text-align: right;
+    box-shadow: 0 0 15px #ffea00;
+}
+
+/* Chat Input Section */
+.chat-input {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding: 10px;
+    background: linear-gradient(135deg, #001f3f, #003366);
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 0 20px #ffd700;
+}
+
+/* Input Field */
+input[type="text"] {
+    width: 75%;
+    padding: 12px 15px;
+    border-radius: 12px;
+    background-color: #001f3f;
+    color: #ffea00;
+    font-size: 14px;
+    box-shadow: 0 0 15px #ffd700;
+}
+
+/* Send Button */
+#send-btn {
+    padding: 12px 20px;
+    background-color: #ffea00;
+    color: #000;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 0 20px #ffd700;
+    transition: all 0.3s ease;
+}
+
+/* Hover Effect */
+#send-btn:hover {
+    background-color: #ffe100;
+    box-shadow: 0 0 25px #ffd700;
+    transform: scale(1.05);
+}
+
+/* ============================
+   Communication Page
+=============================== */
+.communication-box {
+    background-color: #001f3f;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px #ffd700;
+    margin-top: 30px;
+}
+
+/* Communication Text Area */
+#user-message {
+    width: 100%;
+    height: 120px;
+    padding: 12px;
+    border: 2px solid #ffea00;
+    border-radius: 12px;
+    background-color: #001f3f;
+    color: #ffea00;
+    font-size: 14px;
+    box-shadow: 0 0 12px #ffd700;
+    resize: none;
+}
+
+/* Submit Button */
+#submit-btn {
+    margin-top: 12px;
+    padding: 12px 20px;
+    background-color: #ffea00;
+    color: #000;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 0 20px #ffd700;
+    transition: all 0.3s ease;
+}
+
+/* Hover Effect */
+#submit-btn:hover {
+    background-color: #ffe100;
+    box-shadow: 0 0 25px #ffd700;
+    transform: scale(1.05);
+}
+
+/* ============================
+      Keyframe Animations
+=============================== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================
+     Responsive Design
+=============================== */
+@media (max-width: 768px) {
+    .chat-container {
+        width: 90%;
+        padding: 15px;
+    }
+
+    input[type="text"] {
+        width: 65%;
+    }
+
+    #send-btn {
+        padding: 10px;
+    }
+}
