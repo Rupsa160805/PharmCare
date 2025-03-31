@@ -41,25 +41,14 @@ const languageOptions = {
 // Default Language
 let userLanguage = "en";
 
-// Doctor and Hospital Data Based on Symptoms/Problems
-const doctorRecommendations = {
-    "fever": {
-        "doctors": ["Dr. Amit Gupta", "Dr. Riya Das"],
-        "hospitals": ["Care Plus Hospital", "XYZ Medical Center"]
-    },
-    "cough": {
-        "doctors": ["Dr. Rajesh Sharma", "Dr. Priya Sen"],
-        "hospitals": ["Apollo Clinic", "MediCare Hospital"]
-    },
-    "diabetes": {
-        "doctors": ["Dr. Anirban Mukherjee", "Dr. Sneha Roy"],
-        "hospitals": ["Diabetes Care Center", "Endocrine Hospital"]
-    },
-    "heart": {
-        "doctors": ["Dr. Arjun Malhotra", "Dr. Neha Kapoor"],
-        "hospitals": ["Fortis Heart Institute", "Max Super Specialty Hospital"]
-    }
-};
+// Predefined List of Hospitals with Coordinates
+const hospitalData = [
+    { name: "Apollo Hospital", address: "Kolkata, West Bengal", lat: 22.5726, lng: 88.3639 },
+    { name: "Fortis Hospital", address: "Kolkata, West Bengal", lat: 22.5795, lng: 88.4336 },
+    { name: "AMRI Hospital", address: "Dhakuria, Kolkata", lat: 22.5124, lng: 88.3709 },
+    { name: "Ruby General Hospital", address: "Kolkata, West Bengal", lat: 22.5154, lng: 88.4076 },
+    { name: "Narayana Hospital", address: "Howrah, West Bengal", lat: 22.5958, lng: 88.2636 }
+];
 
 // Handle Send Button Click
 sendBtn.addEventListener("click", () => {
@@ -95,10 +84,6 @@ function processInput(userMessage) {
     // Check if the user is asking for nearby hospitals
     else if (userMessage.includes("hospital") || userMessage.includes("clinic") || userMessage.includes("test")) {
         getLocationForHospitals();
-    }
-    // Check if the user is sharing a symptom/problem
-    else if (checkSymptoms(userMessage)) {
-        recommendDoctors(userMessage);
     }
     // Handle predefined responses based on language
     else if (responses[userLanguage][userMessage]) {
@@ -138,39 +123,6 @@ function askForLanguage() {
     displayMessage(responses[userLanguage]["language"], "bot");
 }
 
-// Check for Symptoms/Problem in User Input
-function checkSymptoms(message) {
-    const symptoms = Object.keys(doctorRecommendations);
-    for (const symptom of symptoms) {
-        if (message.includes(symptom)) {
-            return symptom;
-        }
-    }
-    return false;
-}
-
-// Recommend Doctors and Hospitals Based on Symptoms
-function recommendDoctors(message) {
-    const symptom = checkSymptoms(message);
-    if (symptom) {
-        const recommendation = doctorRecommendations[symptom];
-        displayMessage(
-            userLanguage === "hi"
-                ? "आपके लक्षणों के आधार पर, मैं निम्नलिखित डॉक्टरों से परामर्श करने की सलाह देता हूँ:"
-                : userLanguage === "bn"
-                ? "আপনার লক্ষণগুলির উপর ভিত্তি করে, আমি নিম্নলিখিত ডাক্তারদের সাথে পরামর্শ করার পরামর্শ দিচ্ছি:"
-                : "Based on your symptoms, I recommend consulting the following doctors:",
-            "bot"
-        );
-
-        recommendation.doctors.forEach((doctor, index) => {
-            displayMessage(`${index + 1}. ${doctor} - Available at ${recommendation.hospitals[index]}`, "bot");
-        });
-    } else {
-        displayMessage(responses[userLanguage]["default"], "bot");
-    }
-}
-
 // Capitalize First Letter of Text
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -184,7 +136,7 @@ function getLocationForHospitals() {
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
                 displayMessage(responses[userLanguage]["hospital"], "bot");
-                fetchNearbyHospitals(latitude, longitude);
+                findNearbyHospitals(latitude, longitude);
             },
             () => {
                 displayMessage(
@@ -209,22 +161,52 @@ function getLocationForHospitals() {
     }
 }
 
-// Fetch Nearby Hospitals/Clinics (Dummy Function for now - Integrate API Later)
-function fetchNearbyHospitals(lat, lng) {
-    setTimeout(() => {
+// Find Nearby Hospitals Based on User Location (Haversine Formula)
+function findNearbyHospitals(lat, lng) {
+    const hospitalsWithDistance = hospitalData.map((hospital) => {
+        const distance = calculateDistance(lat, lng, hospital.lat, hospital.lng);
+        return { ...hospital, distance };
+    });
+
+    // Sort Hospitals by Distance
+    hospitalsWithDistance.sort((a, b) => a.distance - b.distance);
+
+    if (hospitalsWithDistance.length > 0) {
         displayMessage(
             userLanguage === "hi"
-                ? "आपके स्थान के पास 3 क्लिनिक और अस्पताल मिले।"
+                ? "आपके स्थान के पास निम्नलिखित अस्पताल मिले:"
                 : userLanguage === "bn"
-                ? "আপনার অবস্থানের নিকটে ৩টি ক্লিনিক এবং হাসপাতাল পাওয়া গেছে।"
-                : "Found 3 clinics and hospitals near your location. Check the list below:",
+                ? "আপনার অবস্থানের নিকটে নিম্নলিখিত হাসপাতালগুলি পাওয়া গেছে:"
+                : "Here are the hospitals near your location:",
             "bot"
         );
+
+        hospitalsWithDistance.slice(0, 3).forEach((hospital, index) => {
+            displayMessage(`${index + 1}. ${hospital.name} - ${hospital.address} (${hospital.distance.toFixed(2)} km)`, "bot");
+        });
+    } else {
         displayMessage(
-            "1. ABC Diagnostics - General Health Checkup\n" +
-                "2. XYZ Medical Center - Blood Tests & Pathology\n" +
-                "3. Care Plus Hospital - Full Body Checkup",
+            userLanguage === "hi"
+                ? "कोई अस्पताल नहीं मिला।"
+                : userLanguage === "bn"
+                ? "কোনো হাসপাতাল পাওয়া যায়নি।"
+                : "No hospitals found near your location.",
             "bot"
         );
-    }, 2000);
+    }
+}
+
+// Calculate Distance Between Two Coordinates Using Haversine Formula
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Radius of the Earth in km
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * (Math.PI / 180)) *
+            Math.cos(lat2 * (Math.PI / 180)) *
+            Math.sin(dLon / 2) *
+            Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distance in km
 }
