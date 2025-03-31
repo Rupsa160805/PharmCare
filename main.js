@@ -68,25 +68,41 @@ const hospitalData = [
         name: "Apollo Hospital",
         address: "Kolkata, West Bengal",
         specialties: ["cardiology", "orthopedics", "neurology", "general checkup"],
-        doctors: ["Dr. R. Sharma (Cardiologist)", "Dr. A. Das (Orthopedic)", "Dr. M. Roy (Neurologist)"]
+        doctors: {
+            "cardiology": "Dr. R. Sharma (Cardiologist)",
+            "orthopedics": "Dr. A. Das (Orthopedic)",
+            "neurology": "Dr. M. Roy (Neurologist)"
+        }
     },
     {
         name: "Fortis Hospital",
         address: "Kolkata, West Bengal",
         specialties: ["cancer", "cardiology", "gastroenterology"],
-        doctors: ["Dr. P. Mehta (Oncologist)", "Dr. S. Ghosh (Cardiologist)", "Dr. B. Kumar (Gastroenterologist)"]
+        doctors: {
+            "cancer": "Dr. P. Mehta (Oncologist)",
+            "cardiology": "Dr. S. Ghosh (Cardiologist)",
+            "gastroenterology": "Dr. B. Kumar (Gastroenterologist)"
+        }
     },
     {
         name: "AMRI Hospital",
         address: "Dhakuria, Kolkata",
         specialties: ["orthopedics", "neurology", "urology", "general checkup"],
-        doctors: ["Dr. T. Sen (Orthopedic)", "Dr. K. Gupta (Neurologist)", "Dr. R. Chakraborty (Urologist)"]
+        doctors: {
+            "orthopedics": "Dr. T. Sen (Orthopedic)",
+            "neurology": "Dr. K. Gupta (Neurologist)",
+            "urology": "Dr. R. Chakraborty (Urologist)"
+        }
     },
     {
         name: "Ruby General Hospital",
         address: "Kolkata, West Bengal",
         specialties: ["diabetes", "gynecology", "pulmonology", "general checkup"],
-        doctors: ["Dr. S. Bose (Diabetologist)", "Dr. N. Banerjee (Gynecologist)", "Dr. A. Dasgupta (Pulmonologist)"]
+        doctors: {
+            "diabetes": "Dr. S. Bose (Diabetologist)",
+            "gynecology": "Dr. N. Banerjee (Gynecologist)",
+            "pulmonology": "Dr. A. Dasgupta (Pulmonologist)"
+        }
     }
 ];
 
@@ -200,15 +216,9 @@ function findDoctorsForSpecialty(specialty) {
         );
 
         recommendedHospitals.forEach(hospital => {
-            const doctors = hospital.doctors.filter(doctor =>
-                doctor.toLowerCase().includes(specialty)
-            );
-
-            if (doctors.length > 0) {
+            if (hospital.doctors[specialty]) {
                 displayMessage(`🏥 ${hospital.name} - ${hospital.address}`, "bot");
-                doctors.forEach(doctor => {
-                    displayMessage(`👨‍⚕️ ${doctor}`, "bot");
-                });
+                displayMessage(`👨‍⚕️ ${hospital.doctors[specialty]}`, "bot");
             }
         });
 
