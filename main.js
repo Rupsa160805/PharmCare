@@ -14,6 +14,8 @@ const responses = {
         "confirm_lang": "You have selected English. Would you like to proceed in this language? (Yes/No)",
         "retry_lang": "Okay, please mention your preferred language again.",
         "feedback": "Did I help you find the information you were looking for? (Yes/No)",
+        "thank_you": "You're welcome! I'm happy to assist you anytime.",
+        "sorry": "I'm here to help. Let me know if you have any questions.",
         "default": "I'm sorry, I didn't understand that. Can you please rephrase?"
     },
     "hi": {
@@ -25,6 +27,8 @@ const responses = {
         "confirm_lang": "आपने हिंदी का चयन किया है। क्या आप इस भाषा में जारी रखना चाहेंगे? (हाँ/नहीं)",
         "retry_lang": "ठीक है, कृपया अपनी पसंदीदा भाषा का फिर से उल्लेख करें।",
         "feedback": "क्या मैंने आपको आवश्यक जानकारी खोजने में सहायता की? (हाँ/नहीं)",
+        "thank_you": "आपका स्वागत है! मुझे आपकी सहायता करके खुशी हुई।",
+        "sorry": "कोई बात नहीं। कृपया मुझे बताएं कि मैं आपकी कैसे सहायता कर सकता हूँ।",
         "default": "मुझे क्षमा करें, मैंने समझा नहीं। कृपया दोबारा प्रयास करें।"
     },
     "bn": {
@@ -36,6 +40,8 @@ const responses = {
         "confirm_lang": "আপনি বাংলা নির্বাচন করেছেন। আপনি কি এই ভাষায় চালিয়ে যেতে চান? (হ্যাঁ/না)",
         "retry_lang": "ঠিক আছে, অনুগ্রহ করে আবার আপনার পছন্দের ভাষার নাম উল্লেখ করুন।",
         "feedback": "আমি কি আপনাকে প্রয়োজনীয় তথ্য পেতে সাহায্য করতে পেরেছি? (হ্যাঁ/না)",
+        "thank_you": "আপনাকে স্বাগতম! আমি আপনাকে সাহায্য করতে পেরে খুশি।",
+        "sorry": "কোন সমস্যা নেই। আমাকে জানান কীভাবে আমি সহায়তা করতে পারি।",
         "default": "আমি দুঃখিত, আমি এটি বুঝতে পারিনি। দয়া করে আবার বলুন।"
     }
 };
@@ -125,6 +131,12 @@ function processInput(userMessage) {
     else if (userMessage.includes("hospital") || userMessage.includes("clinic") || userMessage.includes("test")) {
         getLocationForHospitals();
     } 
+    else if (userMessage.includes("thank") || userMessage.includes("thanks")) {
+        displayMessage(responses[userLanguage]["thank_you"], "bot");
+    }
+    else if (userMessage.includes("sorry") || userMessage.includes("apology")) {
+        displayMessage(responses[userLanguage]["sorry"], "bot");
+    }
     else if (responses[userLanguage][userMessage]) {
         displayMessage(responses[userLanguage][userMessage], "bot");
     } 
@@ -286,4 +298,3 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 
 // Greet User on Load
 greetUser();
- 
