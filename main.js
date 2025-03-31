@@ -19,10 +19,7 @@ const responses = {
         "default": "I'm sorry, I didn't understand that. Can you please rephrase?",
         "take_care": "Take care! Let me know if you need any assistance.",
         "checkup": "You should consider scheduling a health checkup along with consultation for better care.",
-        "location_confirm": "Got it! I'll find hospitals and clinics near your location. Please wait a moment...",
-        "language_changed": "Language updated successfully! How can I assist you?",
-        "ask_specialty": "What kind of doctor are you looking for? Please mention your symptoms or specialty.",
-        "no_location": "I couldn’t detect your location. Please enter it by saying: 'Location [your city]'."
+        "location_confirm": "Got it! I'll find hospitals and clinics near your location. Please wait a moment..."
     }
 };
 
@@ -84,35 +81,63 @@ const hospitalData = [
             "gynecology": "Dr. N. Banerjee (Women’s Health/Baby Delivery)",
             "pulmonology": "Dr. A. Dasgupta (Lung/Chest Specialist)"
         }
+    },
+    {
+        name: "Narayana Hospital",
+        address: "Delhi, India",
+        location: "delhi",
+        specialties: ["cardiology", "cancer", "neurology", "general checkup"],
+        doctors: {
+            "cardiology": "Dr. P. Rao (Heart Specialist)",
+            "cancer": "Dr. R. Iyer (Cancer Specialist)",
+            "neurology": "Dr. M. Singh (Nerve/Brain Specialist)"
+        }
+    },
+    {
+        name: "Medanta Hospital",
+        address: "Gurgaon, Haryana",
+        location: "gurgaon",
+        specialties: ["orthopedics", "cardiology", "neurology"],
+        doctors: {
+            "orthopedics": "Dr. A. Verma (Bone Specialist)",
+            "cardiology": "Dr. K. Malhotra (Heart Specialist)",
+            "neurology": "Dr. S. Kapoor (Nerve/Brain Specialist)"
+        }
+    },
+    {
+        name: "Max Super Specialty Hospital",
+        address: "Saket, New Delhi",
+        location: "delhi",
+        specialties: ["cancer", "orthopedics", "gastroenterology"],
+        doctors: {
+            "cancer": "Dr. R. Sharma (Cancer Specialist)",
+            "orthopedics": "Dr. V. Bhatt (Bone Specialist)",
+            "gastroenterology": "Dr. P. Khanna (Stomach Specialist)"
+        }
+    },
+    {
+        name: "Manipal Hospital",
+        address: "Bangalore, Karnataka",
+        location: "bangalore",
+        specialties: ["pulmonology", "neurology", "urology", "general checkup"],
+        doctors: {
+            "pulmonology": "Dr. M. Nair (Lung/Chest Specialist)",
+            "neurology": "Dr. R. Iyer (Nerve/Brain Specialist)",
+            "urology": "Dr. A. Kulkarni (Urine/Bladder Specialist)"
+        }
+    },
+    {
+        name: "CMC Vellore",
+        address: "Vellore, Tamil Nadu",
+        location: "vellore",
+        specialties: ["orthopedics", "neurology", "cardiology"],
+        doctors: {
+            "orthopedics": "Dr. J. Peter (Bone Specialist)",
+            "neurology": "Dr. L. George (Nerve/Brain Specialist)",
+            "cardiology": "Dr. B. Samuel (Heart Specialist)"
+        }
     }
 ];
-
-// Display User and Bot Messages
-function displayMessage(message, sender) {
-    const messageDiv = document.createElement("div");
-    messageDiv.className = sender === "bot" ? "bot-message" : "user-message";
-    messageDiv.innerText = message;
-    chatContainer.appendChild(messageDiv);
-    chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll to bottom
-}
-
-// Find Doctors for Specialty and Location
-function findDoctorsForSpecialtyAndLocation(specialty, location) {
-    const matchingHospitals = hospitalData.filter(hospital =>
-        hospital.location.toLowerCase() === location.toLowerCase() &&
-        hospital.specialties.includes(specialty)
-    );
-
-    if (matchingHospitals.length > 0) {
-        let response = `Here are some hospitals near ${location} with ${specialty} services:\n\n`;
-        matchingHospitals.forEach(hospital => {
-            response += `${hospital.name} - ${hospital.address}\nDoctor: ${hospital.doctors[specialty]}\n\n`;
-        });
-        displayMessage(response, "bot");
-    } else {
-        displayMessage(`Sorry, I couldn't find any hospitals with ${specialty} services near ${location}.`, "bot");
-    }
-}
 
 // Check for Disease or Symptoms and Suggest Doctors & Hospitals
 function checkForDisease(userMessage) {
@@ -155,105 +180,5 @@ function checkForDisease(userMessage) {
         }
     } else {
         displayMessage(responses[userLanguage]["default"], "bot");
-    }
-}
-
-// Handle Language Change
-function changeLanguage(newLang) {
-    if (languageOptions[newLang.toLowerCase()]) {
-        userLanguage = languageOptions[newLang.toLowerCase()];
-        displayMessage(responses[userLanguage]["language_changed"], "bot");
-    } else {
-        displayMessage("Sorry, I can't assist in that language yet.", "bot");
-    }
-}
-
-// Handle Send Button Click
-sendBtn.addEventListener("click", () => {
-    processUserInput();
-});
-
-// Handle Enter Key Press
-userInput.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") {
-        processUserInput();
-    }
-});
-
-// Process User Input and Respond
-function processUserInput() {
-    const userMessage = userInput.value.trim().toLowerCase();
-    if (!userMessage) return;
-
-    displayMessage(userMessage, "user");
-    userInput.value = "";
-
-    // Handle Location Input
-    if (userMessage.startsWith("location")) {
-        userLocation = userMessage.split(" ")[1];
-        displayMessage(responses[userLanguage]["location_confirm"], "bot");
-    }
-    // Change Language
-    else if (userMessage.startsWith("language")) {
-        const newLang = userMessage.split(" ")[1];
-        changeLanguage(newLang);
-    }
-    // Check for Disease or Symptom
-    else {
-        checkForDisease(userMessage);
-    }
-}
-
-// Handle Small Talk and Polite Conversation
-function handleSmallTalk(userMessage) {
-    const smallTalkResponses = {
-        "hello": responses[userLanguage]["hello"],
-        "hi": responses[userLanguage]["hi"],
-        "thanks": responses[userLanguage]["thanks"],
-        "thank you": responses[userLanguage]["thank you"],
-        "sorry": responses[userLanguage]["sorry"],
-        "take care": responses[userLanguage]["take_care"],
-        "bye": "Goodbye! Stay safe and healthy.",
-        "how are you": "I'm doing great! How can I assist you today?",
-        "what can you do": "I can help you find doctors, suggest nearby hospitals, and provide assistance with telemedicine. How may I assist?"
-    };
-
-    const matchedTalk = Object.keys(smallTalkResponses).find(talk =>
-        new RegExp(`\\b${talk}\\b`, "i").test(userMessage)
-    );
-
-    if (matchedTalk) {
-        displayMessage(smallTalkResponses[matchedTalk], "bot");
-        return true;
-    }
-    return false;
-}
-
-// Enhanced Input Processing
-function processUserInput() {
-    const userMessage = userInput.value.trim().toLowerCase();
-    if (!userMessage) return;
-
-    displayMessage(userMessage, "user");
-    userInput.value = "";
-
-    // Handle Small Talk
-    if (handleSmallTalk(userMessage)) {
-        return;
-    }
-
-    // Handle Location Input
-    if (userMessage.startsWith("location")) {
-        userLocation = userMessage.split(" ")[1];
-        displayMessage(responses[userLanguage]["location_confirm"], "bot");
-    }
-    // Handle Language Change
-    else if (userMessage.startsWith("language")) {
-        const newLang = userMessage.split(" ")[1];
-        changeLanguage(newLang);
-    }
-    // Check for Disease or Symptom
-    else {
-        checkForDisease(userMessage);
     }
 }
