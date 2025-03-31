@@ -13,7 +13,7 @@ const responses = {
         "sorry": "No worries! How can I assist you?",
         "location": "Please share your current location to find the nearest clinic or hospital.",
         "clinic": "I’m searching for clinics near your location. Please wait a moment...",
-        "language": "I can assist you in multiple languages. Which language do you prefer? (English, Hindi, Bengali, etc.)",
+        "language": "I can assist you in multiple languages. Which language do you prefer? (English, Hindi, Bengali)",
         "hospital": "Searching for nearby hospitals for medical tests and checkups...",
         "ask_disease": "Please mention your disease or symptoms so I can suggest suitable doctors and hospitals.",
         "default": "I'm sorry, I didn't understand that. Can you please rephrase?",
@@ -29,7 +29,7 @@ const responses = {
         "sorry": "কোনো সমস্যা নেই! আমি কীভাবে সাহায্য করতে পারি?",
         "location": "নিকটবর্তী ক্লিনিক বা হাসপাতাল খুঁজতে দয়া করে আপনার বর্তমান অবস্থান জানান।",
         "clinic": "আপনার অবস্থানের কাছাকাছি ক্লিনিক খোঁজা হচ্ছে। অনুগ্রহ করে অপেক্ষা করুন...",
-        "language": "আমি একাধিক ভাষায় সহায়তা করতে পারি। আপনি কোন ভাষায় কথা বলতে চান? (ইংরেজি, হিন্দি, বাংলা ইত্যাদি)",
+        "language": "আমি একাধিক ভাষায় সহায়তা করতে পারি। আপনি কোন ভাষায় কথা বলতে চান? (ইংরেজি, হিন্দি, বাংলা)",
         "hospital": "চিকিৎসা পরীক্ষার জন্য কাছাকাছি হাসপাতাল খোঁজা হচ্ছে...",
         "ask_disease": "অনুগ্রহ করে আপনার রোগ বা উপসর্গ উল্লেখ করুন যাতে আমি উপযুক্ত ডাক্তার এবং হাসপাতাল সুপারিশ করতে পারি।",
         "default": "দুঃখিত, আমি বুঝতে পারিনি। অনুগ্রহ করে আবার বলুন।",
@@ -45,7 +45,7 @@ const responses = {
         "sorry": "कोई बात नहीं! मैं आपकी कैसे सहायता कर सकता हूँ?",
         "location": "कृपया निकटतम क्लिनिक या अस्पताल खोजने के लिए अपना स्थान साझा करें।",
         "clinic": "आपके स्थान के पास क्लिनिक खोज रहा हूँ। कृपया प्रतीक्षा करें...",
-        "language": "मैं कई भाषाओं में सहायता कर सकता हूँ। आप किस भाषा में बात करना चाहते हैं? (अंग्रेजी, हिंदी, बंगाली आदि)",
+        "language": "मैं कई भाषाओं में सहायता कर सकता हूँ। आप किस भाषा में बात करना चाहते हैं? (अंग्रेजी, हिंदी, बंगाली)",
         "hospital": "चिकित्सा परीक्षण और जांच के लिए निकटतम अस्पताल खोज रहा हूँ...",
         "ask_disease": "कृपया अपनी बीमारी या लक्षणों का उल्लेख करें ताकि मैं उपयुक्त डॉक्टर और अस्पताल सुझा सकूं।",
         "default": "माफ करें, मैंने समझा नहीं। क्या आप दोहरा सकते हैं?",
@@ -59,7 +59,10 @@ const responses = {
 const languageOptions = {
     "english": "en",
     "hindi": "hi",
-    "bengali": "bn"
+    "bengali": "bn",
+    "bangla": "bn",
+    "हिंदी": "hi",
+    "বাংলা": "bn"
 };
 
 // Default Language
@@ -128,123 +131,108 @@ function displayMessage(message, sender) {
 
 // Detect Language and Update Bot Response Language
 function detectLanguage(userMessage) {
-    const languageKeywords = {
-        "english": "en",
-        "hindi": "hi",
-        "bengali": "bn",
-        "bangla": "bn",
-        "हिंदी": "hi",
-        "বাংলা": "bn"
-    };
-
-    const matchedLanguage = Object.keys(languageKeywords).find(lang =>
+    const matchedLanguage = Object.keys(languageOptions).find(lang =>
         userMessage.includes(lang.toLowerCase())
     );
 
     if (matchedLanguage) {
-        userLanguage = languageKeywords[matchedLanguage];
-        displayMessage(`Language switched to ${matchedLanguage.charAt(0).toUpperCase() + matchedLanguage.slice(1)}.`, "bot");
+        userLanguage = languageOptions[matchedLanguage];
+        displayMessage(
+            `✅ Language switched to ${matchedLanguage.charAt(0).toUpperCase() + matchedLanguage.slice(1)}.`,
+            "bot"
+        );
+        return true;
     }
+    return false;
 }
 
 // Find Doctors for Specialty and Location
 function findDoctorsForSpecialtyAndLocation(specialty, location) {
-    const matchingHospitals = hospitalData.filter(hospital =>
-        hospital.location.toLowerCase() === location.toLowerCase() &&
-        hospital.specialties.map(s => s.toLowerCase()).includes(specialty.toLowerCase())
+    const matchingHospitals = hospitalData.filter(
+        (hospital) =>
+            hospital.location.toLowerCase() === location.toLowerCase() &&
+            hospital.specialties.map((s) => s.toLowerCase()).includes(specialty.toLowerCase())
     );
 
     if (matchingHospitals.length > 0) {
         let response = `${responses[userLanguage]["location_confirm"]}\n\n`;
-        matchingHospitals.forEach(hospital => {
+        matchingHospitals.forEach((hospital) => {
             response += `${hospital.name} - ${hospital.address}\nDoctor: ${hospital.doctors[specialty]}\n\n`;
         });
         displayMessage(response, "bot");
     } else {
-        displayMessage(`Sorry, I couldn't find any hospitals with ${specialty} services near ${location}.`, "bot");
+        displayMessage(
+            `⚠️ Sorry, no hospitals with ${specialty} services were found near ${location}.`,
+            "bot"
+        );
     }
 }
 
 // Check for Disease or Symptoms and Suggest Doctors & Hospitals
-function checkForDisease(userMessage) {
-    const diseaseKeywords = {
-        "heart": "cardiology",
-        "cardiology": "cardiology",
-        "cancer": "cancer",
-        "brain": "neurology",
-        "nerves": "neurology",
-        "neurology": "neurology",
-        "bones": "orthopedics",
-        "orthopedic": "orthopedics",
-        "urology": "urology",
-        "urine": "urology",
-        "bladder": "urology",
-        "gynecology": "gynecology",
-        "women's health": "gynecology",
-        "lungs": "pulmonology",
-        "chest": "pulmonology",
-        "stomach": "gastroenterology",
-        "gastro": "gastroenterology",
-        "checkup": "general checkup",
-        "doctor visit": "general checkup"
-    };
+function processUserMessage(userMessage) {
+    userMessage = userMessage.toLowerCase();
 
-    const matchedDisease = Object.keys(diseaseKeywords).find(disease =>
-        userMessage.includes(disease.toLowerCase())
-    );
+    // Detect and Update Language
+    if (detectLanguage(userMessage)) {
+        return;
+    }
 
-    if (matchedDisease) {
-        userSpecialty = diseaseKeywords[matchedDisease];
+    // Check for Greetings
+    if (["hello", "hi", "hey"].some((greet) => userMessage.includes(greet))) {
+        displayMessage(responses[userLanguage]["hello"], "bot");
+    } 
+    else if (userMessage.includes("thank")) {
+        displayMessage(responses[userLanguage]["thanks"], "bot");
+    } 
+    else if (userMessage.includes("sorry")) {
+        displayMessage(responses[userLanguage]["sorry"], "bot");
+    } 
+    else if (userMessage.includes("location")) {
+        displayMessage(responses[userLanguage]["location"], "bot");
+    }
+    else if (userMessage.includes("hospital") || userMessage.includes("clinic")) {
+        displayMessage(responses[userLanguage]["hospital"], "bot");
+    }
+    else if (userMessage.includes("checkup")) {
+        displayMessage(responses[userLanguage]["checkup"], "bot");
+    }
+    else if (userMessage.includes("disease") || userMessage.includes("symptom")) {
+        displayMessage(responses[userLanguage]["ask_disease"], "bot");
+    }
+    else if (userMessage.includes("bye") || userMessage.includes("take care")) {
+        displayMessage(responses[userLanguage]["take_care"], "bot");
+    } 
+    // Handle Location & Specialty
+    else if (userMessage.includes("kolkata") || userMessage.includes("delhi") || userMessage.includes("gurgaon")) {
+        userLocation = userMessage;
+        displayMessage(responses[userLanguage]["location_confirm"], "bot");
+    } 
+    else if (userMessage.includes("cardiology") || userMessage.includes("cancer") || userMessage.includes("orthopedics") || userMessage.includes("neurology")) {
+        userSpecialty = userMessage;
         if (userLocation) {
             findDoctorsForSpecialtyAndLocation(userSpecialty, userLocation);
         } else {
             displayMessage(responses[userLanguage]["location"], "bot");
         }
-    } else {
-        displayMessage(responses[userLanguage]["ask_disease"], "bot");
-    }
-}
-
-// Process User Input and Respond
-function processUserInput() {
-    const userMessage = userInput.value.trim().toLowerCase();
-    if (!userMessage) return;
-
-    displayMessage(userMessage, "user");
-    userInput.value = "";
-
-    detectLanguage(userMessage);
-
-    // Handle greetings and basic responses
-    if (responses[userLanguage][userMessage]) {
-        displayMessage(responses[userLanguage][userMessage], "bot");
-    }
-    // Handle location input
-    else if (userMessage.startsWith("location")) {
-        userLocation = userMessage.slice(9).trim();
-        if (userLocation) {
-            displayMessage(responses[userLanguage]["location_confirm"], "bot");
-            if (userSpecialty) {
-                findDoctorsForSpecialtyAndLocation(userSpecialty, userLocation);
-            }
-        } else {
-            displayMessage("Please provide a valid location.", "bot");
-        }
-    }
-    // Check for diseases or symptoms
+    } 
     else {
-        checkForDisease(userMessage);
+        displayMessage(responses[userLanguage]["default"], "bot");
     }
 }
 
-// Handle Send Button Click
+// Send Button Click
 sendBtn.addEventListener("click", () => {
-    processUserInput();
+    const userMessage = userInput.value.trim();
+    if (userMessage !== "") {
+        displayMessage(userMessage, "user");
+        processUserMessage(userMessage);
+        userInput.value = "";
+    }
 });
 
-// Handle Enter Key Press
-userInput.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") {
-        processUserInput();
+// Press "Enter" to Send Message
+userInput.addEventListener("keypress", (event) => {
+    if (event.key === "Enter") {
+        sendBtn.click();
     }
 });
