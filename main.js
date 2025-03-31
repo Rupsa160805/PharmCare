@@ -51,7 +51,7 @@ const responses = {
         "default": "माफ़ कीजिए, मैं समझ नहीं सका। कृपया फिर से कहें।",
         "take_care": "अपना ख्याल रखें! और किसी सहायता की आवश्यकता हो तो बताइए।",
         "checkup": "बेहतर देखभाल के लिए परामर्श के साथ स्वास्थ्य जांच कराने पर विचार करें।",
-        "location_confirm": "समझ गया! मैं आपके स्थान के पास अस्पताल और क्लीनिक खोज रहा हूँ। कृपया प्रतीक्षा करें..."
+        "location_confirm": "समझ गया! मैं आपके स्थान के पास अस्पताल और क्लिनिक खोज रहा हूँ। कृपया प्रतीक्षा करें..."
     }
 };
 
@@ -102,24 +102,6 @@ function displayMessage(message, sender) {
     messageDiv.innerText = message;
     chatContainer.appendChild(messageDiv);
     chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll to bottom
-
-    // Speak Bot's response
-    if (sender === "bot") {
-        speakMessage(message, userLanguage);
-    }
-}
-
-// Speak Out Bot Responses
-function speakMessage(message, language) {
-    const utterance = new SpeechSynthesisUtterance(message);
-    if (language === "bn") {
-        utterance.lang = "bn-IN";
-    } else if (language === "hi") {
-        utterance.lang = "hi-IN";
-    } else {
-        utterance.lang = "en-US";
-    }
-    window.speechSynthesis.speak(utterance);
 }
 
 // Detect and Change User Language
