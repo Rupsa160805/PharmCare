@@ -131,7 +131,7 @@ function displayMessage(message, sender) {
 
 // Detect Language and Update Bot Response Language
 function detectLanguage(userMessage) {
-    const matchedLanguage = Object.keys(languageOptions).find(lang =>
+    const matchedLanguage = Object.keys(languageOptions).find((lang) =>
         userMessage.includes(lang.toLowerCase())
     );
 
@@ -177,47 +177,50 @@ function processUserMessage(userMessage) {
         return;
     }
 
-    // Check for Greetings
+    // Handle Greetings and Basic Responses
     if (["hello", "hi", "hey"].some((greet) => userMessage.includes(greet))) {
         displayMessage(responses[userLanguage]["hello"], "bot");
-    } 
-    else if (userMessage.includes("thank")) {
+    } else if (userMessage.includes("thank")) {
         displayMessage(responses[userLanguage]["thanks"], "bot");
-    } 
-    else if (userMessage.includes("sorry")) {
+    } else if (userMessage.includes("sorry")) {
         displayMessage(responses[userLanguage]["sorry"], "bot");
-    } 
-    else if (userMessage.includes("location")) {
+    } else if (userMessage.includes("location")) {
         displayMessage(responses[userLanguage]["location"], "bot");
-    }
-    else if (userMessage.includes("hospital") || userMessage.includes("clinic")) {
+    } else if (userMessage.includes("hospital") || userMessage.includes("clinic")) {
         displayMessage(responses[userLanguage]["hospital"], "bot");
-    }
-    else if (userMessage.includes("checkup")) {
+    } else if (userMessage.includes("checkup")) {
         displayMessage(responses[userLanguage]["checkup"], "bot");
-    }
-    else if (userMessage.includes("disease") || userMessage.includes("symptom")) {
+    } else if (userMessage.includes("disease") || userMessage.includes("symptom")) {
         displayMessage(responses[userLanguage]["ask_disease"], "bot");
-    }
-    else if (userMessage.includes("bye") || userMessage.includes("take care")) {
+    } else if (userMessage.includes("bye") || userMessage.includes("take care")) {
         displayMessage(responses[userLanguage]["take_care"], "bot");
-    } 
-    // Handle Location & Specialty
+    }
+    // Handle Location & Specialty Detection
     else if (userMessage.includes("kolkata") || userMessage.includes("delhi") || userMessage.includes("gurgaon")) {
         userLocation = userMessage;
         displayMessage(responses[userLanguage]["location_confirm"], "bot");
-    } 
-    else if (userMessage.includes("cardiology") || userMessage.includes("cancer") || userMessage.includes("orthopedics") || userMessage.includes("neurology")) {
-        userSpecialty = userMessage;
+        if (userSpecialty) {
+            findDoctorsForSpecialtyAndLocation(userSpecialty, userLocation);
+        }
+    } else if (userMessage.includes("heart") || userMessage.includes("cardiology") || userMessage.includes("cancer") || userMessage.includes("bones") || userMessage.includes("nerves")) {
+        userSpecialty = detectSpecialty(userMessage);
         if (userLocation) {
             findDoctorsForSpecialtyAndLocation(userSpecialty, userLocation);
         } else {
             displayMessage(responses[userLanguage]["location"], "bot");
         }
-    } 
-    else {
+    } else {
         displayMessage(responses[userLanguage]["default"], "bot");
     }
+}
+
+// Detect Specialty Based on User Message
+function detectSpecialty(userMessage) {
+    if (userMessage.includes("heart") || userMessage.includes("cardiology")) return "cardiology";
+    if (userMessage.includes("cancer")) return "cancer";
+    if (userMessage.includes("bones") || userMessage.includes("orthopedic")) return "orthopedics";
+    if (userMessage.includes("nerves") || userMessage.includes("neurology")) return "neurology";
+    return "";
 }
 
 // Send Button Click
