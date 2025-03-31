@@ -71,7 +71,8 @@ const responses = {
 const languageOptions = {
     "english": "en",
     "hindi": "hi",
-    "bengali": "bn"
+    "bengali": "bn",
+    "bangla": "bn"
 };
 
 // Default Language
@@ -209,7 +210,7 @@ function findNearestDoctors(userLat, userLon) {
 
 // Switch Language Based on User Input
 function switchLanguage(userMessage) {
-    const selectedLanguage = userMessage.split(" ")[1]?.toLowerCase();
+    const selectedLanguage = userMessage.split(" ").slice(-1)[0]?.toLowerCase();
     if (languageOptions[selectedLanguage]) {
         userLanguage = languageOptions[selectedLanguage];
         displayMessage(responses[userLanguage]["switch_language"], "bot");
@@ -242,7 +243,7 @@ function processUserInput() {
     userInput.value = "";
 
     // Handle language switching
-    if (userMessage.startsWith("switch to")) {
+    if (userMessage.startsWith("switch to") || userMessage.includes("change language")) {
         switchLanguage(userMessage);
     }
     // Handle basic responses
