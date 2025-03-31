@@ -38,7 +38,7 @@ let userLanguage = "en";
 // Store User Specialty
 let userSpecialty = "";
 
-// Dummy Data for Doctors and Hospitals (with approximate coordinates for matching)
+// Dummy Data for Hospitals and Doctors with Coordinates
 const hospitalData = [
     {
         name: "Apollo Hospital",
@@ -104,7 +104,7 @@ function displayMessage(message, sender) {
     chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll to bottom
 }
 
-// Get User’s Live Location Using Geolocation API
+// Get User's Live Location Using Geolocation API
 function getUserLocation() {
     if (navigator.geolocation) {
         displayMessage(responses[userLanguage]["location"], "bot");
@@ -112,7 +112,7 @@ function getUserLocation() {
             (position) => {
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
-                findNearestLocation(latitude, longitude);
+                findNearestDoctors(latitude, longitude);
             },
             () => {
                 displayMessage(responses[userLanguage]["location_error"], "bot");
@@ -123,31 +123,9 @@ function getUserLocation() {
     }
 }
 
-// Find the Nearest City/Location Based on Lat-Long
-function findNearestLocation(latitude, longitude) {
-    let nearestHospital = null;
-    let minDistance = Number.MAX_VALUE;
-
-    // Calculate distance between user and each hospital
-    hospitalData.forEach((hospital) => {
-        const distance = calculateDistance(latitude, longitude, hospital.coordinates.lat, hospital.coordinates.lon);
-        if (distance < minDistance) {
-            minDistance = distance;
-            nearestHospital = hospital.location.toLowerCase();
-        }
-    });
-
-    if (nearestHospital) {
-        displayMessage(`Location detected near: ${nearestHospital.charAt(0).toUpperCase() + nearestHospital.slice(1)}`, "bot");
-        findDoctorsForSpecialtyAndLocation(userSpecialty, nearestHospital);
-    } else {
-        displayMessage("Unable to detect nearby hospitals. Please enter your location manually.", "bot");
-    }
-}
-
-// Calculate Distance Using Haversine Formula
+// Haversine Formula to Calculate Distance Between Two Points
 function calculateDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371; // Radius of Earth in kilometers
+    const R = 6371; // Radius of the Earth in km
     const dLat = (lat2 - lat1) * (Math.PI / 180);
     const dLon = (lon2 - lon1) * (Math.PI / 180);
     const a =
@@ -158,7 +136,39 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
     return R * c;
 }
 
-// Check for Disease or Symptoms and Suggest Doctors & Hospitals
+// Find Nearest Hospitals Based on User's Location and Specialty
+function findNearestDoctors(userLat, userLon) {
+    let nearbyHospitals = [];
+
+    hospitalData.forEach((hospital) => {
+        if (
+            hospital.specialties.includes(userSpecialty.toLowerCase())
+        ) {
+            const distance = calculateDistance(
+                userLat,
+                userLon,
+                hospital.coordinates.lat,
+                hospital.coordinates.lon
+            );
+            nearbyHospitals.push({ ...hospital, distance });
+        }
+    });
+
+    // Sort hospitals by distance (nearest first)
+    nearbyHospitals.sort((a, b) => a.distance - b.distance);
+
+    if (nearbyHospitals.length > 0) {
+        let response = `${responses[userLanguage]["doctors_found"]}\n\n`;
+        nearbyHospitals.forEach((hospital) => {
+            response += `${hospital.name} - ${hospital.address}\nDoctor: ${hospital.doctors[userSpecialty]}\nDistance: ${hospital.distance.toFixed(2)} km\n\n`;
+        });
+        displayMessage(response, "bot");
+    } else {
+        displayMessage("No hospitals found nearby for your condition. Please try again.", "bot");
+    }
+}
+
+// Check for Disease or Symptoms and Suggest Specialty
 function checkForDisease(userMessage) {
     const matchedDisease = Object.keys(diseaseKeywords).find((disease) =>
         userMessage.includes(disease.toLowerCase())
@@ -169,28 +179,6 @@ function checkForDisease(userMessage) {
         getUserLocation(); // Automatically get location to suggest nearby doctors
     } else {
         displayMessage(responses[userLanguage]["ask_disease"], "bot");
-    }
-}
-
-// Find Doctors for Specialty and Location
-function findDoctorsForSpecialtyAndLocation(specialty, location) {
-    const matchingHospitals = hospitalData.filter(
-        (hospital) =>
-            hospital.location.toLowerCase() === location.toLowerCase() &&
-            hospital.specialties.map((s) => s.toLowerCase()).includes(specialty.toLowerCase())
-    );
-
-    if (matchingHospitals.length > 0) {
-        let response = `${responses[userLanguage]["doctors_found"]}\n\n`;
-        matchingHospitals.forEach((hospital) => {
-            response += `${hospital.name} - ${hospital.address}\nDoctor: ${hospital.doctors[specialty]}\n\n`;
-        });
-        displayMessage(response, "bot");
-    } else {
-        displayMessage(
-            `I'm sorry, I couldn't find any ${specialty} specialists near your location. Please try another condition.`,
-            "bot"
-        );
     }
 }
 
