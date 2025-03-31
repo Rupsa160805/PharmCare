@@ -1,6 +1,25 @@
 /* ============================
    Global Styles for All Pages
 =============================== */
+/* Logo Styles */
+#logo {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 100px; /* Adjust the size as needed */
+    height: auto;
+    cursor: pointer;
+    box-shadow: 0 0 12px #ffd700, 0 0 20px #ffd700; /* Optional glow effect */
+}
+
+/* Header Styles */
+header {
+    position: relative;
+    width: 100%;
+    height: 60px;
+    background-color: #001f3f; /* Prussian Blue Background */
+}
+
 body {
     font-family: "Poppins", Arial, sans-serif;
     margin: 0;
