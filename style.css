@@ -3,14 +3,6 @@
 =============================== */
 /* Logo Styles */
 /* Logo as Fixed Position */
-#logo {
-    position: absolute;
-    top: 5px;
-    left: 5px;
-    width: 60px; /* Adjust the size as needed */
-    height: auto;
-    cursor: pointer;
-    box-shadow: 0 0 12px #ffd700, 0 0 20px #ffd700; /* Optional glow effect */
 
 
 /* Header Styles */
