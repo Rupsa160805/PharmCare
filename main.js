@@ -123,7 +123,7 @@ function processInput(userMessage) {
     } else if (userMessage.includes("location") || userMessage.includes("address")) {
         askForLocation();
     } else if (isLocation(userMessage)) {
-        userLocation = userMessage;
+        userLocation = userMessage.toLowerCase();
         displayMessage(responses[userLanguage]["location_confirm"], "bot");
     } else if (userMessage.includes("hospital") || userMessage.includes("clinic") || userMessage.includes("checkup")) {
         if (userLocation) {
@@ -168,7 +168,7 @@ function askForLocation() {
 // Check if User Provided a Location
 function isLocation(message) {
     const locationKeywords = ["kolkata", "delhi", "mumbai", "chennai", "bangalore"];
-    return locationKeywords.some(location => message.includes(location));
+    return locationKeywords.some(location => message.includes(location.toLowerCase()));
 }
 
 // Capitalize First Letter of Text
@@ -199,26 +199,31 @@ function checkForDisease(userMessage) {
 
     // Check for matching disease keywords
     const matchedDisease = Object.keys(diseaseKeywords).find(disease =>
-        new RegExp(`\\b${disease}\\b`).test(userMessage)
+        new RegExp(`\\b${disease}\\b`, "i").test(userMessage)
     );
 
     if (matchedDisease) {
         const specialty = diseaseKeywords[matchedDisease];
-        findDoctorsForSpecialty(specialty);
+        if (userLocation) {
+            findDoctorsForSpecialtyAndLocation(specialty, userLocation);
+        } else {
+            displayMessage(responses[userLanguage]["location"], "bot");
+        }
     } else {
         displayMessage(responses[userLanguage]["default"], "bot");
     }
 }
 
-// Find Suitable Doctors and Hospitals Based on Specialties
-function findDoctorsForSpecialty(specialty) {
+// Find Suitable Doctors and Hospitals Based on Specialty and Location
+function findDoctorsForSpecialtyAndLocation(specialty, location) {
     const recommendedHospitals = hospitalData.filter(hospital =>
-        hospital.specialties.includes(specialty)
+        hospital.specialties.includes(specialty) &&
+        hospital.location.toLowerCase() === location.toLowerCase()
     );
 
     if (recommendedHospitals.length > 0) {
         displayMessage(
-            "Here are some hospitals and doctors specializing in your condition:",
+            `Here are some hospitals and doctors specializing in ${specialty} near ${capitalizeFirstLetter(location)}:`,
             "bot"
         );
 
@@ -233,7 +238,7 @@ function findDoctorsForSpecialty(specialty) {
         displayMessage(responses[userLanguage]["take_care"], "bot");
     } else {
         displayMessage(
-            "I'm sorry, I couldn't find a suitable hospital for that condition.",
+            `❗ Sorry, no hospitals found for ${specialty} near ${capitalizeFirstLetter(location)}.`,
             "bot"
         );
     }
@@ -242,7 +247,7 @@ function findDoctorsForSpecialty(specialty) {
 // Find Nearby Hospitals Based on Location
 function findNearbyHospitals(location) {
     const nearbyHospitals = hospitalData.filter(hospital =>
-        hospital.location.includes(location.toLowerCase())
+        hospital.location.toLowerCase() === location.toLowerCase()
     );
 
     if (nearbyHospitals.length > 0) {
