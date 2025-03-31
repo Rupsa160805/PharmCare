@@ -20,7 +20,8 @@ const responses = {
         "take_care": "Take care! Let me know if you need any assistance.",
         "checkup": "You should consider scheduling a health checkup along with consultation for better care.",
         "location_confirm": "Got it! I'll find hospitals and clinics near your location. Please wait a moment...",
-        "language_confirm": "Sure! I will now assist you in English."
+        "language_confirm": "Sure! I will now assist you in English.",
+        "doctor": "Doctor"
     },
     "hi": {
         "hello": "नमस्ते! आज मैं आपकी कैसे सहायता कर सकता हूँ?",
@@ -37,7 +38,8 @@ const responses = {
         "take_care": "ख्याल रखें! यदि आपको सहायता की आवश्यकता हो तो मुझे बताएं।",
         "checkup": "आपको बेहतर देखभाल के लिए परामर्श के साथ स्वास्थ्य जांच कराने पर विचार करना चाहिए।",
         "location_confirm": "समझ गया! मैं आपके स्थान के पास के अस्पताल और क्लीनिक खोज रहा हूँ। कृपया प्रतीक्षा करें...",
-        "language_confirm": "ठीक है! अब मैं आपकी हिंदी में सहायता करूंगा।"
+        "language_confirm": "ठीक है! अब मैं आपकी हिंदी में सहायता करूंगा।",
+        "doctor": "डॉक्टर"
     },
     "bn": {
         "hello": "নমস্কার! আপনাকে আজ কীভাবে সাহায্য করতে পারি?",
@@ -54,7 +56,8 @@ const responses = {
         "take_care": "নিজের খেয়াল রাখুন! সাহায্যের প্রয়োজন হলে আমাকে জানান।",
         "checkup": "ভালো যত্নের জন্য পরামর্শের পাশাপাশি স্বাস্থ্য পরীক্ষা করার কথা ভাবা উচিত।",
         "location_confirm": "পেয়েছি! আমি আপনার অবস্থানের কাছাকাছি হাসপাতাল এবং ক্লিনিক খুঁজছি। অনুগ্রহ করে অপেক্ষা করুন...",
-        "language_confirm": "ঠিক আছে! এখন আমি বাংলায় কথা বলব।"
+        "language_confirm": "ঠিক আছে! এখন আমি বাংলায় কথা বলব।",
+        "doctor": "ডাক্তার"
     }
 };
 
@@ -95,28 +98,6 @@ const hospitalData = [
             "cardiology": "Dr. S. Ghosh (Heart Specialist)",
             "gastroenterology": "Dr. B. Kumar (Stomach Specialist)"
         }
-    },
-    {
-        name: "Narayana Hospital",
-        address: "Delhi, India",
-        location: "delhi",
-        specialties: ["cardiology", "cancer", "neurology", "general checkup"],
-        doctors: {
-            "cardiology": "Dr. P. Rao (Heart Specialist)",
-            "cancer": "Dr. R. Iyer (Cancer Specialist)",
-            "neurology": "Dr. M. Singh (Nerve/Brain Specialist)"
-        }
-    },
-    {
-        name: "Medanta Hospital",
-        address: "Gurgaon, Haryana",
-        location: "gurgaon",
-        specialties: ["orthopedics", "cardiology", "neurology"],
-        doctors: {
-            "orthopedics": "Dr. A. Verma (Bone Specialist)",
-            "cardiology": "Dr. K. Malhotra (Heart Specialist)",
-            "neurology": "Dr. S. Kapoor (Nerve/Brain Specialist)"
-        }
     }
 ];
 
@@ -126,7 +107,7 @@ function displayMessage(message, sender) {
     messageDiv.className = sender === "bot" ? "bot-message" : "user-message";
     messageDiv.innerText = message;
     chatContainer.appendChild(messageDiv);
-    chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll to bottom
+    chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
 // Detect Language Change
@@ -206,35 +187,29 @@ function processUserInput() {
     // Handle predefined responses
     if (responses[userLanguage][userMessage]) {
         displayMessage(responses[userLanguage][userMessage], "bot");
+        return;
     }
-    // Handle location input
-    else if (userMessage.startsWith("location")) {
-        userLocation = userMessage.slice(9).trim(); // Extract location after "location"
-        if (userLocation) {
-            displayMessage(responses[userLanguage]["location_confirm"], "bot");
 
-            // If disease already provided, show relevant doctors
-            if (userSpecialty) {
-                findDoctorsForSpecialtyAndLocation(userSpecialty, userLocation);
-            }
-        } else {
-            displayMessage(responses[userLanguage]["location"], "bot");
+    // Handle location input
+    if (userMessage.includes("location") || userMessage.includes("near") || userMessage.includes("city")) {
+        userLocation = userMessage.replace("location", "").trim();
+        displayMessage(responses[userLanguage]["location_confirm"], "bot");
+        if (userSpecialty) {
+            findDoctorsForSpecialtyAndLocation(userSpecialty, userLocation);
         }
+        return;
     }
-    // Check for disease or specialty
-    else {
-        checkForDisease(userMessage);
-    }
+
+    // Check for disease or symptoms
+    checkForDisease(userMessage);
 }
 
-// Handle Send Button Click
-sendBtn.addEventListener("click", () => {
-    processUserInput();
-});
+// Add Event Listener to Send Button
+sendBtn.addEventListener("click", processUserInput);
 
-// Handle Enter Key Press
-userInput.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") {
+// Add Event Listener for Enter Key
+userInput.addEventListener("keypress", function (event) {
+    if (event.key === "Enter") {
         processUserInput();
     }
 });
