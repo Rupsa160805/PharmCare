@@ -23,7 +23,13 @@ const responses = {
         "doctors_found": "Here are the doctors and hospitals I found based on your condition:",
         "location_error": "I'm unable to retrieve your location. Please allow location access.",
         "switch_language": "Language switched successfully. How may I assist you now?",
-        "language_error": "Sorry, I currently support English, Hindi, and Bengali. Please choose one."
+        "language_error": "Sorry, I currently support English, Hindi, and Bengali. Please choose one.",
+        "ask_location": "Please enable location services so I can suggest nearby hospitals.",
+        "heart_disease": "For heart-related issues, you may consult a Cardiologist. Fetching nearby hospitals...",
+        "bone_issue": "For bone problems, an Orthopedic specialist would be helpful. Fetching nearby hospitals...",
+        "nerve_issue": "For nerve issues, I recommend consulting a Neurologist. Fetching nearby hospitals...",
+        "cancer_issue": "For cancer concerns, please consult an Oncologist. Fetching nearby hospitals...",
+        "skin_issue": "For skin problems, a Dermatologist is the best choice. Fetching nearby hospitals..."
     },
     "hi": {
         "hello": "नमस्ते! मैं आपकी कैसे सहायता कर सकता हूँ?",
@@ -43,7 +49,13 @@ const responses = {
         "doctors_found": "यहाँ आपके रोग के आधार पर मैंने डॉक्टर और अस्पताल ढूंढे हैं:",
         "location_error": "मैं आपका स्थान प्राप्त करने में असमर्थ हूँ। कृपया स्थान की अनुमति दें।",
         "switch_language": "भाषा सफलतापूर्वक बदली गई। अब मैं आपकी कैसे सहायता कर सकता हूँ?",
-        "language_error": "मुझे क्षमा करें, फिलहाल मैं केवल अंग्रेजी, हिंदी, और बांग्ला में सहायता कर सकता हूँ।"
+        "language_error": "मुझे क्षमा करें, फिलहाल मैं केवल अंग्रेजी, हिंदी, और बांग्ला में सहायता कर सकता हूँ।",
+        "ask_location": "कृपया स्थान सेवाएं सक्षम करें ताकि मैं निकटतम अस्पतालों का सुझाव दे सकूं।",
+        "heart_disease": "हृदय से जुड़ी समस्याओं के लिए, आप किसी हृदय रोग विशेषज्ञ से परामर्श करें। निकटतम अस्पतालों की जानकारी ला रहा हूँ...",
+        "bone_issue": "हड्डियों की समस्याओं के लिए, किसी अस्थि रोग विशेषज्ञ से परामर्श करें। निकटतम अस्पतालों की जानकारी ला रहा हूँ...",
+        "nerve_issue": "नसों की समस्याओं के लिए, किसी न्यूरोलॉजिस्ट से मिलें। निकटतम अस्पताल खोज रहा हूँ...",
+        "cancer_issue": "कैंसर के मामलों में, एक ऑन्कोलॉजिस्ट से परामर्श करें। निकटतम अस्पताल खोज रहा हूँ...",
+        "skin_issue": "त्वचा संबंधी समस्याओं के लिए, त्वचा विशेषज्ञ से मिलें। निकटतम अस्पताल खोज रहा हूँ..."
     },
     "bn": {
         "hello": "হ্যালো! আমি কীভাবে আপনাকে সাহায্য করতে পারি?",
@@ -63,7 +75,13 @@ const responses = {
         "doctors_found": "আপনার পরিস্থিতির উপর ভিত্তি করে আমি যে ডাক্তার ও হাসপাতাল পেয়েছি:",
         "location_error": "আমি আপনার অবস্থান সনাক্ত করতে পারছি না। দয়া করে অবস্থানের অনুমতি দিন।",
         "switch_language": "ভাষা সফলভাবে পরিবর্তিত হয়েছে। এখন আমি কীভাবে সাহায্য করতে পারি?",
-        "language_error": "দুঃখিত, আমি বর্তমানে শুধুমাত্র ইংরেজি, হিন্দি এবং বাংলা সমর্থন করি।"
+        "language_error": "দুঃখিত, আমি বর্তমানে শুধুমাত্র ইংরেজি, হিন্দি এবং বাংলা সমর্থন করি।",
+        "ask_location": "অনুগ্রহ করে অবস্থান পরিষেবা সক্রিয় করুন যাতে আমি নিকটবর্তী হাসপাতালগুলি সুপারিশ করতে পারি।",
+        "heart_disease": "হৃদরোগ সংক্রান্ত সমস্যার জন্য, একজন কার্ডিওলজিস্টের পরামর্শ নিন। কাছের হাসপাতালের তালিকা আনছি...",
+        "bone_issue": "হাড়ের সমস্যার জন্য একজন অর্থোপেডিক বিশেষজ্ঞের সাথে যোগাযোগ করুন। কাছাকাছি হাসপাতাল খুঁজছি...",
+        "nerve_issue": "স্নায়বিক সমস্যার জন্য একজন নিউরোলজিস্টের পরামর্শ নিন। কাছের হাসপাতালের সন্ধান করছি...",
+        "cancer_issue": "ক্যান্সার রোগের জন্য অনকোলজিস্টের পরামর্শ নিন। কাছের হাসপাতালের তথ্য আনছি...",
+        "skin_issue": "ত্বক সংক্রান্ত সমস্যার জন্য, একজন চর্মরোগ বিশেষজ্ঞের পরামর্শ নিন। নিকটবর্তী হাসপাতালের তালিকা আনছি..."
     }
 };
 
@@ -80,11 +98,18 @@ let userLanguage = "en";
 // Store User Specialty
 let userSpecialty = "";
 
-// Phrases to Switch Language
-const languageSwitchPhrases = {
-    "en": ["switch to english", "speak in english"],
-    "hi": ["switch to hindi", "hindi me baat karo", "hindi bolo"],
-    "bn": ["switch to bengali", "bangla te katha bolo", "speak in bengali"]
+// Detect Health Issues and Respond
+const healthConditions = {
+    "heart": "heart_disease",
+    "cardio": "heart_disease",
+    "bones": "bone_issue",
+    "orthopedic": "bone_issue",
+    "nerves": "nerve_issue",
+    "neurology": "nerve_issue",
+    "cancer": "cancer_issue",
+    "oncology": "cancer_issue",
+    "skin": "skin_issue",
+    "dermatology": "skin_issue"
 };
 
 // Display User and Bot Messages
@@ -99,24 +124,31 @@ function displayMessage(message, sender) {
 // Switch Language Based on User Input
 function switchLanguage(userMessage) {
     const lowerCaseMessage = userMessage.toLowerCase();
-
-    // Direct switch if user types "bengali", "hindi", or "english"
     if (languageOptions[lowerCaseMessage]) {
         userLanguage = languageOptions[lowerCaseMessage];
         displayMessage(responses[userLanguage]["switch_language"], "bot");
         return true;
     }
-
-    // Check for longer phrases like "switch to bengali"
-    for (const [lang, phrases] of Object.entries(languageSwitchPhrases)) {
-        if (phrases.some((phrase) => userMessage.includes(phrase))) {
-            userLanguage = lang;
-            displayMessage(responses[userLanguage]["switch_language"], "bot");
-            return true;
-        }
-    }
-
     return false;
+}
+
+// Fetch Nearby Hospitals Based on User Location
+function fetchNearbyHospitals(condition) {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                displayMessage(responses[userLanguage][condition], "bot");
+                displayMessage(`Fetching nearby hospitals for latitude: ${latitude}, longitude: ${longitude}...`, "bot");
+            },
+            () => {
+                displayMessage(responses[userLanguage]["location_error"], "bot");
+            }
+        );
+    } else {
+        displayMessage(responses[userLanguage]["location_error"], "bot");
+    }
 }
 
 // Process User Input and Respond
@@ -130,6 +162,14 @@ function processUserInput() {
     // Handle language switching
     if (switchLanguage(userMessage)) {
         return;
+    }
+
+    // Check for disease or symptoms
+    for (const [key, value] of Object.entries(healthConditions)) {
+        if (userMessage.includes(key)) {
+            fetchNearbyHospitals(value);
+            return;
+        }
     }
 
     // Handle basic responses
