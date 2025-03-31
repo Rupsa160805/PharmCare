@@ -33,8 +33,9 @@ const languageOptions = {
 // Default Language
 let userLanguage = "en";
 
-// Store User Location
+// Store User Location and Disease
 let userLocation = "";
+let userSpecialty = "";
 
 // Predefined List of Hospitals and Doctors
 const hospitalData = [
@@ -117,7 +118,6 @@ function checkForDisease(userMessage) {
         "heart": "cardiology",
         "cardiology": "cardiology",
         "cancer": "cancer",
-        "diabetes": "diabetes",
         "brain": "neurology",
         "nerves": "neurology",
         "neurology": "neurology",
@@ -144,14 +144,14 @@ function checkForDisease(userMessage) {
     );
 
     if (matchedDisease) {
-        const specialty = diseaseKeywords[matchedDisease];
+        userSpecialty = diseaseKeywords[matchedDisease];
         if (userLocation) {
-            findDoctorsForSpecialtyAndLocation(specialty, userLocation);
+            findDoctorsForSpecialtyAndLocation(userSpecialty, userLocation);
         } else {
             displayMessage(responses[userLanguage]["location"], "bot");
         }
     } else {
-        displayMessage(responses[userLanguage]["default"], "bot");
+        displayMessage(responses[userLanguage]["ask_disease"], "bot");
     }
 }
 
@@ -163,20 +163,31 @@ function processUserInput() {
     displayMessage(userMessage, "user");
     userInput.value = "";
 
-    // Handle greetings and basic responses
+    // Handle basic responses
     if (responses[userLanguage][userMessage]) {
         displayMessage(responses[userLanguage][userMessage], "bot");
     }
-    // Handle Location Input
+    // Handle location input
     else if (userMessage.startsWith("location")) {
-        userLocation = userMessage.slice(9).trim(); // Extracts location after "location "
+        userLocation = userMessage.slice(9).trim(); // Extract location after "location"
         if (userLocation) {
             displayMessage(responses[userLanguage]["location_confirm"], "bot");
+
+            // If disease already provided, show relevant doctors
+            if (userSpecialty) {
+                findDoctorsForSpecialtyAndLocation(userSpecialty, userLocation);
+            }
         } else {
             displayMessage("Please provide a valid location.", "bot");
         }
     }
-    // Check for Disease or Symptoms
+    // Handle follow-up questions
+    else if (userLocation === "" && userSpecialty === "") {
+        displayMessage(responses[userLanguage]["ask_disease"], "bot");
+    } else if (userLocation === "" && userSpecialty !== "") {
+        displayMessage(responses[userLanguage]["location"], "bot");
+    }
+    // Check for diseases or symptoms
     else {
         checkForDisease(userMessage);
     }
