@@ -153,25 +153,75 @@ function capitalizeFirstLetter(string) {
 
 // Check for Disease or Symptoms and Suggest Doctors & Hospitals
 function checkForDisease(userMessage) {
-    const diseaseKeywords = [
-        "cardiology", "heart", "cancer", "oncology", "diabetes", "neurology", "brain", "orthopedics", "bones",
-        "urology", "gynecology", "lungs", "pulmonology", "gastroenterology", "stomach", "general checkup", "checkup"
-    ];
+    const diseaseKeywords = {
+        "heart": "cardiology",
+        "cardiology": "cardiology",
+        "cancer": "cancer",
+        "diabetes": "diabetes",
+        "brain": "neurology",
+        "neurology": "neurology",
+        "bones": "orthopedics",
+        "orthopedics": "orthopedics",
+        "urology": "urology",
+        "gynecology": "gynecology",
+        "lungs": "pulmonology",
+        "pulmonology": "pulmonology",
+        "stomach": "gastroenterology",
+        "gastroenterology": "gastroenterology",
+        "checkup": "general checkup"
+    };
 
-    const matchedDisease = diseaseKeywords.find(disease => userMessage.includes(disease));
+    const matchedDisease = Object.keys(diseaseKeywords).find(disease =>
+        userMessage.includes(disease)
+    );
 
     if (matchedDisease) {
-        findHospitalsForDisease(matchedDisease);
+        const specialty = diseaseKeywords[matchedDisease];
+        findDoctorsForSpecialty(specialty);
     } else {
-        listAllDoctors();
+        displayMessage(responses[userLanguage]["default"], "bot");
     }
 }
 
-// Find Suitable Hospitals and Doctors Based on Disease
-function findHospitalsForDisease(disease) {
+// Find Suitable Doctors and Hospitals Based on Specialties
+function findDoctorsForSpecialty(specialty) {
     const recommendedHospitals = hospitalData.filter(hospital =>
-        hospital.specialties.some(specialty => disease.includes(specialty))
+        hospital.specialties.includes(specialty)
     );
 
     if (recommendedHospitals.length > 0) {
-        display
+        displayMessage(
+            userLanguage === "hi"
+                ? "यहाँ आपके रोग के लिए उपयुक्त अस्पताल और डॉक्टर हैं:"
+                : userLanguage === "bn"
+                ? "আপনার রোগের জন্য উপযুক্ত হাসপাতাল এবং ডাক্তারগুলি এখানে রয়েছে:"
+                : "Here are some hospitals and doctors specializing in your condition:",
+            "bot"
+        );
+
+        recommendedHospitals.forEach(hospital => {
+            const doctors = hospital.doctors.filter(doctor =>
+                doctor.toLowerCase().includes(specialty)
+            );
+
+            if (doctors.length > 0) {
+                displayMessage(`🏥 ${hospital.name} - ${hospital.address}`, "bot");
+                doctors.forEach(doctor => {
+                    displayMessage(`👨‍⚕️ ${doctor}`, "bot");
+                });
+            }
+        });
+
+        displayMessage(responses[userLanguage]["checkup"], "bot");
+        displayMessage(responses[userLanguage]["take_care"], "bot");
+    } else {
+        displayMessage(
+            userLanguage === "hi"
+                ? "मुझे उस बीमारी के लिए कोई उपयुक्त अस्पताल नहीं मिला।"
+                : userLanguage === "bn"
+                ? "আমি সেই রোগের জন্য কোনও উপযুক্ত হাসপাতাল খুঁজে পাইনি।"
+                : "I'm sorry, I couldn't find a suitable hospital for that condition.",
+            "bot"
+        );
+    }
+}
