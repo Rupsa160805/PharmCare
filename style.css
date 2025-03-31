@@ -6,7 +6,7 @@
     position: absolute;
     top: 5px;
     left: 5px;
-    width: 5px; /* Adjust the size as needed */
+    width: 60px; /* Adjust the size as needed */
     height: auto;
     cursor: pointer;
     box-shadow: 0 0 12px #ffd700, 0 0 20px #ffd700; /* Optional glow effect */
