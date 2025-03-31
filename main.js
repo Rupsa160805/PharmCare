@@ -22,36 +22,36 @@ const responses = {
         "location_confirm": "Got it! I'll find hospitals and clinics near your location. Please wait a moment..."
     },
     "hi": {
-        "hello": "नमस्ते! आज मैं आपकी कैसे मदद कर सकता हूँ?",
-        "hi": "नमस्ते! कैसे मदद कर सकता हूँ?",
-        "thanks": "आपका स्वागत है! और किसी सहायता की आवश्यकता हो तो बताएं।",
+        "hello": "नमस्ते! आज मैं आपकी कैसे सहायता कर सकता हूँ?",
+        "hi": "नमस्ते! मैं आपकी कैसे सहायता कर सकता हूँ?",
+        "thanks": "आपका स्वागत है! यदि आपको और सहायता चाहिए तो बताएं।",
         "thank you": "धन्यवाद! स्वस्थ रहें।",
-        "sorry": "कोई बात नहीं! मैं आपकी कैसे मदद कर सकता हूँ?",
-        "location": "कृपया अपना स्थान साझा करें ताकि हम नजदीकी अस्पताल या क्लिनिक ढूंढ सकें।",
-        "clinic": "आपके स्थान के पास क्लिनिक की खोज कर रहा हूँ। कृपया प्रतीक्षा करें...",
-        "language": "मैं कई भाषाओं में सहायता कर सकता हूँ। आप किस भाषा को पसंद करते हैं? (अंग्रेजी, हिंदी, बंगाली आदि)",
-        "hospital": "नजदीकी अस्पतालों की खोज कर रहा हूँ...",
-        "ask_disease": "कृपया अपना रोग या लक्षण बताएं ताकि मैं उपयुक्त डॉक्टर और अस्पताल सुझा सकूं।",
-        "default": "मुझे क्षमा करें, मैं समझ नहीं पाया। कृपया दोबारा कोशिश करें।",
-        "take_care": "अपना ध्यान रखें! किसी भी सहायता की आवश्यकता हो तो बताएं।",
-        "checkup": "बेहतर देखभाल के लिए परामर्श के साथ एक स्वास्थ्य जांच कराने पर विचार करें।",
-        "location_confirm": "समझ गया! मैं आपके स्थान के आसपास के अस्पतालों और क्लीनिकों को खोजूंगा। कृपया प्रतीक्षा करें..."
+        "sorry": "कोई बात नहीं! मैं आपकी किस प्रकार सहायता कर सकता हूँ?",
+        "location": "निकटतम क्लिनिक या अस्पताल खोजने के लिए कृपया अपना स्थान साझा करें।",
+        "clinic": "आपके स्थान के पास क्लिनिक खोज रहा हूँ। कृपया प्रतीक्षा करें...",
+        "language": "मैं कई भाषाओं में सहायता कर सकता हूँ। आप कौन सी भाषा पसंद करेंगे? (अंग्रेज़ी, हिंदी, बंगाली आदि)",
+        "hospital": "मेडिकल जांच और चेकअप के लिए निकटतम अस्पताल खोज रहा हूँ...",
+        "ask_disease": "कृपया अपना रोग या लक्षण बताएं ताकि मैं उपयुक्त डॉक्टर और अस्पताल की सिफारिश कर सकूं।",
+        "default": "मुझे खेद है, मैं इसे समझ नहीं सका। कृपया पुनः कहें।",
+        "take_care": "अपना ख्याल रखें! अगर आपको कोई सहायता चाहिए तो बताएं।",
+        "checkup": "बेहतर देखभाल के लिए आपको स्वास्थ्य जांच और परामर्श करवाना चाहिए।",
+        "location_confirm": "समझ गया! मैं आपके स्थान के पास अस्पताल और क्लिनिक खोजूंगा। कृपया प्रतीक्षा करें..."
     },
     "bn": {
-        "hello": "নমস্কার! আজ আমি আপনাকে কীভাবে সাহায্য করতে পারি?",
-        "hi": "হাই! বলুন কিভাবে সাহায্য করতে পারি?",
-        "thanks": "আপনার স্বাগতম! আরও কিছু সাহায্যের প্রয়োজন হলে বলুন।",
+        "hello": "হ্যালো! আমি আপনাকে আজ কীভাবে সাহায্য করতে পারি?",
+        "hi": "হাই! আমি কীভাবে সাহায্য করতে পারি?",
+        "thanks": "আপনার স্বাগতম! আরও সাহায্যের প্রয়োজন হলে জানান।",
         "thank you": "ধন্যবাদ! সুস্থ থাকুন।",
         "sorry": "কোনো সমস্যা নেই! আমি কীভাবে সাহায্য করতে পারি?",
-        "location": "আপনার বর্তমান অবস্থান জানান যাতে আমি কাছের ক্লিনিক বা হাসপাতাল খুঁজে দিতে পারি।",
-        "clinic": "আপনার অবস্থানের কাছাকাছি ক্লিনিক খুঁজছি। একটু অপেক্ষা করুন...",
-        "language": "আমি একাধিক ভাষায় সাহায্য করতে পারি। আপনি কোন ভাষা পছন্দ করেন? (ইংরেজি, হিন্দি, বাংলা ইত্যাদি)",
-        "hospital": "কাছাকাছি হাসপাতালগুলোর সন্ধান করছি...",
-        "ask_disease": "আপনার রোগ বা উপসর্গের নাম বলুন যাতে আমি যথাযথ ডাক্তার ও হাসপাতাল সুপারিশ করতে পারি।",
-        "default": "দুঃখিত, আমি বুঝতে পারিনি। অনুগ্রহ করে আবার বলুন।",
-        "take_care": "সাবধানে থাকুন! কোনো সাহায্যের প্রয়োজন হলে আমাকে জানান।",
-        "checkup": "উন্নত চিকিৎসার জন্য পরামর্শের পাশাপাশি একটি স্বাস্থ্য পরীক্ষা নির্ধারণ করুন।",
-        "location_confirm": "বুঝেছি! আমি আপনার অবস্থানের নিকটবর্তী হাসপাতাল এবং ক্লিনিক খুঁজছি। অনুগ্রহ করে অপেক্ষা করুন..."
+        "location": "নিকটস্থ ক্লিনিক বা হাসপাতাল খুঁজতে দয়া করে আপনার অবস্থান শেয়ার করুন।",
+        "clinic": "আপনার অবস্থানের নিকটবর্তী ক্লিনিক খুঁজছি... অনুগ্রহ করে অপেক্ষা করুন।",
+        "language": "আমি বিভিন্ন ভাষায় সাহায্য করতে পারি। আপনি কোন ভাষা পছন্দ করবেন? (ইংরেজি, হিন্দি, বাংলা ইত্যাদি)",
+        "hospital": "চিকিৎসা পরীক্ষা এবং চেকআপের জন্য নিকটস্থ হাসপাতাল খুঁজছি...",
+        "ask_disease": "আপনার রোগ বা লক্ষণ বলুন যাতে আমি উপযুক্ত ডাক্তার এবং হাসপাতাল সুপারিশ করতে পারি।",
+        "default": "দুঃখিত, আমি এটি বুঝতে পারিনি। অনুগ্রহ করে পুনরায় বলুন।",
+        "take_care": "সাবধানে থাকুন! আপনাকে আরও সাহায্য করতে পারলে বলুন।",
+        "checkup": "ভালো চিকিৎসার জন্য আপনাকে স্বাস্থ্য পরীক্ষা এবং পরামর্শ নেওয়া উচিত।",
+        "location_confirm": "বুঝেছি! আমি আপনার অবস্থানের কাছাকাছি হাসপাতাল এবং ক্লিনিক খুঁজছি... অনুগ্রহ করে অপেক্ষা করুন।"
     }
 };
 
@@ -103,6 +103,17 @@ const hospitalData = [
             "cancer": "Dr. R. Iyer (Cancer Specialist)",
             "neurology": "Dr. M. Singh (Nerve/Brain Specialist)"
         }
+    },
+    {
+        name: "Medanta Hospital",
+        address: "Gurgaon, Haryana",
+        location: "gurgaon",
+        specialties: ["orthopedics", "cardiology", "neurology"],
+        doctors: {
+            "orthopedics": "Dr. A. Verma (Bone Specialist)",
+            "cardiology": "Dr. K. Malhotra (Heart Specialist)",
+            "neurology": "Dr. S. Kapoor (Nerve/Brain Specialist)"
+        }
     }
 ];
 
@@ -144,8 +155,8 @@ function checkForDisease(userMessage) {
         "neurology": "neurology",
         "bones": "orthopedics",
         "orthopedic": "orthopedics",
-        "urology": "urology",
         "stomach": "gastroenterology",
+        "gastro": "gastroenterology",
         "checkup": "general checkup"
     };
 
@@ -174,19 +185,20 @@ function processUserInput() {
     displayMessage(userMessage, "user");
     userInput.value = "";
 
-    // Language Preference Handling
-    if (userMessage.includes("english")) {
-        userLanguage = "en";
-        displayMessage("Language changed to English.", "bot");
+    // Check if user wants to change language
+    if (userMessage.includes("language") || userMessage.includes("bhasha")) {
+        displayMessage(responses[userLanguage]["language"], "bot");
     } else if (userMessage.includes("hindi")) {
         userLanguage = "hi";
-        displayMessage("भाषा हिंदी में बदल दी गई।", "bot");
+        displayMessage("ठीक है! अब मैं हिंदी में आपकी सहायता करूंगा।", "bot");
     } else if (userMessage.includes("bengali") || userMessage.includes("bangla")) {
         userLanguage = "bn";
-        displayMessage("ভাষা বাংলা তে পরিবর্তন করা হয়েছে।", "bot");
+        displayMessage("ঠিক আছে! এখন থেকে আমি বাংলায় কথা বলব।", "bot");
+    } else if (userMessage.includes("english")) {
+        userLanguage = "en";
+        displayMessage("Okay! I will now assist you in English.", "bot");
     }
-
-    // Handle basic responses
+    // Handle greetings and responses
     else if (responses[userLanguage][userMessage]) {
         displayMessage(responses[userLanguage][userMessage], "bot");
     }
@@ -201,10 +213,10 @@ function processUserInput() {
                 findDoctorsForSpecialtyAndLocation(userSpecialty, userLocation);
             }
         } else {
-            displayMessage(responses[userLanguage]["location"], "bot");
+            displayMessage("Please provide a valid location.", "bot");
         }
     }
-    // Handle symptoms or diseases
+    // Check for diseases or symptoms
     else {
         checkForDisease(userMessage);
     }
