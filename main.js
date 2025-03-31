@@ -20,16 +20,15 @@ const responses = {
         "take_care": "Take care! Let me know if you need any assistance.",
         "checkup": "You should consider scheduling a health checkup along with consultation for better care.",
         "location_confirm": "Got it! I'll find hospitals and clinics near your location. Please wait a moment...",
-        "heart_doctors": "Here are some cardiologists near your location:",
-        "bones_doctors": "Here are some orthopedic doctors near your location:",
-        "cancer_doctors": "Here are some oncologists near your location:",
-        "skin_doctors": "Here are some dermatologists near your location:"
+        "doctors_found": "Here are the doctors and hospitals I found based on your condition."
     }
 };
 
 // Available Languages
 const languageOptions = {
-    "english": "en"
+    "english": "en",
+    "hindi": "hi",
+    "bengali": "bn"
 };
 
 // Default Language
@@ -39,42 +38,59 @@ let userLanguage = "en";
 let userLocation = "";
 let userSpecialty = "";
 
-// Sample Hospital and Doctor Data
+// Dummy Data for Doctors and Hospitals
 const hospitalData = [
     {
         name: "Apollo Hospital",
         address: "Salt Lake, Kolkata",
         location: "kolkata",
-        specialties: ["cardiology", "orthopedics", "oncology", "dermatology"],
+        specialties: ["cardiology", "orthopedics", "neurology", "dermatology"],
         doctors: {
-            "cardiology": "Dr. Rajiv Kapoor",
-            "orthopedics": "Dr. Amit Gupta",
-            "oncology": "Dr. Priya Sharma",
-            "dermatology": "Dr. Sneha Bose"
+            "cardiology": "Dr. Anil Sharma",
+            "orthopedics": "Dr. Rakesh Gupta",
+            "neurology": "Dr. Rajeev Nair",
+            "dermatology": "Dr. Priya Mukherjee"
         }
     },
     {
         name: "Fortis Hospital",
         address: "Rajarhat, Kolkata",
         location: "kolkata",
-        specialties: ["cardiology", "orthopedics", "oncology"],
+        specialties: ["cardiology", "cancer", "gastroenterology"],
         doctors: {
-            "cardiology": "Dr. Sandeep Bhalla",
-            "orthopedics": "Dr. Ravi Verma",
-            "oncology": "Dr. Meenal Joshi"
+            "cardiology": "Dr. Suresh Patel",
+            "cancer": "Dr. Pooja Mehta",
+            "gastroenterology": "Dr. Alok Sen"
         }
     },
     {
-        name: "AMRI Hospital",
-        address: "Dhakuria, Kolkata",
+        name: "Medica Super Specialty Hospital",
+        address: "Mukundapur, Kolkata",
         location: "kolkata",
-        specialties: ["cardiology", "dermatology"],
+        specialties: ["orthopedics", "neurology", "cancer"],
         doctors: {
-            "cardiology": "Dr. Sunil Mehta",
-            "dermatology": "Dr. Anjali Sen"
+            "orthopedics": "Dr. Kunal Roy",
+            "neurology": "Dr. Amit Dutta",
+            "cancer": "Dr. Ananya Basu"
         }
     }
 ];
+
+// Disease-to-Specialty Mapping
+const diseaseKeywords = {
+    "heart": "cardiology",
+    "cardiology": "cardiology",
+    "cancer": "cancer",
+    "brain": "neurology",
+    "nerves": "neurology",
+    "neurology": "neurology",
+    "bones": "orthopedics",
+    "orthopedic": "orthopedics",
+    "stomach": "gastroenterology",
+    "gastro": "gastroenterology",
+    "skin": "dermatology",
+    "checkup": "general checkup"
+};
 
 // Display User and Bot Messages
 function displayMessage(message, sender) {
@@ -87,15 +103,15 @@ function displayMessage(message, sender) {
 
 // Detect Language Switch Requests
 function detectLanguageSwitch(userMessage) {
-    if (userMessage.includes("hindi")) {
+    if (userMessage.includes("hindi") || userMessage.includes("हिंदी")) {
         userLanguage = "hi";
         displayMessage("ठीक है! अब मैं हिंदी में आपकी सहायता करूंगा।", "bot");
         return true;
-    } else if (userMessage.includes("bengali")) {
+    } else if (userMessage.includes("bengali") || userMessage.includes("bangla") || userMessage.includes("বাংলা")) {
         userLanguage = "bn";
         displayMessage("ঠিক আছে! এখন থেকে আমি বাংলায় কথা বলব।", "bot");
         return true;
-    } else if (userMessage.includes("english")) {
+    } else if (userMessage.includes("english") || userMessage.includes("अंग्रेजी") || userMessage.includes("ইংরেজি")) {
         userLanguage = "en";
         displayMessage("Okay! I will now assist you in English.", "bot");
         return true;
@@ -105,17 +121,6 @@ function detectLanguageSwitch(userMessage) {
 
 // Check for Disease or Symptoms and Suggest Doctors & Hospitals
 function checkForDisease(userMessage) {
-    const diseaseKeywords = {
-        "heart": "cardiology",
-        "cardiology": "cardiology",
-        "cancer": "oncology",
-        "oncology": "oncology",
-        "bones": "orthopedics",
-        "orthopedic": "orthopedics",
-        "skin": "dermatology",
-        "dermatology": "dermatology"
-    };
-
     const matchedDisease = Object.keys(diseaseKeywords).find(disease =>
         userMessage.includes(disease.toLowerCase())
     );
@@ -140,13 +145,13 @@ function findDoctorsForSpecialtyAndLocation(specialty, location) {
     );
 
     if (matchingHospitals.length > 0) {
-        let response = `${responses[userLanguage][specialty + "_doctors"]}\n\n`;
+        let response = `${responses[userLanguage]["doctors_found"]}\n\n`;
         matchingHospitals.forEach(hospital => {
             response += `${hospital.name} - ${hospital.address}\nDoctor: ${hospital.doctors[specialty]}\n\n`;
         });
         displayMessage(response, "bot");
     } else {
-        displayMessage("Sorry, I couldn't find any suitable doctors nearby. Please try again with a different location.", "bot");
+        displayMessage(responses[userLanguage]["default"], "bot");
     }
 }
 
@@ -164,7 +169,7 @@ function processUserInput() {
     }
 
     // Check if user wants to know about available languages
-    if (userMessage.includes("language")) {
+    if (userMessage.includes("language") || userMessage.includes("bhasha") || userMessage.includes("ভাষা")) {
         displayMessage(responses[userLanguage]["language"], "bot");
         return;
     }
@@ -182,7 +187,7 @@ function processUserInput() {
             displayMessage(responses[userLanguage]["location"], "bot");
         }
     }
-    // Check for disease/specialty
+    // Check for disease/specialty and suggest doctors
     else {
         checkForDisease(userMessage);
     }
