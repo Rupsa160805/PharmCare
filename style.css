@@ -3,17 +3,14 @@
 =============================== */
 /* Logo Styles */
 /* Logo as Fixed Position */
-.logo-container {
-    position: fixed;
+#logo {
+    position: absolute;
     top: 5px;
     left: 5px;
-    width: 60px;
-    height: 60px;
-    background-image: url('logo.jpg');
-    background-size: contain;
-    background-repeat: no-repeat;
-    z-index: 999;
-}
+    width: 60px; /* Adjust the size as needed */
+    height: auto;
+    cursor: pointer;
+    box-shadow: 0 0 12px #ffd700, 0 0 20px #ffd700; /* Optional glow effect */
 
 
 /* Header Styles */
