@@ -15,8 +15,9 @@ const responses = {
         "clinic": "I’m searching for clinics near your location. Please wait a moment...",
         "language": "I can assist you in multiple languages. Which language do you prefer? (English, Hindi, Bengali, etc.)",
         "hospital": "Searching for nearby hospitals for medical tests and checkups...",
-        "ask_disease": "Please mention your disease or symptoms so I can suggest suitable hospitals.",
-        "default": "I'm sorry, I didn't understand that. Can you please rephrase?"
+        "ask_disease": "Please mention your disease or symptoms so I can suggest suitable doctors and hospitals.",
+        "default": "I'm sorry, I didn't understand that. Can you please rephrase?",
+        "take_care": "Take care! Let me know if you need any assistance."
     },
     "hi": {
         "hello": "नमस्ते! आज मैं आपकी किस प्रकार सहायता कर सकता हूँ?",
@@ -28,8 +29,9 @@ const responses = {
         "clinic": "मैं आपके स्थान के पास क्लिनिक खोज रहा हूँ। कृपया प्रतीक्षा करें...",
         "language": "मैं कई भाषाओं में आपकी सहायता कर सकता हूँ। आप कौन सी भाषा पसंद करते हैं? (अंग्रेजी, हिंदी, बंगाली आदि)",
         "hospital": "चिकित्सा परीक्षण और स्वास्थ्य जांच के लिए निकटतम अस्पताल खोज रहा हूँ...",
-        "ask_disease": "कृपया अपनी बीमारी या लक्षण बताएं ताकि मैं उचित अस्पताल सुझा सकूँ।",
-        "default": "मुझे क्षमा करें, मैंने समझा नहीं। कृपया दोबारा प्रयास करें।"
+        "ask_disease": "कृपया अपनी बीमारी या लक्षण बताएं ताकि मैं उचित डॉक्टर और अस्पताल सुझा सकूँ।",
+        "default": "मुझे क्षमा करें, मैंने समझा नहीं। कृपया दोबारा प्रयास करें।",
+        "take_care": "ख्याल रखना! अगर आपको और सहायता चाहिए तो बताएं।"
     },
     "bn": {
         "hello": "হ্যালো! আজ আমি কীভাবে আপনার সহায়তা করতে পারি?",
@@ -41,8 +43,9 @@ const responses = {
         "clinic": "আপনার অবস্থানের কাছাকাছি ক্লিনিক খুঁজছি। অনুগ্রহ করে অপেক্ষা করুন...",
         "language": "আমি আপনাকে বিভিন্ন ভাষায় সহায়তা করতে পারি। আপনি কোন ভাষা পছন্দ করবেন? (ইংরেজি, হিন্দি, বাংলা ইত্যাদি)",
         "hospital": "চিকিৎসা পরীক্ষা এবং স্বাস্থ্য পরীক্ষার জন্য কাছাকাছি হাসপাতাল খুঁজছি...",
-        "ask_disease": "অনুগ্রহ করে আপনার রোগ বা লক্ষণগুলি বলুন যাতে আমি উপযুক্ত হাসপাতাল সুপারিশ করতে পারি।",
-        "default": "আমি দুঃখিত, আমি এটি বুঝতে পারিনি। দয়া করে আবার বলুন।"
+        "ask_disease": "অনুগ্রহ করে আপনার রোগ বা লক্ষণগুলি বলুন যাতে আমি উপযুক্ত ডাক্তার ও হাসপাতাল সুপারিশ করতে পারি।",
+        "default": "আমি দুঃখিত, আমি এটি বুঝতে পারিনি। দয়া করে আবার বলুন।",
+        "take_care": "সাবধানে থাকুন! আমাকে জানান যদি আপনার কোনো সাহায্যের প্রয়োজন হয়।"
     }
 };
 
@@ -56,12 +59,12 @@ const languageOptions = {
 // Default Language
 let userLanguage = "en";
 
-// Predefined List of Hospitals
+// Predefined List of Hospitals and Doctors
 const hospitalData = [
-    { name: "Apollo Hospital", address: "Kolkata, West Bengal", lat: 22.5726, lng: 88.3639, specialties: ["cardiology", "orthopedics", "neurology"] },
-    { name: "Fortis Hospital", address: "Kolkata, West Bengal", lat: 22.5795, lng: 88.4336, specialties: ["cancer", "cardiology", "gastroenterology"] },
-    { name: "AMRI Hospital", address: "Dhakuria, Kolkata", lat: 22.5124, lng: 88.3709, specialties: ["orthopedics", "neurology", "urology"] },
-    { name: "Ruby General Hospital", address: "Kolkata, West Bengal", lat: 22.5154, lng: 88.4076, specialties: ["diabetes", "gynecology", "pulmonology"] }
+    { name: "Apollo Hospital", address: "Kolkata, West Bengal", lat: 22.5726, lng: 88.3639, specialties: ["cardiology", "orthopedics", "neurology"], doctors: ["Dr. R. Sharma (Cardiologist)", "Dr. A. Das (Orthopedic)", "Dr. M. Roy (Neurologist)"] },
+    { name: "Fortis Hospital", address: "Kolkata, West Bengal", lat: 22.5795, lng: 88.4336, specialties: ["cancer", "cardiology", "gastroenterology"], doctors: ["Dr. P. Mehta (Oncologist)", "Dr. S. Ghosh (Cardiologist)", "Dr. B. Kumar (Gastroenterologist)"] },
+    { name: "AMRI Hospital", address: "Dhakuria, Kolkata", lat: 22.5124, lng: 88.3709, specialties: ["orthopedics", "neurology", "urology"], doctors: ["Dr. T. Sen (Orthopedic)", "Dr. K. Gupta (Neurologist)", "Dr. R. Chakraborty (Urologist)"] },
+    { name: "Ruby General Hospital", address: "Kolkata, West Bengal", lat: 22.5154, lng: 88.4076, specialties: ["diabetes", "gynecology", "pulmonology"], doctors: ["Dr. S. Bose (Diabetologist)", "Dr. N. Banerjee (Gynecologist)", "Dr. A. Dasgupta (Pulmonologist)"] }
 ];
 
 // Handle Send Button Click
@@ -94,7 +97,7 @@ function processInput(userMessage) {
     } else if (userMessage in responses[userLanguage]) {
         displayMessage(responses[userLanguage][userMessage], "bot");
     } else {
-        displayMessage(responses[userLanguage]["default"], "bot");
+        checkForDisease(userMessage);
     }
 }
 
@@ -125,18 +128,54 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-// Find Suitable Hospitals Based on Disease
+// Check for Disease or Symptoms and Suggest Doctors & Hospitals
+function checkForDisease(userMessage) {
+    const diseaseKeywords = [
+        "cardiology", "heart", "cancer", "oncology", "diabetes", "neurology", "brain", "orthopedics", "bones",
+        "urology", "gynecology", "lungs", "pulmonology", "gastroenterology", "stomach"
+    ];
+
+    const matchedDisease = diseaseKeywords.find(disease => userMessage.includes(disease));
+
+    if (matchedDisease) {
+        findHospitalsForDisease(matchedDisease);
+    } else {
+        displayMessage(responses[userLanguage]["default"], "bot");
+    }
+}
+
+// Find Suitable Hospitals and Doctors Based on Disease
 function findHospitalsForDisease(disease) {
     const recommendedHospitals = hospitalData.filter(hospital =>
         hospital.specialties.some(specialty => disease.includes(specialty))
     );
 
     if (recommendedHospitals.length > 0) {
-        displayMessage("Here are some hospitals specializing in your condition:", "bot");
+        displayMessage(
+            userLanguage === "hi"
+                ? "यहाँ आपके रोग के लिए उपयुक्त अस्पताल और डॉक्टर हैं:"
+                : userLanguage === "bn"
+                ? "আপনার রোগের জন্য উপযুক্ত হাসপাতাল এবং ডাক্তারগুলি এখানে রয়েছে:"
+                : "Here are some hospitals and doctors specializing in your condition:",
+            "bot"
+        );
+
         recommendedHospitals.forEach(hospital => {
             displayMessage(`${hospital.name} - ${hospital.address}`, "bot");
+            hospital.doctors.forEach(doctor => {
+                displayMessage(`👨‍⚕️ ${doctor}`, "bot");
+            });
         });
+
+        displayMessage(responses[userLanguage]["take_care"], "bot");
     } else {
-        displayMessage("I'm sorry, I couldn't find a hospital for that condition.", "bot");
+        displayMessage(
+            userLanguage === "hi"
+                ? "मुझे उस बीमारी के लिए कोई उपयुक्त अस्पताल नहीं मिला।"
+                : userLanguage === "bn"
+                ? "আমি সেই রোগের জন্য কোনও উপযুক্ত হাসপাতাল খুঁজে পাইনি।"
+                : "I'm sorry, I couldn't find a suitable hospital for that condition.",
+            "bot"
+        );
     }
 }
