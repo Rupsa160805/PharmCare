@@ -80,11 +80,11 @@ let userLanguage = "en";
 // Store User Specialty
 let userSpecialty = "";
 
-// Phrases to Switch Languages
+// Phrases to Switch Language
 const languageSwitchPhrases = {
-    "en": ["switch to english", "talk to me in english", "can we talk in english"],
-    "hi": ["switch to hindi", "hindi me baat karo", "can we talk in hindi"],
-    "bn": ["switch to bengali", "bangla te katha bolo", "can we talk in bengali"]
+    "en": ["switch to english", "speak in english"],
+    "hi": ["switch to hindi", "hindi me baat karo", "hindi bolo"],
+    "bn": ["switch to bengali", "bangla te katha bolo", "speak in bengali"]
 };
 
 // Display User and Bot Messages
@@ -98,6 +98,16 @@ function displayMessage(message, sender) {
 
 // Switch Language Based on User Input
 function switchLanguage(userMessage) {
+    const lowerCaseMessage = userMessage.toLowerCase();
+
+    // Direct switch if user types "bengali", "hindi", or "english"
+    if (languageOptions[lowerCaseMessage]) {
+        userLanguage = languageOptions[lowerCaseMessage];
+        displayMessage(responses[userLanguage]["switch_language"], "bot");
+        return true;
+    }
+
+    // Check for longer phrases like "switch to bengali"
     for (const [lang, phrases] of Object.entries(languageSwitchPhrases)) {
         if (phrases.some((phrase) => userMessage.includes(phrase))) {
             userLanguage = lang;
@@ -105,6 +115,7 @@ function switchLanguage(userMessage) {
             return true;
         }
     }
+
     return false;
 }
 
@@ -118,7 +129,7 @@ function processUserInput() {
 
     // Handle language switching
     if (switchLanguage(userMessage)) {
-        return; // Language switched successfully
+        return;
     }
 
     // Handle basic responses
