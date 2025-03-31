@@ -80,13 +80,12 @@ let userLanguage = "en";
 // Store User Specialty
 let userSpecialty = "";
 
-// Pattern Matching for Language Switching
-const languagePatterns = [
-    /switch to (\w+)/i,
-    /change language to (\w+)/i,
-    /speak in (\w+)/i,
-    /use (\w+)/i
-];
+// Phrases to Switch Languages
+const languageSwitchPhrases = {
+    "en": ["switch to english", "talk to me in english", "can we talk in english"],
+    "hi": ["switch to hindi", "hindi me baat karo", "can we talk in hindi"],
+    "bn": ["switch to bengali", "bangla te katha bolo", "can we talk in bengali"]
+};
 
 // Display User and Bot Messages
 function displayMessage(message, sender) {
@@ -99,37 +98,14 @@ function displayMessage(message, sender) {
 
 // Switch Language Based on User Input
 function switchLanguage(userMessage) {
-    let selectedLanguage = null;
-
-    for (const pattern of languagePatterns) {
-        const match = userMessage.match(pattern);
-        if (match && match[1]) {
-            selectedLanguage = match[1].toLowerCase();
-            break;
+    for (const [lang, phrases] of Object.entries(languageSwitchPhrases)) {
+        if (phrases.some((phrase) => userMessage.includes(phrase))) {
+            userLanguage = lang;
+            displayMessage(responses[userLanguage]["switch_language"], "bot");
+            return true;
         }
     }
-
-    if (selectedLanguage && languageOptions[selectedLanguage]) {
-        userLanguage = languageOptions[selectedLanguage];
-        displayMessage(responses[userLanguage]["switch_language"], "bot");
-    } else {
-        displayMessage(responses[userLanguage]["language_error"], "bot");
-    }
-}
-
-// Check for Disease or Symptoms and Suggest Specialty
-function checkForDisease(userMessage) {
-    const matchedDisease = Object.keys(diseaseKeywords).find((disease) =>
-        userMessage.includes(disease.toLowerCase())
-    );
-
-    if (matchedDisease) {
-        userSpecialty = diseaseKeywords[matchedDisease];
-        displayMessage(`Got it! You may need to see a specialist in *${userSpecialty}*.`, "bot");
-        getUserLocation(); // Automatically get location to suggest nearby doctors
-    } else {
-        displayMessage(responses[userLanguage]["ask_disease"], "bot");
-    }
+    return false;
 }
 
 // Process User Input and Respond
@@ -140,17 +116,16 @@ function processUserInput() {
     displayMessage(userMessage, "user");
     userInput.value = "";
 
-    // Check for language switching
-    if (languagePatterns.some((pattern) => pattern.test(userMessage))) {
-        switchLanguage(userMessage);
+    // Handle language switching
+    if (switchLanguage(userMessage)) {
+        return; // Language switched successfully
     }
+
     // Handle basic responses
-    else if (responses[userLanguage][userMessage]) {
+    if (responses[userLanguage][userMessage]) {
         displayMessage(responses[userLanguage][userMessage], "bot");
-    }
-    // Check for disease/specialty and get live location
-    else {
-        checkForDisease(userMessage);
+    } else {
+        displayMessage(responses[userLanguage]["default"], "bot");
     }
 }
 
