@@ -1,16 +1,6 @@
 /* ============================
    Global Styles for All Pages
 =============================== */
-#logo-container {
-    width: 120px;
-    height: 120px;
-    background-image: url('images/logo.png'); /* Adjust path */
-    background-size: contain;
-    background-repeat: no-repeat;
-    margin: 0 auto;
-}
-
-
 body {
     font-family: "Poppins", Arial, sans-serif;
     margin: 0;
