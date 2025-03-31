@@ -18,7 +18,7 @@ const responses = {
         "ask_disease": "Please mention your disease or symptoms so I can suggest suitable doctors and hospitals.",
         "default": "I'm sorry, I didn't understand that. Can you please rephrase?",
         "take_care": "Take care! Let me know if you need any assistance.",
-        "checkup": "You should consider scheduling a health checkup along with consultation for better care."
+        "checkup": "Consider scheduling a health checkup and consultation for better care."
     },
     "hi": {
         "hello": "नमस्ते! आज मैं आपकी किस प्रकार सहायता कर सकता हूँ?",
