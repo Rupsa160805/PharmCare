@@ -1,18 +1,17 @@
 /* ============================
    Global Styles for All Pages
 =============================== */
-/* Logo as Fixed Position */
-.logo-container {
-    position: fixed;
+#logo {
+    position: absolute;
     top: 5px;
     left: 5px;
-    width: 60px;
-    height: 60px;
-    background-image: url('logo.jpg');
-    background-size: contain;
-    background-repeat: no-repeat;
-    z-index: 999;
+    width: 60px; /* Set the desired width */
+    height: auto; /* Maintain aspect ratio */
+    cursor: pointer;
+    box-shadow: 0 0 12px #ffd700, 0 0 20px #ffd700; /* Optional glow effect */
+    border-radius: 50%; /* Optional for rounded logo */
 }
+
 .doctor-img {
     display: block;
     margin: 15px auto;
