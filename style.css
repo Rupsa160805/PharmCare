@@ -13,6 +13,21 @@
     background-repeat: no-repeat;
     z-index: 999;
 }
+.doctor-img {
+    display: block;
+    margin: 20px auto;
+    width: 60%; /* Adjust as needed */
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 0 15px #ffd700, 0 0 25px #ffd700;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Hover Effect */
+.doctor-img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px #ffd700, 0 0 40px #ffd700;
+}
 
 body {
     font-family: "Poppins", Arial, sans-serif;
