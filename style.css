@@ -5,8 +5,8 @@
 #logo {
     position: absolute;
     top: 3px;
-    left: 5px;
-    width: 60px; /* Adjust the size as needed */
+    left: 3px;
+    width: 3px; /* Adjust the size as needed */
     height: auto;
     cursor: pointer;
     box-shadow: 0 0 12px #ffd700, 0 0 20px #ffd700; /* Optional glow effect */
