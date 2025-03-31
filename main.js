@@ -163,7 +163,7 @@ function checkForDisease(userMessage) {
     if (matchedDisease) {
         findHospitalsForDisease(matchedDisease);
     } else {
-        displayMessage(responses[userLanguage]["default"], "bot");
+        listAllDoctors();
     }
 }
 
@@ -174,32 +174,4 @@ function findHospitalsForDisease(disease) {
     );
 
     if (recommendedHospitals.length > 0) {
-        displayMessage(
-            userLanguage === "hi"
-                ? "यहाँ आपके रोग के लिए उपयुक्त अस्पताल और डॉक्टर हैं:"
-                : userLanguage === "bn"
-                ? "আপনার রোগের জন্য উপযুক্ত হাসপাতাল এবং ডাক্তারগুলি এখানে রয়েছে:"
-                : "Here are some hospitals and doctors specializing in your condition:",
-            "bot"
-        );
-
-        recommendedHospitals.forEach(hospital => {
-            displayMessage(`🏥 ${hospital.name} - ${hospital.address}`, "bot");
-            hospital.doctors.forEach(doctor => {
-                displayMessage(`👨‍⚕️ ${doctor}`, "bot");
-            });
-        });
-
-        displayMessage(responses[userLanguage]["checkup"], "bot");
-        displayMessage(responses[userLanguage]["take_care"], "bot");
-    } else {
-        displayMessage(
-            userLanguage === "hi"
-                ? "मुझे उस बीमारी के लिए कोई उपयुक्त अस्पताल नहीं मिला।"
-                : userLanguage === "bn"
-                ? "আমি সেই রোগের জন্য কোনও উপযুক্ত হাসপাতাল খুঁজে পাইনি।"
-                : "I'm sorry, I couldn't find a suitable hospital for that condition.",
-            "bot"
-        );
-    }
-}
+        display
