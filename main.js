@@ -69,54 +69,6 @@ let userLanguage = "en";
 let userLocation = "";
 let userSpecialty = "";
 
-// Predefined List of Hospitals and Doctors
-const hospitalData = [
-    {
-        name: "Apollo Hospital",
-        address: "Kolkata, West Bengal",
-        location: "kolkata",
-        specialties: ["cardiology", "orthopedics", "neurology", "general checkup"],
-        doctors: {
-            "cardiology": "Dr. R. Sharma (Heart Specialist)",
-            "orthopedics": "Dr. A. Das (Bone Specialist)",
-            "neurology": "Dr. M. Roy (Nerve/Brain Specialist)"
-        }
-    },
-    {
-        name: "Fortis Hospital",
-        address: "Kolkata, West Bengal",
-        location: "kolkata",
-        specialties: ["cancer", "cardiology", "gastroenterology"],
-        doctors: {
-            "cancer": "Dr. P. Mehta (Cancer Specialist)",
-            "cardiology": "Dr. S. Ghosh (Heart Specialist)",
-            "gastroenterology": "Dr. B. Kumar (Stomach Specialist)"
-        }
-    },
-    {
-        name: "Narayana Hospital",
-        address: "Delhi, India",
-        location: "delhi",
-        specialties: ["cardiology", "cancer", "neurology", "general checkup"],
-        doctors: {
-            "cardiology": "Dr. P. Rao (Heart Specialist)",
-            "cancer": "Dr. R. Iyer (Cancer Specialist)",
-            "neurology": "Dr. M. Singh (Nerve/Brain Specialist)"
-        }
-    },
-    {
-        name: "Medanta Hospital",
-        address: "Gurgaon, Haryana",
-        location: "gurgaon",
-        specialties: ["orthopedics", "cardiology", "neurology"],
-        doctors: {
-            "orthopedics": "Dr. A. Verma (Bone Specialist)",
-            "cardiology": "Dr. K. Malhotra (Heart Specialist)",
-            "neurology": "Dr. S. Kapoor (Nerve/Brain Specialist)"
-        }
-    }
-];
-
 // Display User and Bot Messages
 function displayMessage(message, sender) {
     const messageDiv = document.createElement("div");
@@ -126,22 +78,22 @@ function displayMessage(message, sender) {
     chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll to bottom
 }
 
-// Find Doctors for Specialty and Location
-function findDoctorsForSpecialtyAndLocation(specialty, location) {
-    const matchingHospitals = hospitalData.filter(hospital =>
-        hospital.location.toLowerCase() === location.toLowerCase() &&
-        hospital.specialties.map(s => s.toLowerCase()).includes(specialty.toLowerCase())
-    );
-
-    if (matchingHospitals.length > 0) {
-        let response = `${responses[userLanguage]["hospital"]}\n\n`;
-        matchingHospitals.forEach(hospital => {
-            response += `${hospital.name} - ${hospital.address}\nDoctor: ${hospital.doctors[specialty]}\n\n`;
-        });
-        displayMessage(response, "bot");
-    } else {
-        displayMessage(`Sorry, I couldn't find any hospitals with ${specialty} services near ${location}.`, "bot");
+// Detect Language Switch Requests
+function detectLanguageSwitch(userMessage) {
+    if (userMessage.includes("hindi") || userMessage.includes("हिंदी")) {
+        userLanguage = "hi";
+        displayMessage("ठीक है! अब मैं हिंदी में आपकी सहायता करूंगा।", "bot");
+        return true;
+    } else if (userMessage.includes("bengali") || userMessage.includes("bangla") || userMessage.includes("বাংলা")) {
+        userLanguage = "bn";
+        displayMessage("ঠিক আছে! এখন থেকে আমি বাংলায় কথা বলব।", "bot");
+        return true;
+    } else if (userMessage.includes("english") || userMessage.includes("अंग्रेजी") || userMessage.includes("ইংরেজি")) {
+        userLanguage = "en";
+        displayMessage("Okay! I will now assist you in English.", "bot");
+        return true;
     }
+    return false;
 }
 
 // Check for Disease or Symptoms and Suggest Doctors & Hospitals
@@ -160,7 +112,6 @@ function checkForDisease(userMessage) {
         "checkup": "general checkup"
     };
 
-    // Check for matching disease keywords
     const matchedDisease = Object.keys(diseaseKeywords).find(disease =>
         userMessage.includes(disease.toLowerCase())
     );
@@ -177,6 +128,24 @@ function checkForDisease(userMessage) {
     }
 }
 
+// Find Doctors for Specialty and Location
+function findDoctorsForSpecialtyAndLocation(specialty, location) {
+    const matchingHospitals = hospitalData.filter(hospital =>
+        hospital.location.toLowerCase() === location.toLowerCase() &&
+        hospital.specialties.map(s => s.toLowerCase()).includes(specialty.toLowerCase())
+    );
+
+    if (matchingHospitals.length > 0) {
+        let response = `${responses[userLanguage]["hospital"]}\n\n`;
+        matchingHospitals.forEach(hospital => {
+            response += `${hospital.name} - ${hospital.address}\nDoctor: ${hospital.doctors[specialty]}\n\n`;
+        });
+        displayMessage(response, "bot");
+    } else {
+        displayMessage(responses[userLanguage]["default"], "bot");
+    }
+}
+
 // Process User Input and Respond
 function processUserInput() {
     const userMessage = userInput.value.trim().toLowerCase();
@@ -185,49 +154,38 @@ function processUserInput() {
     displayMessage(userMessage, "user");
     userInput.value = "";
 
-    // Check if user wants to change language
-    if (userMessage.includes("language") || userMessage.includes("bhasha")) {
-        displayMessage(responses[userLanguage]["language"], "bot");
-    } else if (userMessage.includes("hindi")) {
-        userLanguage = "hi";
-        displayMessage("ठीक है! अब मैं हिंदी में आपकी सहायता करूंगा।", "bot");
-    } else if (userMessage.includes("bengali") || userMessage.includes("bangla")) {
-        userLanguage = "bn";
-        displayMessage("ঠিক আছে! এখন থেকে আমি বাংলায় কথা বলব।", "bot");
-    } else if (userMessage.includes("english")) {
-        userLanguage = "en";
-        displayMessage("Okay! I will now assist you in English.", "bot");
+    // Check if language switch is requested
+    if (detectLanguageSwitch(userMessage)) {
+        return;
     }
-    // Handle greetings and responses
-    else if (responses[userLanguage][userMessage]) {
+
+    // Check if user wants to know about available languages
+    if (userMessage.includes("language") || userMessage.includes("bhasha") || userMessage.includes("ভাষা")) {
+        displayMessage(responses[userLanguage]["language"], "bot");
+        return;
+    }
+
+    // Handle basic responses
+    if (responses[userLanguage][userMessage]) {
         displayMessage(responses[userLanguage][userMessage], "bot");
     }
     // Handle location input
     else if (userMessage.startsWith("location")) {
-        userLocation = userMessage.slice(9).trim(); // Extract location after "location"
+        userLocation = userMessage.slice(9).trim();
         if (userLocation) {
             displayMessage(responses[userLanguage]["location_confirm"], "bot");
-
-            // If disease already provided, show relevant doctors
-            if (userSpecialty) {
-                findDoctorsForSpecialtyAndLocation(userSpecialty, userLocation);
-            }
         } else {
-            displayMessage("Please provide a valid location.", "bot");
+            displayMessage(responses[userLanguage]["location"], "bot");
         }
     }
-    // Check for diseases or symptoms
+    // Check for disease/specialty
     else {
         checkForDisease(userMessage);
     }
 }
 
-// Handle Send Button Click
-sendBtn.addEventListener("click", () => {
-    processUserInput();
-});
-
-// Handle Enter Key Press
+// Add Event Listeners
+sendBtn.addEventListener("click", processUserInput);
 userInput.addEventListener("keypress", (e) => {
     if (e.key === "Enter") {
         processUserInput();
