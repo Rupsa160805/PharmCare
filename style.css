@@ -1,15 +1,19 @@
 /* ============================
    Global Styles for All Pages
 =============================== */
-#logo {
-    position: absolute;
+/* Logo as Fixed Position */
+.logo-container {
+    position: fixed;
     top: 5px;
     left: 5px;
-    width: 60px; /* Adjust the size as needed */
-    height: auto;
-    cursor: pointer;
-    box-shadow: 0 0 12px #ffd700, 0 0 20px #ffd700; /* Optional glow effect */
+    width: 60px;
+    height: 120px;
+    background-image: url('images/logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 999;
 }
+
 body {
     font-family: "Poppins", Arial, sans-serif;
     margin: 0;
