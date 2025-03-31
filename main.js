@@ -18,8 +18,20 @@ const responses = {
         "ask_disease": "Please mention your disease or symptoms so I can suggest suitable doctors and hospitals.",
         "default": "I'm sorry, I didn't understand that. Can you please rephrase?",
         "take_care": "Take care! Let me know if you need any assistance.",
-        "checkup": "You should consider scheduling a health checkup along with consultation for better care.",
+        "checkup": "You should consider scheduling a health checkup along with a consultation for better care.",
         "location_confirm": "Got it! I'll find hospitals and clinics near your location. Please wait a moment..."
+    },
+    "hi": {
+        "hello": "नमस्ते! मैं आपकी आज किस प्रकार सहायता कर सकता हूँ?",
+        "location": "कृपया अपना स्थान साझा करें ताकि मैं आपके निकटतम क्लिनिक या अस्पताल खोज सकूं।",
+        "ask_disease": "कृपया अपनी बीमारी या लक्षण का उल्लेख करें ताकि मैं उपयुक्त डॉक्टर और अस्पताल सुझा सकूं।",
+        "location_confirm": "समझ गया! मैं आपके स्थान के निकट अस्पतालों की खोज कर रहा हूँ। कृपया प्रतीक्षा करें..."
+    },
+    "bn": {
+        "hello": "হ্যালো! আমি কিভাবে আপনাকে সাহায্য করতে পারি?",
+        "location": "অনুগ্রহ করে আপনার বর্তমান অবস্থান জানান যাতে কাছের ক্লিনিক বা হাসপাতাল খুঁজে বের করা যায়।",
+        "ask_disease": "আপনার রোগ বা লক্ষণগুলি উল্লেখ করুন যাতে আমি উপযুক্ত ডাক্তার এবং হাসপাতাল সুপারিশ করতে পারি।",
+        "location_confirm": "বোঝা গেল! আপনার অবস্থানের কাছাকাছি হাসপাতাল এবং ক্লিনিক খুঁজছি... অনুগ্রহ করে অপেক্ষা করুন।"
     }
 };
 
@@ -71,17 +83,6 @@ const hospitalData = [
             "cancer": "Dr. R. Iyer (Cancer Specialist)",
             "neurology": "Dr. M. Singh (Nerve/Brain Specialist)"
         }
-    },
-    {
-        name: "Medanta Hospital",
-        address: "Gurgaon, Haryana",
-        location: "gurgaon",
-        specialties: ["orthopedics", "cardiology", "neurology"],
-        doctors: {
-            "orthopedics": "Dr. A. Verma (Bone Specialist)",
-            "cardiology": "Dr. K. Malhotra (Heart Specialist)",
-            "neurology": "Dr. S. Kapoor (Nerve/Brain Specialist)"
-        }
     }
 ];
 
@@ -92,6 +93,18 @@ function displayMessage(message, sender) {
     messageDiv.innerText = message;
     chatContainer.appendChild(messageDiv);
     chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll to bottom
+    if (sender === "bot") {
+        speakText(message); // Speak the bot's response
+    }
+}
+
+// Text-to-Speech Function
+function speakText(text) {
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.lang = userLanguage === "en" ? "en-US" :
+                  userLanguage === "hi" ? "hi-IN" : 
+                  "bn-BD"; // Bengali
+    window.speechSynthesis.speak(speech);
 }
 
 // Find Doctors for Specialty and Location
@@ -116,26 +129,13 @@ function findDoctorsForSpecialtyAndLocation(specialty, location) {
 function checkForDisease(userMessage) {
     const diseaseKeywords = {
         "heart": "cardiology",
-        "cardiology": "cardiology",
         "cancer": "cancer",
         "brain": "neurology",
-        "nerves": "neurology",
-        "neurology": "neurology",
         "bones": "orthopedics",
-        "orthopedic": "orthopedics",
-        "urology": "urology",
-        "urine": "urology",
-        "bladder": "urology",
-        "gynecology": "gynecology",
-        "women's health": "gynecology",
-        "baby delivery": "gynecology",
+        "skin": "dermatology",
         "lungs": "pulmonology",
-        "chest": "pulmonology",
-        "pulmonary": "pulmonology",
         "stomach": "gastroenterology",
-        "gastro": "gastroenterology",
-        "checkup": "general checkup",
-        "doctor visit": "general checkup"
+        "checkup": "general checkup"
     };
 
     // Check for matching disease keywords
@@ -169,7 +169,7 @@ function processUserInput() {
     }
     // Handle location input
     else if (userMessage.startsWith("location")) {
-        userLocation = userMessage.slice(9).trim(); // Extract location after "location"
+        userLocation = userMessage.slice(9).trim();
         if (userLocation) {
             displayMessage(responses[userLanguage]["location_confirm"], "bot");
 
@@ -181,11 +181,9 @@ function processUserInput() {
             displayMessage("Please provide a valid location.", "bot");
         }
     }
-    // Handle follow-up questions
-    else if (userLocation === "" && userSpecialty === "") {
-        displayMessage(responses[userLanguage]["ask_disease"], "bot");
-    } else if (userLocation === "" && userSpecialty !== "") {
-        displayMessage(responses[userLanguage]["location"], "bot");
+    // Handle single-word disease inputs
+    else if (Object.keys(responses[userLanguage]).includes(userMessage)) {
+        displayMessage(responses[userLanguage][userMessage], "bot");
     }
     // Check for diseases or symptoms
     else {
@@ -204,3 +202,29 @@ userInput.addEventListener("keypress", (e) => {
         processUserInput();
     }
 });
+
+// Voice Recognition Function
+function startListening() {
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = userLanguage === "en" ? "en-US" :
+                       userLanguage === "hi" ? "hi-IN" : 
+                       "bn-BD"; // Bengali
+
+    recognition.start();
+
+    recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript.toLowerCase();
+        displayMessage(transcript, "user");
+        processUserInput(transcript);
+    };
+
+    recognition.onerror = (event) => {
+        displayMessage("Sorry, I didn't catch that. Please try again.", "bot");
+    };
+}
+
+// Add Voice Input Button
+const voiceBtn = document.createElement("button");
+voiceBtn.innerText = "🎤 Speak";
+voiceBtn.onclick = startListening;
+chatContainer.parentElement.insertBefore(voiceBtn, chatContainer);
