@@ -11,6 +11,9 @@ const responses = {
         "clinic": "I’m searching for clinics near your location. Please wait a moment...",
         "language": "I can assist you in multiple languages. Which language do you prefer? (English, Hindi, Bengali, etc.)",
         "hospital": "Searching for nearby hospitals or clinics for medical tests and health checkups...",
+        "confirm_lang": "You have selected English. Would you like to proceed in this language? (Yes/No)",
+        "retry_lang": "Okay, please mention your preferred language again.",
+        "feedback": "Did I help you find the information you were looking for? (Yes/No)",
         "default": "I'm sorry, I didn't understand that. Can you please rephrase?"
     },
     "hi": {
@@ -19,6 +22,9 @@ const responses = {
         "clinic": "मैं आपके स्थान के पास क्लिनिक खोज रहा हूँ। कृपया प्रतीक्षा करें...",
         "language": "मैं कई भाषाओं में आपकी सहायता कर सकता हूँ। आप कौन सी भाषा पसंद करते हैं? (अंग्रेजी, हिंदी, बंगाली आदि)",
         "hospital": "चिकित्सा परीक्षण और स्वास्थ्य जांच के लिए निकटतम अस्पताल खोज रहा हूँ...",
+        "confirm_lang": "आपने हिंदी का चयन किया है। क्या आप इस भाषा में जारी रखना चाहेंगे? (हाँ/नहीं)",
+        "retry_lang": "ठीक है, कृपया अपनी पसंदीदा भाषा का फिर से उल्लेख करें।",
+        "feedback": "क्या मैंने आपको आवश्यक जानकारी खोजने में सहायता की? (हाँ/नहीं)",
         "default": "मुझे क्षमा करें, मैंने समझा नहीं। कृपया दोबारा प्रयास करें।"
     },
     "bn": {
@@ -27,6 +33,9 @@ const responses = {
         "clinic": "আপনার অবস্থানের কাছাকাছি ক্লিনিক খুঁজছি। অনুগ্রহ করে অপেক্ষা করুন...",
         "language": "আমি আপনাকে বিভিন্ন ভাষায় সহায়তা করতে পারি। আপনি কোন ভাষা পছন্দ করবেন? (ইংরেজি, হিন্দি, বাংলা ইত্যাদি)",
         "hospital": "চিকিৎসা পরীক্ষা এবং স্বাস্থ্য পরীক্ষার জন্য কাছাকাছি হাসপাতাল খুঁজছি...",
+        "confirm_lang": "আপনি বাংলা নির্বাচন করেছেন। আপনি কি এই ভাষায় চালিয়ে যেতে চান? (হ্যাঁ/না)",
+        "retry_lang": "ঠিক আছে, অনুগ্রহ করে আবার আপনার পছন্দের ভাষার নাম উল্লেখ করুন।",
+        "feedback": "আমি কি আপনাকে প্রয়োজনীয় তথ্য পেতে সাহায্য করতে পেরেছি? (হ্যাঁ/না)",
         "default": "আমি দুঃখিত, আমি এটি বুঝতে পারিনি। দয়া করে আবার বলুন।"
     }
 };
@@ -40,6 +49,8 @@ const languageOptions = {
 
 // Default Language
 let userLanguage = "en";
+let waitingForLangConfirmation = false;
+let waitingForFeedback = false;
 
 // Predefined List of Hospitals with Coordinates and Specialties
 const hospitalData = [
@@ -66,7 +77,7 @@ const diseaseSpecialties = {
 // Initial Greeting and Language Setup
 function greetUser() {
     displayMessage(responses[userLanguage]["hello"], "bot");
-    setTimeout(askForLanguage, 2000); // Ask for language after a short delay
+    setTimeout(askForLanguage, 2000);
 }
 
 // Send Button Event Listener
@@ -90,42 +101,98 @@ function displayMessage(message, sender) {
 
 // Process User Input and Generate Response
 function processInput(userMessage) {
+    if (waitingForLangConfirmation) {
+        handleLangConfirmation(userMessage);
+        return;
+    }
+
+    if (waitingForFeedback) {
+        handleFeedback(userMessage);
+        return;
+    }
+
     const disease = checkForDisease(userMessage);
 
     if (disease) {
         getLocationForHospitals(disease);
-    }
-    // Check if user wants to change language
+    } 
     else if (userMessage.includes("language") || userMessage.includes("भाषा") || userMessage.includes("ভাষা")) {
         askForLanguage();
-    }
-    // Check if the user is mentioning a specific language
+    } 
     else if (checkLanguage(userMessage)) {
-        setLanguage(userMessage);
-    }
-    // Check if the user is asking for nearby hospitals without mentioning disease
+        confirmLanguage(userMessage);
+    } 
     else if (userMessage.includes("hospital") || userMessage.includes("clinic") || userMessage.includes("test")) {
         getLocationForHospitals();
-    }
-    // Handle predefined responses based on language
+    } 
     else if (responses[userLanguage][userMessage]) {
         displayMessage(responses[userLanguage][userMessage], "bot");
-    }
-    // Default fallback
+    } 
     else {
         displayMessage(responses[userLanguage]["default"], "bot");
     }
 }
 
+// Handle Language Confirmation
+function handleLangConfirmation(response) {
+    if (response.includes("yes") || response.includes("हाँ") || response.includes("হ্যাঁ")) {
+        displayMessage(responses[userLanguage]["hello"], "bot");
+    } else {
+        displayMessage(responses[userLanguage]["retry_lang"], "bot");
+        askForLanguage();
+    }
+    waitingForLangConfirmation = false;
+}
+
+// Handle User Feedback
+function handleFeedback(response) {
+    if (response.includes("yes") || response.includes("हाँ") || response.includes("হ্যাঁ")) {
+        displayMessage(
+            userLanguage === "hi"
+                ? "धन्यवाद! मुझे आपकी सहायता करके खुशी हुई।"
+                : userLanguage === "bn"
+                ? "ধন্যবাদ! আমি আপনাকে সাহায্য করতে পেরে খুশি।"
+                : "Thank you! I'm happy to have helped.",
+            "bot"
+        );
+    } else {
+        displayMessage(
+            userLanguage === "hi"
+                ? "मुझे खेद है कि मैं आपकी मदद नहीं कर सका।"
+                : userLanguage === "bn"
+                ? "দুঃখিত, আমি আপনাকে সহায়তা করতে পারিনি।"
+                : "I'm sorry I couldn't assist you better.",
+            "bot"
+        );
+    }
+    waitingForFeedback = false;
+}
+
+// Ask for Language Preference
+function askForLanguage() {
+    displayMessage(responses[userLanguage]["language"], "bot");
+}
+
 // Check if User Mentioned a Disease
 function checkForDisease(message) {
-    const lowerMessage = message.toLowerCase();
     for (const disease in diseaseSpecialties) {
-        if (lowerMessage.includes(disease)) {
+        if (message.includes(disease)) {
             return diseaseSpecialties[disease];
         }
     }
     return null;
+}
+
+// Confirm User's Preferred Language
+function confirmLanguage(lang) {
+    const langKey = languageOptions[lang];
+    if (langKey) {
+        userLanguage = langKey;
+        waitingForLangConfirmation = true;
+        displayMessage(responses[userLanguage]["confirm_lang"], "bot");
+    } else {
+        displayMessage("I'm sorry, that language is not supported yet.", "bot");
+    }
 }
 
 // Get User Location for Hospitals/Clinics Based on Disease
@@ -175,21 +242,12 @@ function findNearbyHospitals(lat, lng, specialty = null) {
         );
     }
 
-    // Sort Hospitals by Distance
     hospitalsWithDistance.sort((a, b) => a.distance - b.distance);
 
     if (hospitalsWithDistance.length > 0) {
         const introMessage =
             specialty
-                ? userLanguage === "hi"
-                    ? `यहाँ आपके स्थान के पास ${specialty} के विशेषज्ञ अस्पताल हैं:`
-                    : userLanguage === "bn"
-                    ? `আপনার অবস্থানের কাছাকাছি ${specialty} বিশেষজ্ঞ হাসপাতালগুলি এখানে:`
-                    : `Here are the hospitals specializing in ${specialty} near your location:`
-                : userLanguage === "hi"
-                ? "आपके स्थान के पास निम्नलिखित अस्पताल मिले:"
-                : userLanguage === "bn"
-                ? "আপনার অবস্থানের নিকটে নিম্নলিখিত হাসপাতালগুলি পাওয়া গেছে:"
+                ? `Here are the hospitals specializing in ${specialty} near your location:`
                 : "Here are the hospitals near your location:";
 
         displayMessage(introMessage, "bot");
@@ -200,50 +258,14 @@ function findNearbyHospitals(lat, lng, specialty = null) {
                 "bot"
             );
         });
+
+        setTimeout(() => {
+            displayMessage(responses[userLanguage]["feedback"], "bot");
+            waitingForFeedback = true;
+        }, 3000);
     } else {
-        const noHospitalsMessage =
-            specialty
-                ? userLanguage === "hi"
-                    ? `क्षमा करें, आपके स्थान के पास कोई ${specialty} विशेषज्ञ अस्पताल नहीं मिला।`
-                    : userLanguage === "bn"
-                    ? `দুঃখিত, আপনার অবস্থানের কাছে কোনও ${specialty} বিশেষজ্ঞ হাসপাতাল পাওয়া যায়নি।`
-                    : `Sorry, no hospitals specializing in ${specialty} were found near your location.`
-                : userLanguage === "hi"
-                ? "कोई अस्पताल नहीं मिला।"
-                : userLanguage === "bn"
-                ? "কোনো হাসপাতাল পাওয়া যায়নি।"
-                : "No hospitals found near your location.";
-
-        displayMessage(noHospitalsMessage, "bot");
+        displayMessage("No hospitals found near your location.", "bot");
     }
-}
-
-// Check if the User Mentioned a Language
-function checkLanguage(message) {
-    const languages = Object.keys(languageOptions);
-    for (const lang of languages) {
-        if (message.includes(lang)) {
-            return lang;
-        }
-    }
-    return false;
-}
-
-// Set User's Preferred Language
-function setLanguage(lang) {
-    const langKey = languageOptions[lang];
-    if (langKey) {
-        userLanguage = langKey;
-        displayMessage(`✅ ${capitalizeFirstLetter(lang)} selected. I will assist you in this language now.`, "bot");
-        displayMessage(responses[userLanguage]["hello"], "bot"); // Greeting in selected language
-    } else {
-        displayMessage("I'm sorry, that language is not supported yet.", "bot");
-    }
-}
-
-// Ask User for Language Preference
-function askForLanguage() {
-    displayMessage(responses[userLanguage]["language"], "bot");
 }
 
 // Calculate Distance Between Two Points Using Haversine Formula
@@ -262,10 +284,6 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
     return R * c;
 }
 
-// Capitalize First Letter of Language
-function capitalizeFirstLetter(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
 // Greet User on Load
 greetUser();
+ 
