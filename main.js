@@ -1,80 +1,36 @@
-// Handle User Input and Bot Responses
-const chatContainer = document.getElementById("chat-container");
-const userInput = document.getElementById("user-input");
-const sendBtn = document.getElementById("send-btn");
-
-// Predefined Bot Responses in Multiple Languages
-const responses = {
-    "en": {
-        "hello": "Hello! How can I assist you today?",
-        "location": "Please share your current location to find the nearest clinic or hospital.",
-        "clinic": "I’m searching for clinics near your location. Please wait a moment...",
-        "language": "I can assist you in multiple languages. Which language do you prefer? (English, Hindi, Bengali, etc.)",
-        "hospital": "Searching for nearby hospitals or clinics for medical tests and health checkups...",
-        "default": "I'm sorry, I didn't understand that. Can you please rephrase?"
-    },
-    "hi": {
-        "hello": "नमस्ते! आज मैं आपकी किस प्रकार सहायता कर सकता हूँ?",
-        "location": "कृपया अपना स्थान साझा करें ताकि हम निकटतम क्लिनिक या अस्पताल खोज सकें।",
-        "clinic": "मैं आपके स्थान के पास क्लिनिक खोज रहा हूँ। कृपया प्रतीक्षा करें...",
-        "language": "मैं कई भाषाओं में आपकी सहायता कर सकता हूँ। आप कौन सी भाषा पसंद करते हैं? (अंग्रेजी, हिंदी, बंगाली आदि)",
-        "hospital": "चिकित्सा परीक्षण और स्वास्थ्य जांच के लिए निकटतम अस्पताल खोज रहा है...",
-        "default": "मुझे क्षमा करें, मैंने समझा नहीं। कृपया दोबारा प्रयास करें।"
-    },
-    "bn": {
-        "hello": "হ্যালো! আজ আমি কীভাবে আপনার সহায়তা করতে পারি?",
-        "location": "নিকটবর্তী ক্লিনিক বা হাসপাতাল খুঁজতে দয়া করে আপনার বর্তমান অবস্থান শেয়ার করুন।",
-        "clinic": "আপনার অবস্থানের কাছাকাছি ক্লিনিক খুঁজছি। অনুগ্রহ করে অপেক্ষা করুন...",
-        "language": "আমি আপনাকে বিভিন্ন ভাষায় সহায়তা করতে পারি। আপনি কোন ভাষা পছন্দ করবেন? (ইংরেজি, হিন্দি, বাংলা ইত্যাদি)",
-        "hospital": "চিকিৎসা পরীক্ষা এবং স্বাস্থ্য পরীক্ষার জন্য কাছাকাছি হাসপাতাল খুঁজছি...",
-        "default": "আমি দুঃখিত, আমি এটি বুঝতে পারিনি। দয়া করে আবার বলুন।"
-    }
-};
-
-// Available Languages
-const languageOptions = {
-    "english": "en",
-    "hindi": "hi",
-    "bengali": "bn"
-};
-
-// Default Language
-let userLanguage = "en";
-
-// Predefined List of Hospitals with Coordinates
+// Predefined List of Hospitals with Coordinates and Specialties
 const hospitalData = [
-    { name: "Apollo Hospital", address: "Kolkata, West Bengal", lat: 22.5726, lng: 88.3639 },
-    { name: "Fortis Hospital", address: "Kolkata, West Bengal", lat: 22.5795, lng: 88.4336 },
-    { name: "AMRI Hospital", address: "Dhakuria, Kolkata", lat: 22.5124, lng: 88.3709 },
-    { name: "Ruby General Hospital", address: "Kolkata, West Bengal", lat: 22.5154, lng: 88.4076 },
-    { name: "Narayana Hospital", address: "Howrah, West Bengal", lat: 22.5958, lng: 88.2636 }
+    { name: "Apollo Hospital", address: "Kolkata, West Bengal", lat: 22.5726, lng: 88.3639, specialties: ["cardiology", "orthopedics", "neurology", "cancer"] },
+    { name: "Fortis Hospital", address: "Kolkata, West Bengal", lat: 22.5795, lng: 88.4336, specialties: ["cardiology", "dermatology", "gynecology", "pediatrics"] },
+    { name: "AMRI Hospital", address: "Dhakuria, Kolkata", lat: 22.5124, lng: 88.3709, specialties: ["neurology", "cancer", "orthopedics", "general medicine"] },
+    { name: "Ruby General Hospital", address: "Kolkata, West Bengal", lat: 22.5154, lng: 88.4076, specialties: ["general medicine", "orthopedics", "cardiology"] },
+    { name: "Narayana Hospital", address: "Howrah, West Bengal", lat: 22.5958, lng: 88.2636, specialties: ["cardiology", "neurology", "nephrology", "pediatrics"] }
 ];
 
-// Handle Send Button Click
-sendBtn.addEventListener("click", () => {
-    const userMessage = userInput.value.trim();
-    if (userMessage !== "") {
-        displayMessage(userMessage, "user");
-
-        // Process User Input
-        processInput(userMessage.toLowerCase());
-        userInput.value = "";
-    }
-});
-
-// Display Chat Message
-function displayMessage(message, sender) {
-    const messageDiv = document.createElement("div");
-    messageDiv.classList.add(sender === "bot" ? "bot-message" : "user-message");
-    messageDiv.textContent = message;
-    chatContainer.appendChild(messageDiv);
-    chatContainer.scrollTop = chatContainer.scrollHeight;
-}
+// Disease to Specialty Mapping
+const diseaseSpecialties = {
+    "heart attack": "cardiology",
+    "chest pain": "cardiology",
+    "bone fracture": "orthopedics",
+    "brain stroke": "neurology",
+    "cancer": "cancer",
+    "skin infection": "dermatology",
+    "pregnancy": "gynecology",
+    "child care": "pediatrics",
+    "kidney disease": "nephrology",
+    "fever": "general medicine"
+};
 
 // Process User Input and Generate Response
 function processInput(userMessage) {
+    // Check if the user is mentioning a disease or condition
+    const detectedSpecialty = checkForDisease(userMessage);
+
+    if (detectedSpecialty) {
+        getLocationForHospitals(detectedSpecialty);
+    }
     // Check if user wants to change language
-    if (userMessage.includes("language") || userMessage.includes("भाषा") || userMessage.includes("ভাষা")) {
+    else if (userMessage.includes("language") || userMessage.includes("भाषा") || userMessage.includes("ভাষা")) {
         askForLanguage();
     }
     // Check if the user is mentioning a specific language
@@ -83,7 +39,7 @@ function processInput(userMessage) {
     }
     // Check if the user is asking for nearby hospitals
     else if (userMessage.includes("hospital") || userMessage.includes("clinic") || userMessage.includes("test")) {
-        getLocationForHospitals();
+        getLocationForHospitals(null);
     }
     // Handle predefined responses based on language
     else if (responses[userLanguage][userMessage]) {
@@ -95,48 +51,30 @@ function processInput(userMessage) {
     }
 }
 
-// Check if the User Mentioned a Language
-function checkLanguage(message) {
-    const languages = Object.keys(languageOptions);
-    for (const lang of languages) {
-        if (message.includes(lang)) {
-            return lang;
+// Check if User Mentioned a Disease and Return Specialty
+function checkForDisease(userMessage) {
+    for (const disease in diseaseSpecialties) {
+        if (userMessage.includes(disease)) {
+            return diseaseSpecialties[disease];
         }
     }
-    return false;
+    return null;
 }
 
-// Set User's Preferred Language
-function setLanguage(lang) {
-    const langKey = languageOptions[lang];
-    if (langKey) {
-        userLanguage = langKey;
-        displayMessage(`✅ ${capitalizeFirstLetter(lang)} selected. I will assist you in this language now.`, "bot");
-        displayMessage(responses[userLanguage]["hello"], "bot"); // Greeting in selected language
-    } else {
-        displayMessage("I'm sorry, I don't support that language yet. Continuing in English.", "bot");
-    }
-}
-
-// Ask for Preferred Language
-function askForLanguage() {
-    displayMessage(responses[userLanguage]["language"], "bot");
-}
-
-// Capitalize First Letter of Text
-function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-// Get User Location for Hospitals/Clinics
-function getLocationForHospitals() {
+// Get User Location for Hospitals Based on Specialty
+function getLocationForHospitals(specialty) {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
-                displayMessage(responses[userLanguage]["hospital"], "bot");
-                findNearbyHospitals(latitude, longitude);
+                displayMessage(
+                    specialty
+                        ? `🔍 Searching for hospitals specializing in ${specialty} near your location...`
+                        : responses[userLanguage]["hospital"],
+                    "bot"
+                );
+                findNearbyHospitals(latitude, longitude, specialty);
             },
             () => {
                 displayMessage(
@@ -161,39 +99,51 @@ function getLocationForHospitals() {
     }
 }
 
-// Find Nearby Hospitals Based on User Location (Haversine Formula)
-function findNearbyHospitals(lat, lng) {
-    const hospitalsWithDistance = hospitalData.map((hospital) => {
+// Find Nearby Hospitals Based on User Location and Specialty
+function findNearbyHospitals(lat, lng, specialty) {
+    let filteredHospitals = hospitalData;
+
+    // Filter Hospitals Based on Specialty
+    if (specialty) {
+        filteredHospitals = hospitalData.filter((hospital) =>
+            hospital.specialties.includes(specialty)
+        );
+    }
+
+    if (filteredHospitals.length === 0) {
+        displayMessage(
+            userLanguage === "hi"
+                ? "इस विशेष बीमारी के लिए कोई अस्पताल नहीं मिला।"
+                : userLanguage === "bn"
+                ? "এই রোগের জন্য কোনো হাসপাতাল পাওয়া যায়নি।"
+                : "No hospitals found for this condition near your location.",
+            "bot"
+        );
+        return;
+    }
+
+    // Calculate Distances and Sort
+    const hospitalsWithDistance = filteredHospitals.map((hospital) => {
         const distance = calculateDistance(lat, lng, hospital.lat, hospital.lng);
         return { ...hospital, distance };
     });
 
-    // Sort Hospitals by Distance
     hospitalsWithDistance.sort((a, b) => a.distance - b.distance);
 
-    if (hospitalsWithDistance.length > 0) {
-        displayMessage(
-            userLanguage === "hi"
-                ? "आपके स्थान के पास निम्नलिखित अस्पताल मिले:"
-                : userLanguage === "bn"
-                ? "আপনার অবস্থানের নিকটে নিম্নলিখিত হাসপাতালগুলি পাওয়া গেছে:"
-                : "Here are the hospitals near your location:",
-            "bot"
-        );
+    displayMessage(
+        specialty
+            ? `🏥 Here are the best hospitals specializing in ${specialty} near your location:`
+            : responses[userLanguage]["hospital"],
+        "bot"
+    );
 
-        hospitalsWithDistance.slice(0, 3).forEach((hospital, index) => {
-            displayMessage(`${index + 1}. ${hospital.name} - ${hospital.address} (${hospital.distance.toFixed(2)} km)`, "bot");
-        });
-    } else {
+    // Show Top 3 Nearest Hospitals
+    hospitalsWithDistance.slice(0, 3).forEach((hospital, index) => {
         displayMessage(
-            userLanguage === "hi"
-                ? "कोई अस्पताल नहीं मिला।"
-                : userLanguage === "bn"
-                ? "কোনো হাসপাতাল পাওয়া যায়নি।"
-                : "No hospitals found near your location.",
+            `${index + 1}. ${hospital.name} - ${hospital.address} (${hospital.distance.toFixed(2)} km)`,
             "bot"
         );
-    }
+    });
 }
 
 // Calculate Distance Between Two Coordinates Using Haversine Formula
