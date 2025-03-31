@@ -168,6 +168,15 @@ function findDoctorsForSpecialtyAndLocation(specialty, location) {
     }
 }
 
+// Detect and Suggest Hospitals Based on Symptoms
+function detectSpecialtyFromSymptoms(userMessage) {
+    if (userMessage.includes("heart") || userMessage.includes("chest pain")) return "cardiology";
+    if (userMessage.includes("cancer") || userMessage.includes("tumor")) return "cancer";
+    if (userMessage.includes("bones") || userMessage.includes("fracture")) return "orthopedics";
+    if (userMessage.includes("nerves") || userMessage.includes("headache")) return "neurology";
+    return "";
+}
+
 // Check for Disease or Symptoms and Suggest Doctors & Hospitals
 function processUserMessage(userMessage) {
     userMessage = userMessage.toLowerCase();
@@ -202,25 +211,19 @@ function processUserMessage(userMessage) {
         if (userSpecialty) {
             findDoctorsForSpecialtyAndLocation(userSpecialty, userLocation);
         }
-    } else if (userMessage.includes("heart") || userMessage.includes("cardiology") || userMessage.includes("cancer") || userMessage.includes("bones") || userMessage.includes("nerves")) {
-        userSpecialty = detectSpecialty(userMessage);
-        if (userLocation) {
-            findDoctorsForSpecialtyAndLocation(userSpecialty, userLocation);
-        } else {
-            displayMessage(responses[userLanguage]["location"], "bot");
-        }
     } else {
-        displayMessage(responses[userLanguage]["default"], "bot");
+        const detectedSpecialty = detectSpecialtyFromSymptoms(userMessage);
+        if (detectedSpecialty) {
+            userSpecialty = detectedSpecialty;
+            if (userLocation) {
+                findDoctorsForSpecialtyAndLocation(userSpecialty, userLocation);
+            } else {
+                displayMessage(responses[userLanguage]["location"], "bot");
+            }
+        } else {
+            displayMessage(responses[userLanguage]["default"], "bot");
+        }
     }
-}
-
-// Detect Specialty Based on User Message
-function detectSpecialty(userMessage) {
-    if (userMessage.includes("heart") || userMessage.includes("cardiology")) return "cardiology";
-    if (userMessage.includes("cancer")) return "cancer";
-    if (userMessage.includes("bones") || userMessage.includes("orthopedic")) return "orthopedics";
-    if (userMessage.includes("nerves") || userMessage.includes("neurology")) return "neurology";
-    return "";
 }
 
 // Send Button Click
