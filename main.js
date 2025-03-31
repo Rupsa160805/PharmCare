@@ -95,8 +95,14 @@ const languageOptions = {
 // Default Language
 let userLanguage = "en";
 
-// Store User Specialty
-let userSpecialty = "";
+// Doctor and Hospital Suggestions
+const doctorHospitalList = {
+    "heart_disease": ["Dr. Amit Sharma (Cardiologist) - City Heart Clinic", "Carewell Hospital, Sector 12"],
+    "bone_issue": ["Dr. Rakesh Verma (Orthopedic) - Bone & Joint Care", "Ortho Life Hospital, Sector 22"],
+    "nerve_issue": ["Dr. Priya Kapoor (Neurologist) - NeuroCare Clinic", "Mind & Nerve Hospital, Sector 18"],
+    "cancer_issue": ["Dr. Anjali Mehta (Oncologist) - Cancer Care Institute", "LifeLine Cancer Hospital, Sector 32"],
+    "skin_issue": ["Dr. Sanjay Das (Dermatologist) - Skin Glow Clinic", "Derma Health Hospital, Sector 45"]
+};
 
 // Detect Health Issues and Respond
 const healthConditions = {
@@ -139,8 +145,19 @@ function fetchNearbyHospitals(condition) {
             (position) => {
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
+
                 displayMessage(responses[userLanguage][condition], "bot");
-                displayMessage(`Fetching nearby hospitals for latitude: ${latitude}, longitude: ${longitude}...`, "bot");
+
+                // Show Suggested Doctors and Hospitals
+                const hospitalList = doctorHospitalList[condition] || [];
+                if (hospitalList.length > 0) {
+                    displayMessage(responses[userLanguage]["doctors_found"], "bot");
+                    hospitalList.forEach((hospital) => {
+                        displayMessage(hospital, "bot");
+                    });
+                } else {
+                    displayMessage(responses[userLanguage]["location_error"], "bot");
+                }
             },
             () => {
                 displayMessage(responses[userLanguage]["location_error"], "bot");
