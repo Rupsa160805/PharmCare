@@ -44,9 +44,9 @@ const hospitalData = [
         location: "kolkata",
         specialties: ["cardiology", "orthopedics", "neurology", "general checkup"],
         doctors: {
-            "cardiology": "Dr. R. Sharma (Cardiologist)",
-            "orthopedics": "Dr. A. Das (Orthopedic)",
-            "neurology": "Dr. M. Roy (Neurologist)"
+            "cardiology": "Dr. R. Sharma (Heart Specialist)",
+            "orthopedics": "Dr. A. Das (Bone Specialist)",
+            "neurology": "Dr. M. Roy (Nerve/Brain Specialist)"
         }
     },
     {
@@ -55,9 +55,9 @@ const hospitalData = [
         location: "kolkata",
         specialties: ["cancer", "cardiology", "gastroenterology"],
         doctors: {
-            "cancer": "Dr. P. Mehta (Oncologist)",
-            "cardiology": "Dr. S. Ghosh (Cardiologist)",
-            "gastroenterology": "Dr. B. Kumar (Gastroenterologist)"
+            "cancer": "Dr. P. Mehta (Cancer Specialist)",
+            "cardiology": "Dr. S. Ghosh (Heart Specialist)",
+            "gastroenterology": "Dr. B. Kumar (Stomach Specialist)"
         }
     },
     {
@@ -66,9 +66,9 @@ const hospitalData = [
         location: "kolkata",
         specialties: ["orthopedics", "neurology", "urology", "general checkup"],
         doctors: {
-            "orthopedics": "Dr. T. Sen (Orthopedic)",
-            "neurology": "Dr. K. Gupta (Neurologist)",
-            "urology": "Dr. R. Chakraborty (Urologist)"
+            "orthopedics": "Dr. T. Sen (Bone Specialist)",
+            "neurology": "Dr. K. Gupta (Nerve/Brain Specialist)",
+            "urology": "Dr. R. Chakraborty (Urine/Bladder Specialist)"
         }
     },
     {
@@ -77,9 +77,9 @@ const hospitalData = [
         location: "kolkata",
         specialties: ["diabetes", "gynecology", "pulmonology", "general checkup"],
         doctors: {
-            "diabetes": "Dr. S. Bose (Diabetologist)",
-            "gynecology": "Dr. N. Banerjee (Gynecologist)",
-            "pulmonology": "Dr. A. Dasgupta (Pulmonologist)"
+            "diabetes": "Dr. S. Bose (Diabetes Specialist)",
+            "gynecology": "Dr. N. Banerjee (Women’s Health/Baby Delivery)",
+            "pulmonology": "Dr. A. Dasgupta (Lung/Chest Specialist)"
         }
     },
     {
@@ -88,9 +88,9 @@ const hospitalData = [
         location: "delhi",
         specialties: ["cardiology", "cancer", "neurology", "general checkup"],
         doctors: {
-            "cardiology": "Dr. P. Rao (Cardiologist)",
-            "cancer": "Dr. R. Iyer (Oncologist)",
-            "neurology": "Dr. M. Singh (Neurologist)"
+            "cardiology": "Dr. P. Rao (Heart Specialist)",
+            "cancer": "Dr. R. Iyer (Cancer Specialist)",
+            "neurology": "Dr. M. Singh (Nerve/Brain Specialist)"
         }
     },
     {
@@ -99,9 +99,9 @@ const hospitalData = [
         location: "gurgaon",
         specialties: ["orthopedics", "cardiology", "neurology"],
         doctors: {
-            "orthopedics": "Dr. A. Verma (Orthopedic Surgeon)",
-            "cardiology": "Dr. K. Malhotra (Cardiologist)",
-            "neurology": "Dr. S. Kapoor (Neurologist)"
+            "orthopedics": "Dr. A. Verma (Bone Specialist)",
+            "cardiology": "Dr. K. Malhotra (Heart Specialist)",
+            "neurology": "Dr. S. Kapoor (Nerve/Brain Specialist)"
         }
     },
     {
@@ -110,9 +110,9 @@ const hospitalData = [
         location: "delhi",
         specialties: ["cancer", "orthopedics", "gastroenterology"],
         doctors: {
-            "cancer": "Dr. R. Sharma (Oncologist)",
-            "orthopedics": "Dr. V. Bhatt (Orthopedic)",
-            "gastroenterology": "Dr. P. Khanna (Gastroenterologist)"
+            "cancer": "Dr. R. Sharma (Cancer Specialist)",
+            "orthopedics": "Dr. V. Bhatt (Bone Specialist)",
+            "gastroenterology": "Dr. P. Khanna (Stomach Specialist)"
         }
     },
     {
@@ -121,9 +121,9 @@ const hospitalData = [
         location: "bangalore",
         specialties: ["pulmonology", "neurology", "urology", "general checkup"],
         doctors: {
-            "pulmonology": "Dr. M. Nair (Pulmonologist)",
-            "neurology": "Dr. R. Iyer (Neurologist)",
-            "urology": "Dr. A. Kulkarni (Urologist)"
+            "pulmonology": "Dr. M. Nair (Lung/Chest Specialist)",
+            "neurology": "Dr. R. Iyer (Nerve/Brain Specialist)",
+            "urology": "Dr. A. Kulkarni (Urine/Bladder Specialist)"
         }
     },
     {
@@ -132,93 +132,12 @@ const hospitalData = [
         location: "vellore",
         specialties: ["orthopedics", "neurology", "cardiology"],
         doctors: {
-            "orthopedics": "Dr. J. Peter (Orthopedic Surgeon)",
-            "neurology": "Dr. L. George (Neurologist)",
-            "cardiology": "Dr. B. Samuel (Cardiologist)"
+            "orthopedics": "Dr. J. Peter (Bone Specialist)",
+            "neurology": "Dr. L. George (Nerve/Brain Specialist)",
+            "cardiology": "Dr. B. Samuel (Heart Specialist)"
         }
     }
 ];
-
-// Handle Send Button Click
-sendBtn.addEventListener("click", () => {
-    const userMessage = userInput.value.trim().toLowerCase();
-    if (userMessage !== "") {
-        displayMessage(userMessage, "user");
-        processInput(userMessage);
-        userInput.value = "";
-    }
-});
-
-// Display Chat Message
-function displayMessage(message, sender) {
-    const messageDiv = document.createElement("div");
-    messageDiv.classList.add(sender === "bot" ? "bot-message" : "user-message");
-    messageDiv.textContent = message;
-    chatContainer.appendChild(messageDiv);
-    chatContainer.scrollTop = chatContainer.scrollHeight;
-}
-
-// Process User Input and Generate Response
-function processInput(userMessage) {
-    if (userMessage.includes("language") || userMessage.includes("भाषा") || userMessage.includes("ভাষা")) {
-        askForLanguage();
-    } else if (checkLanguage(userMessage)) {
-        setLanguage(userMessage);
-    } else if (userMessage.includes("location") || userMessage.includes("address")) {
-        askForLocation();
-    } else if (isLocation(userMessage)) {
-        userLocation = userMessage.toLowerCase();
-        displayMessage(responses[userLanguage]["location_confirm"], "bot");
-    } else if (userMessage.includes("hospital") || userMessage.includes("clinic") || userMessage.includes("checkup")) {
-        if (userLocation) {
-            findNearbyHospitals(userLocation);
-        } else {
-            displayMessage(responses[userLanguage]["location"], "bot");
-        }
-    } else if (userMessage in responses[userLanguage]) {
-        displayMessage(responses[userLanguage][userMessage], "bot");
-    } else {
-        checkForDisease(userMessage);
-    }
-}
-
-// Check if User Mentioned a Language
-function checkLanguage(message) {
-    return Object.keys(languageOptions).find(lang => message.includes(lang)) || false;
-}
-
-// Set User's Preferred Language
-function setLanguage(lang) {
-    const langKey = languageOptions[lang];
-    if (langKey) {
-        userLanguage = langKey;
-        displayMessage(`✅ ${capitalizeFirstLetter(lang)} selected.`, "bot");
-        displayMessage(responses[userLanguage]["hello"], "bot");
-    } else {
-        displayMessage("I'm sorry, I don't support that language yet. Continuing in English.", "bot");
-    }
-}
-
-// Ask for Preferred Language
-function askForLanguage() {
-    displayMessage(responses[userLanguage]["language"], "bot");
-}
-
-// Ask for User Location
-function askForLocation() {
-    displayMessage(responses[userLanguage]["location"], "bot");
-}
-
-// Check if User Provided a Location
-function isLocation(message) {
-    const locationKeywords = ["kolkata", "delhi", "mumbai", "chennai", "bangalore", "gurgaon", "vellore"];
-    return locationKeywords.some(location => message.includes(location.toLowerCase()));
-}
-
-// Capitalize First Letter of Text
-function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
 
 // Check for Disease or Symptoms and Suggest Doctors & Hospitals
 function checkForDisease(userMessage) {
@@ -228,16 +147,23 @@ function checkForDisease(userMessage) {
         "cancer": "cancer",
         "diabetes": "diabetes",
         "brain": "neurology",
+        "nerves": "neurology",
         "neurology": "neurology",
         "bones": "orthopedics",
         "orthopedic": "orthopedics",
         "urology": "urology",
+        "urine": "urology",
+        "bladder": "urology",
         "gynecology": "gynecology",
+        "women's health": "gynecology",
+        "baby delivery": "gynecology",
         "lungs": "pulmonology",
+        "chest": "pulmonology",
         "pulmonary": "pulmonology",
         "stomach": "gastroenterology",
         "gastro": "gastroenterology",
-        "checkup": "general checkup"
+        "checkup": "general checkup",
+        "doctor visit": "general checkup"
     };
 
     // Check for matching disease keywords
@@ -254,54 +180,5 @@ function checkForDisease(userMessage) {
         }
     } else {
         displayMessage(responses[userLanguage]["default"], "bot");
-    }
-}
-
-// Find Suitable Doctors and Hospitals Based on Specialty and Location
-function findDoctorsForSpecialtyAndLocation(specialty, location) {
-    const recommendedHospitals = hospitalData.filter(hospital =>
-        hospital.specialties.includes(specialty) &&
-        hospital.location.toLowerCase() === location.toLowerCase()
-    );
-
-    if (recommendedHospitals.length > 0) {
-        displayMessage(
-            `Here are some hospitals and doctors specializing in ${specialty} near ${capitalizeFirstLetter(location)}:`,
-            "bot"
-        );
-
-        recommendedHospitals.forEach(hospital => {
-            if (hospital.doctors[specialty]) {
-                displayMessage(`🏥 ${hospital.name} - ${hospital.address}`, "bot");
-                displayMessage(`👨‍⚕️ ${hospital.doctors[specialty]}`, "bot");
-            }
-        });
-
-        displayMessage(responses[userLanguage]["checkup"], "bot");
-        displayMessage(responses[userLanguage]["take_care"], "bot");
-    } else {
-        displayMessage(
-            `❗ Sorry, no hospitals found for ${specialty} near ${capitalizeFirstLetter(location)}.`,
-            "bot"
-        );
-    }
-}
-
-// Find Nearby Hospitals Based on Location
-function findNearbyHospitals(location) {
-    const nearbyHospitals = hospitalData.filter(hospital =>
-        hospital.location.toLowerCase() === location.toLowerCase()
-    );
-
-    if (nearbyHospitals.length > 0) {
-        displayMessage(`✅ Here are some hospitals and clinics near ${capitalizeFirstLetter(location)}:`, "bot");
-
-        nearbyHospitals.forEach(hospital => {
-            displayMessage(`🏥 ${hospital.name} - ${hospital.address}`, "bot");
-        });
-
-        displayMessage(responses[userLanguage]["checkup"], "bot");
-    } else {
-        displayMessage(`❗ Sorry, no hospitals found near ${capitalizeFirstLetter(location)}.`, "bot");
     }
 }
