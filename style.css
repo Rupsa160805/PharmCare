@@ -1,16 +1,38 @@
 /* ============================
    Global Styles for All Pages
 =============================== */
+/* Logo Styling for All Pages */
 #logo {
     position: absolute;
     top: 5px;
     left: 5px;
-    width: 60px; /* Set the desired width */
+    width: 60px; /* Adjust size to fit */
     height: auto; /* Maintain aspect ratio */
     cursor: pointer;
     box-shadow: 0 0 12px #ffd700, 0 0 20px #ffd700; /* Optional glow effect */
     border-radius: 50%; /* Optional for rounded logo */
+    transition: transform 0.3s ease-in-out; /* Smooth hover effect */
 }
+
+/* Logo Hover Effect */
+#logo:hover {
+    transform: scale(1.1); /* Slight zoom on hover */
+    box-shadow: 0 0 25px #ffd700;
+}
+
+/* Ensuring Proper Logo Placement in Header */
+header {
+    position: relative;
+    height: 80px; /* Adjust based on header height */
+    padding: 10px;
+    background-color: #001f3f; /* Prussian Blue */
+}
+
+/* Add Padding to Prevent Content Overlap */
+main {
+    margin-top: 90px; /* Prevent content overlap with logo */
+}
+
 
 .doctor-img {
     display: block;
