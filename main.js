@@ -10,6 +10,7 @@ const responses = {
         "location": "Please share your current location to find the nearest clinic or hospital.",
         "clinic": "I’m searching for clinics near your location. Please wait a moment...",
         "language": "I can assist you in multiple languages. Which language do you prefer? (English, Hindi, Bengali, etc.)",
+        "hospital": "Searching for nearby hospitals or clinics for medical tests and health checkups...",
         "default": "I'm sorry, I didn't understand that. Can you please rephrase?"
     },
     "hi": {
@@ -17,6 +18,7 @@ const responses = {
         "location": "कृपया अपना स्थान साझा करें ताकि हम निकटतम क्लिनिक या अस्पताल खोज सकें।",
         "clinic": "मैं आपके स्थान के पास क्लिनिक खोज रहा हूँ। कृपया प्रतीक्षा करें...",
         "language": "मैं कई भाषाओं में आपकी सहायता कर सकता हूँ। आप कौन सी भाषा पसंद करते हैं? (अंग्रेजी, हिंदी, बंगाली आदि)",
+        "hospital": "चिकित्सा परीक्षण और स्वास्थ्य जांच के लिए निकटतम अस्पताल खोज रहा है...",
         "default": "मुझे क्षमा करें, मैंने समझा नहीं। कृपया दोबारा प्रयास करें।"
     },
     "bn": {
@@ -24,6 +26,7 @@ const responses = {
         "location": "নিকটবর্তী ক্লিনিক বা হাসপাতাল খুঁজতে দয়া করে আপনার বর্তমান অবস্থান শেয়ার করুন।",
         "clinic": "আপনার অবস্থানের কাছাকাছি ক্লিনিক খুঁজছি। অনুগ্রহ করে অপেক্ষা করুন...",
         "language": "আমি আপনাকে বিভিন্ন ভাষায় সহায়তা করতে পারি। আপনি কোন ভাষা পছন্দ করবেন? (ইংরেজি, হিন্দি, বাংলা ইত্যাদি)",
+        "hospital": "চিকিৎসা পরীক্ষা এবং স্বাস্থ্য পরীক্ষার জন্য কাছাকাছি হাসপাতাল খুঁজছি...",
         "default": "আমি দুঃখিত, আমি এটি বুঝতে পারিনি। দয়া করে আবার বলুন।"
     }
 };
@@ -84,19 +87,23 @@ function processInput(userMessage) {
     // Check if user wants to change language
     if (userMessage.includes("language") || userMessage.includes("भाषा") || userMessage.includes("ভাষা")) {
         askForLanguage();
-    } 
+    }
     // Check if the user is mentioning a specific language
     else if (checkLanguage(userMessage)) {
         setLanguage(userMessage);
-    } 
+    }
+    // Check if the user is asking for nearby hospitals
+    else if (userMessage.includes("hospital") || userMessage.includes("clinic") || userMessage.includes("test")) {
+        getLocationForHospitals();
+    }
     // Check if the user is sharing a symptom/problem
     else if (checkSymptoms(userMessage)) {
         recommendDoctors(userMessage);
-    } 
+    }
     // Handle predefined responses based on language
     else if (responses[userLanguage][userMessage]) {
         displayMessage(responses[userLanguage][userMessage], "bot");
-    } 
+    }
     // Default fallback
     else {
         displayMessage(responses[userLanguage]["default"], "bot");
@@ -169,15 +176,15 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-// Get User Location
-function getLocation() {
+// Get User Location for Hospitals/Clinics
+function getLocationForHospitals() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
-                displayMessage(`📍 Searching for clinics near (${latitude}, ${longitude})...`, "bot");
-                findClinics(latitude, longitude);
+                displayMessage(responses[userLanguage]["hospital"], "bot");
+                fetchNearbyHospitals(latitude, longitude);
             },
             () => {
                 displayMessage(
@@ -202,17 +209,22 @@ function getLocation() {
     }
 }
 
-// Dummy Function to Find Clinics (Add API later)
-function findClinics(lat, lng) {
+// Fetch Nearby Hospitals/Clinics (Dummy Function for now - Integrate API Later)
+function fetchNearbyHospitals(lat, lng) {
     setTimeout(() => {
         displayMessage(
             userLanguage === "hi"
-                ? "आपके स्थान के पास 3 क्लिनिक मिले।"
+                ? "आपके स्थान के पास 3 क्लिनिक और अस्पताल मिले।"
                 : userLanguage === "bn"
-                ? "আপনার অবস্থানের নিকটে ৩টি ক্লিনিক পাওয়া গেছে।"
-                : "Found 3 clinics near your location. Check the list below:",
+                ? "আপনার অবস্থানের নিকটে ৩টি ক্লিনিক এবং হাসপাতাল পাওয়া গেছে।"
+                : "Found 3 clinics and hospitals near your location. Check the list below:",
             "bot"
         );
-        displayMessage("1. ABC Diagnostics\n2. XYZ Medical Center\n3. Care Plus Hospital", "bot");
+        displayMessage(
+            "1. ABC Diagnostics - General Health Checkup\n" +
+                "2. XYZ Medical Center - Blood Tests & Pathology\n" +
+                "3. Care Plus Hospital - Full Body Checkup",
+            "bot"
+        );
     }, 2000);
 }
