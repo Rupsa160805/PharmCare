@@ -92,6 +92,50 @@ const hospitalData = [
             "cancer": "Dr. R. Iyer (Oncologist)",
             "neurology": "Dr. M. Singh (Neurologist)"
         }
+    },
+    {
+        name: "Medanta Hospital",
+        address: "Gurgaon, Haryana",
+        location: "gurgaon",
+        specialties: ["orthopedics", "cardiology", "neurology"],
+        doctors: {
+            "orthopedics": "Dr. A. Verma (Orthopedic Surgeon)",
+            "cardiology": "Dr. K. Malhotra (Cardiologist)",
+            "neurology": "Dr. S. Kapoor (Neurologist)"
+        }
+    },
+    {
+        name: "Max Super Specialty Hospital",
+        address: "Saket, New Delhi",
+        location: "delhi",
+        specialties: ["cancer", "orthopedics", "gastroenterology"],
+        doctors: {
+            "cancer": "Dr. R. Sharma (Oncologist)",
+            "orthopedics": "Dr. V. Bhatt (Orthopedic)",
+            "gastroenterology": "Dr. P. Khanna (Gastroenterologist)"
+        }
+    },
+    {
+        name: "Manipal Hospital",
+        address: "Bangalore, Karnataka",
+        location: "bangalore",
+        specialties: ["pulmonology", "neurology", "urology", "general checkup"],
+        doctors: {
+            "pulmonology": "Dr. M. Nair (Pulmonologist)",
+            "neurology": "Dr. R. Iyer (Neurologist)",
+            "urology": "Dr. A. Kulkarni (Urologist)"
+        }
+    },
+    {
+        name: "CMC Vellore",
+        address: "Vellore, Tamil Nadu",
+        location: "vellore",
+        specialties: ["orthopedics", "neurology", "cardiology"],
+        doctors: {
+            "orthopedics": "Dr. J. Peter (Orthopedic Surgeon)",
+            "neurology": "Dr. L. George (Neurologist)",
+            "cardiology": "Dr. B. Samuel (Cardiologist)"
+        }
     }
 ];
 
@@ -167,7 +211,7 @@ function askForLocation() {
 
 // Check if User Provided a Location
 function isLocation(message) {
-    const locationKeywords = ["kolkata", "delhi", "mumbai", "chennai", "bangalore"];
+    const locationKeywords = ["kolkata", "delhi", "mumbai", "chennai", "bangalore", "gurgaon", "vellore"];
     return locationKeywords.some(location => message.includes(location.toLowerCase()));
 }
 
@@ -180,7 +224,6 @@ function capitalizeFirstLetter(string) {
 function checkForDisease(userMessage) {
     const diseaseKeywords = {
         "heart": "cardiology",
-        "hearts": "cardiology",
         "cardiology": "cardiology",
         "cancer": "cancer",
         "diabetes": "diabetes",
