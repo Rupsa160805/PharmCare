@@ -45,43 +45,6 @@ const languageOptions = {
 // Default Language
 let userLanguage = "en";
 
-// Doctor and Hospital Suggestions
-const doctorHospitalList = {
-    "heart_disease": ["Dr. Amit Sharma (Cardiologist) - City Heart Clinic", "Carewell Hospital, Sector 12"],
-    "bone_issue": ["Dr. Rakesh Verma (Orthopedic) - Bone & Joint Care", "Ortho Life Hospital, Sector 22"],
-    "nerve_issue": ["Dr. Priya Kapoor (Neurologist) - NeuroCare Clinic", "Mind & Nerve Hospital, Sector 18"],
-    "cancer_issue": ["Dr. Anjali Mehta (Oncologist) - Cancer Care Institute", "LifeLine Cancer Hospital, Sector 32"],
-    "skin_issue": ["Dr. Sanjay Das (Dermatologist) - Skin Glow Clinic", "Derma Health Hospital, Sector 45"],
-    "pulmonary_issue": ["Dr. Ravi Khanna (Pulmonologist) - Lung Care Clinic", "Breathe Easy Hospital, Sector 30"],
-    "women_health": ["Dr. Pooja Bhatia (Gynecologist) - Women’s Health Center", "Mother & Child Hospital, Sector 40"],
-    "general_physician": ["Dr. Rajesh Mehta (General Physician) - City Care Clinic", "HealthFirst Clinic, Sector 15"]
-};
-
-// Detect Health Issues and Respond
-const healthConditions = {
-    "heart": "heart_disease",
-    "cardio": "heart_disease",
-    "bones": "bone_issue",
-    "orthopedic": "bone_issue",
-    "nerves": "nerve_issue",
-    "neurology": "nerve_issue",
-    "cancer": "cancer_issue",
-    "oncology": "cancer_issue",
-    "skin": "skin_issue",
-    "dermatology": "skin_issue",
-    "lungs": "pulmonary_issue",
-    "respiratory": "pulmonary_issue",
-    "breathing": "pulmonary_issue",
-    "women": "women_health",
-    "gynecology": "women_health",
-    "pregnancy": "women_health",
-    "fever": "general_physician",
-    "pain": "general_physician",
-    "headache": "general_physician",
-    "cold": "general_physician",
-    "cough": "general_physician"
-};
-
 // Display User and Bot Messages
 function displayMessage(message, sender) {
     const messageDiv = document.createElement("div");
@@ -102,23 +65,30 @@ function switchLanguage(userMessage) {
     return false;
 }
 
-// Fetch Nearby Hospitals Based on User Location
+// Fetch Nearby Hospitals and Doctors Using Google Places API
 function fetchNearbyHospitals(condition) {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             (position) => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
                 displayMessage(responses[userLanguage][condition], "bot");
 
-                // Show Suggested Doctors and Hospitals
-                const hospitalList = doctorHospitalList[condition] || [];
-                if (hospitalList.length > 0) {
-                    displayMessage(responses[userLanguage]["doctors_found"], "bot");
-                    hospitalList.forEach((hospital) => {
-                        displayMessage(hospital, "bot");
-                    });
-                } else {
-                    displayMessage(responses[userLanguage]["location_error"], "bot");
-                }
+                // Call Google Places API to fetch hospitals and doctors
+                const query = condition === "general_physician" ? "general physician near me" : "gynecologist near me";
+                const googleSearchURL = `https://www.google.com/search?q=${encodeURIComponent(query)}&near=${latitude},${longitude}`;
+
+                displayMessage("Click the link below to see the nearby options:", "bot");
+
+                // Display clickable link
+                const linkElement = document.createElement("a");
+                linkElement.href = googleSearchURL;
+                linkElement.innerText = "Find Nearby Hospitals & Doctors";
+                linkElement.target = "_blank";
+                chatContainer.appendChild(linkElement);
+                chatContainer.appendChild(document.createElement("br"));
+                chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll to bottom
             },
             () => {
                 displayMessage(responses[userLanguage]["location_error"], "bot");
@@ -142,12 +112,14 @@ function processUserInput() {
         return;
     }
 
-    // Check for disease or symptoms
-    for (const [key, value] of Object.entries(healthConditions)) {
-        if (userMessage.includes(key)) {
-            fetchNearbyHospitals(value);
-            return;
-        }
+    // Check for symptoms and fetch nearby hospitals
+    if (userMessage.includes("fever") || userMessage.includes("general physician")) {
+        fetchNearbyHospitals("general_physician");
+        return;
+    }
+    if (userMessage.includes("women") || userMessage.includes("gynecology") || userMessage.includes("pregnancy")) {
+        fetchNearbyHospitals("women_health");
+        return;
     }
 
     // Handle basic responses
