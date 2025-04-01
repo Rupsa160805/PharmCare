@@ -1,9 +1,22 @@
-// Handle User Input and Bot Responses
-const chatContainer = document.getElementById("chat-container");
-const userInput = document.getElementById("user-input");
-const sendBtn = document.getElementById("send-btn");
+// Additional Health Conditions and their Responses
+const healthConditions = {
+    "heart": "heart_disease",
+    "cardio": "heart_disease",
+    "bones": "bone_issue",
+    "orthopedic": "bone_issue",
+    "nerves": "nerve_issue",
+    "neurology": "nerve_issue",
+    "cancer": "cancer_issue",
+    "oncology": "cancer_issue",
+    "skin": "skin_issue",
+    "dermatology": "skin_issue",
+    "pulmonary": "pulmonary_issue",   // Added pulmonary condition
+    "fever": "general_physician_issue", // Added fever/general physician condition
+    "pain": "general_physician_issue",  // Added pain/general physician condition
+    "women": "women_issue"            // Added women issues condition
+};
 
-// Predefined Bot Responses in Multiple Languages
+// Additional Responses in Multiple Languages
 const responses = {
     "en": {
         "hello": "Hello! How can I assist you today?",
@@ -25,17 +38,14 @@ const responses = {
         "switch_language": "Language switched successfully. How may I assist you now?",
         "language_error": "Sorry, I currently support English, Hindi, and Bengali. Please choose one.",
         "ask_location": "Please enable location services so I can suggest nearby hospitals.",
-        "fever": "For fever, I recommend consulting a General Physician. Fetching nearby hospitals...",
-        "pain": "If you are experiencing pain, it’s best to consult a General Physician or a Pain Management Specialist. Searching for nearby hospitals...",
-        "basic_issue": "For basic health issues, a General Physician can assist you. Let me find nearby hospitals...",
-        "women_issue": "For women’s health issues, a Gynecologist can help. Fetching nearby hospitals...",
-        "pulmonology": "For respiratory issues, you should consult a Pulmonologist. Searching for nearby hospitals...",
-        "general_physician": "Here are some general physicians nearby: Dr. John Doe (General Physician) - HealthCare Clinic, Dr. Sarah Smith (General Physician) - City Clinic.",
         "heart_disease": "For heart-related issues, you may consult a Cardiologist. Fetching nearby hospitals...",
         "bone_issue": "For bone problems, an Orthopedic specialist would be helpful. Fetching nearby hospitals...",
         "nerve_issue": "For nerve issues, I recommend consulting a Neurologist. Fetching nearby hospitals...",
         "cancer_issue": "For cancer concerns, please consult an Oncologist. Fetching nearby hospitals...",
-        "skin_issue": "For skin problems, a Dermatologist is the best choice. Fetching nearby hospitals..."
+        "skin_issue": "For skin problems, a Dermatologist is the best choice. Fetching nearby hospitals...",
+        "pulmonary_issue": "For pulmonary issues, you should consult a Pulmonologist. Searching for nearby hospitals...",
+        "general_physician_issue": "For fever or general pain, you should consult a General Physician. Searching for nearby hospitals...",
+        "women_issue": "For women's health issues, you may consult a Gynecologist. Searching for nearby hospitals..."
     },
     "hi": {
         "hello": "नमस्ते! मैं आपकी कैसे सहायता कर सकता हूँ?",
@@ -57,17 +67,14 @@ const responses = {
         "switch_language": "भाषा सफलतापूर्वक बदली गई। अब मैं आपकी कैसे सहायता कर सकता हूँ?",
         "language_error": "मुझे क्षमा करें, फिलहाल मैं केवल अंग्रेजी, हिंदी, और बांग्ला में सहायता कर सकता हूँ।",
         "ask_location": "कृपया स्थान सेवाएं सक्षम करें ताकि मैं निकटतम अस्पतालों का सुझाव दे सकूं।",
-        "fever": "बुखार के लिए, आपको सामान्य चिकित्सक से परामर्श करना चाहिए। निकटतम अस्पताल ढूंढ रहा हूँ...",
-        "pain": "अगर आपको दर्द हो रहा है, तो सामान्य चिकित्सक या दर्द प्रबंधन विशेषज्ञ से मिलना उचित होगा। निकटतम अस्पताल खोज रहा हूँ...",
-        "basic_issue": "सामान्य स्वास्थ्य समस्याओं के लिए, एक सामान्य चिकित्सक आपकी मदद कर सकता है। निकटतम अस्पताल खोज रहा हूँ...",
-        "women_issue": "महिलाओं के स्वास्थ्य संबंधी समस्याओं के लिए, एक स्त्री रोग विशेषज्ञ से परामर्श करें। निकटतम अस्पताल खोज रहा हूँ...",
-        "pulmonology": "श्वसन समस्याओं के लिए, आपको पल्मोनोलॉजिस्ट से परामर्श करना चाहिए। निकटतम अस्पताल खोज रहा हूँ...",
-        "general_physician": "यहां कुछ सामान्य चिकित्सक हैं: डॉ. जॉन डो (सामान्य चिकित्सक) - हेल्थकेयर क्लिनिक, डॉ. सारा स्मिथ (सामान्य चिकित्सक) - सिटी क्लिनिक।",
         "heart_disease": "हृदय से जुड़ी समस्याओं के लिए, आप किसी हृदय रोग विशेषज्ञ से परामर्श करें। निकटतम अस्पतालों की जानकारी ला रहा हूँ...",
         "bone_issue": "हड्डियों की समस्याओं के लिए, किसी अस्थि रोग विशेषज्ञ से परामर्श करें। निकटतम अस्पतालों की जानकारी ला रहा हूँ...",
         "nerve_issue": "नसों की समस्याओं के लिए, किसी न्यूरोलॉजिस्ट से मिलें। निकटतम अस्पताल खोज रहा हूँ...",
         "cancer_issue": "कैंसर के मामलों में, एक ऑन्कोलॉजिस्ट से परामर्श करें। निकटतम अस्पताल खोज रहा हूँ...",
-        "skin_issue": "त्वचा संबंधी समस्याओं के लिए, त्वचा विशेषज्ञ से मिलें। निकटतम अस्पताल खोज रहा हूँ..."
+        "skin_issue": "त्वचा संबंधी समस्याओं के लिए, त्वचा विशेषज्ञ से मिलें। निकटतम अस्पताल खोज रहा हूँ...",
+        "pulmonary_issue": "पुल्मोनरी समस्याओं के लिए, आपको एक पल्मोनोलॉजिस्ट से परामर्श करना चाहिए। निकटतम अस्पताल खोज रहा हूँ...",
+        "general_physician_issue": "बुखार या सामान्य दर्द के लिए, आपको एक सामान्य चिकित्सक से मिलना चाहिए। निकटतम अस्पताल खोज रहा हूँ...",
+        "women_issue": "महिलाओं के स्वास्थ्य समस्याओं के लिए, आप एक गायनकोलॉजिस्ट से परामर्श कर सकती हैं। निकटतम अस्पताल खोज रहा हूँ..."
     },
     "bn": {
         "hello": "হ্যালো! আমি কীভাবে আপনাকে সাহায্য করতে পারি?",
@@ -89,88 +96,30 @@ const responses = {
         "switch_language": "ভাষা সফলভাবে পরিবর্তিত হয়েছে। এখন আমি কীভাবে সাহায্য করতে পারি?",
         "language_error": "দুঃখিত, আমি বর্তমানে শুধুমাত্র ইংরেজি, হিন্দি এবং বাংলা সমর্থন করি।",
         "ask_location": "অনুগ্রহ করে অবস্থান পরিষেবা সক্রিয় করুন যাতে আমি নিকটবর্তী হাসপাতালগুলি সুপারিশ করতে পারি।",
-        "fever": "জ্বরের জন্য, আপনাকে সাধারণ চিকিৎসকের সাথে পরামর্শ করা উচিত। কাছাকাছি হাসপাতাল খুঁজছি...",
-        "pain": "যদি আপনি ব্যথা অনুভব করছেন, তবে এটি সাধারণ চিকিৎসক বা ব্যথা ব্যবস্থাপনা বিশেষজ্ঞের সাথে পরামর্শ করা উচিত। কাছাকাছি হাসপাতাল খুঁজছি...",
-        "basic_issue": "সাধারণ স্বাস্থ্য সমস্যার জন্য, সাধারণ চিকিৎসক আপনাকে সাহায্য করতে পারেন। কাছাকাছি হাসপাতাল খুঁজছি...",
-        "women_issue": "মহিলাদের স্বাস্থ্য সমস্যা জন্য, একজন স্ত্রীরোগ বিশেষজ্ঞের সাথে পরামর্শ করুন। কাছাকাছি হাসপাতাল খুঁজছি...",
-        "pulmonology": "শ্বাসকষ্টের জন্য, একজন পালমোনোলজিস্টের সাথে পরামর্শ করুন। কাছাকাছি হাসপাতাল খুঁজছি...",
-        "general_physician": "এখানে কিছু সাধারণ চিকিৎসক রয়েছেন: ড. জন ডো (সাধারণ চিকিৎসক) - হেলথকেয়ার ক্লিনিক, ড. সারা স্মিথ (সাধারণ চিকিৎসক) - সিটি ক্লিনিক।",
-        "heart_disease": "হৃদরোগ সম্পর্কিত সমস্যার জন্য, একজন কার্ডিওলজিস্টের পরামর্শ নিন। কাছাকাছি হাসপাতাল খুঁজছি...",
-        "bone_issue": "হাড়ের সমস্যার জন্য একজন অর্থোপেডিক বিশেষজ্ঞের সাথে পরামর্শ করুন। কাছাকাছি হাসপাতাল খুঁজছি...",
-        "nerve_issue": "স্নায়ু সম্পর্কিত সমস্যার জন্য একজন নিউরোলজিস্টের সাথে পরামর্শ করুন। কাছাকাছি হাসপাতাল খুঁজছি...",
-        "cancer_issue": "ক্যান্সারের জন্য, একজন অনকোলজিস্টের পরামর্শ নিন। কাছাকাছি হাসপাতাল খুঁজছি...",
-        "skin_issue": "ত্বক সম্পর্কিত সমস্যার জন্য, একজন চর্মরোগ বিশেষজ্ঞের সাথে পরামর্শ করুন। কাছাকাছি হাসপাতাল খুঁজছি..."
+        "heart_disease": "হৃদরোগ সংক্রান্ত সমস্যার জন্য, আপনাকে একজন কার্ডিওলজিস্টের পরামর্শ নিতে হবে। কাছের হাসপাতাল খুঁজছি...",
+        "bone_issue": "হাড়ের সমস্যার জন্য একজন অর্থোপেডিক বিশেষজ্ঞের সাথে যোগাযোগ করুন। কাছাকাছি হাসপাতাল খুঁজছি...",
+        "nerve_issue": "স্নায়বিক সমস্যার জন্য একজন নিউরোলজিস্টের পরামর্শ নিন। কাছের হাসপাতালের সন্ধান করছি...",
+        "cancer_issue": "ক্যান্সার রোগের জন্য অনকোলজিস্টের পরামর্শ নিন। কাছের হাসপাতালের তথ্য আনছি...",
+        "skin_issue": "ত্বক সংক্রান্ত সমস্যার জন্য, একজন চর্মরোগ বিশেষজ্ঞের পরামর্শ নিন। নিকটবর্তী হাসপাতালের তালিকা আনছি...",
+        "pulmonary_issue": "পালমোনারি সমস্যার জন্য, আপনাকে একজন পালমোনোলজিস্টের পরামর্শ নিতে হবে। নিকটবর্তী হাসপাতাল খুঁজছি...",
+        "general_physician_issue": "জ্বর বা সাধারণ ব্যথার জন্য, আপনাকে একজন সাধারণ চিকিৎসকের কাছে যেতে হবে। নিকটবর্তী হাসপাতাল খুঁজছি...",
+        "women_issue": "মহিলাদের স্বাস্থ্য সমস্যার জন্য, আপনাকে একজন গাইনোকোলজিস্টের পরামর্শ নিতে হবে। নিকটবর্তী হাসপাতাল খুঁজছি..."
     }
 };
 
-// Available Languages
-const languageOptions = {
-    "english": "en",
-    "hindi": "hi",
-    "bengali": "bn"
-};
-
-// Default Language
-let userLanguage = "en";
-
-// Doctor and Hospital Suggestions
+// Updated Doctor and Hospital Suggestions for the New Conditions
 const doctorHospitalList = {
-    "fever": ["Dr. James Anderson (General Physician) - HealthCare Clinic", "City Medical Hospital, Sector 1"],
-    "pain": ["Dr. Lisa Monroe (Pain Management Specialist) - PainCare Clinic", "Relief Hospital, Sector 15"],
-    "basic_issue": ["Dr. John Doe (General Physician) - HealthCare Clinic", "City Clinic, Sector 3"],
-    "women_issue": ["Dr. Aisha Khan (Gynecologist) - Women's Health Clinic", "MotherCare Hospital, Sector 9"],
-    "pulmonology": ["Dr. Ramesh Gupta (Pulmonologist) - Respiratory Health Clinic", "BreatheWell Hospital, Sector 10"],
     "heart_disease": ["Dr. Amit Sharma (Cardiologist) - City Heart Clinic", "Carewell Hospital, Sector 12"],
     "bone_issue": ["Dr. Rakesh Verma (Orthopedic) - Bone & Joint Care", "Ortho Life Hospital, Sector 22"],
     "nerve_issue": ["Dr. Priya Kapoor (Neurologist) - NeuroCare Clinic", "Mind & Nerve Hospital, Sector 18"],
     "cancer_issue": ["Dr. Anjali Mehta (Oncologist) - Cancer Care Institute", "LifeLine Cancer Hospital, Sector 32"],
     "skin_issue": ["Dr. Sanjay Das (Dermatologist) - Skin Glow Clinic", "Derma Health Hospital, Sector 45"],
-    "general_physician": ["Dr. John Doe (General Physician) - HealthCare Clinic", "City Clinic, Sector 3"]
+    "pulmonary_issue": ["Dr. Ravi Kumar (Pulmonologist) - PulmoCare Clinic", "Respiratory Health Hospital, Sector 10"], // Pulmonary specialists
+    "general_physician_issue": ["Dr. Neha Gupta (General Physician) - HealthCare Clinic", "City General Hospital, Sector 5"], // General physician for fever/pain
+    "women_issue": ["Dr. Priya Sen (Gynecologist) - Women's Care Clinic", "Women Health Hospital, Sector 20"] // Gynecologist for women's health
 };
 
-// Detect Health Issues and Respond
-const healthConditions = {
-    "fever": "fever",
-    "pain": "pain",
-    "basic": "basic_issue",
-    "women": "women_issue",
-    "gynecology": "women_issue",
-    "pulmonology": "pulmonology",
-    "respiratory": "pulmonology",
-    "heart": "heart_disease",
-    "cardio": "heart_disease",
-    "bones": "bone_issue",
-    "orthopedic": "bone_issue",
-    "nerves": "nerve_issue",
-    "neurology": "nerve_issue",
-    "cancer": "cancer_issue",
-    "oncology": "cancer_issue",
-    "skin": "skin_issue",
-    "dermatology": "skin_issue",
-    "general": "general_physician"
-};
-
-// Display User and Bot Messages
-function displayMessage(message, sender) {
-    const messageDiv = document.createElement("div");
-    messageDiv.className = sender === "bot" ? "bot-message" : "user-message";
-    messageDiv.innerText = message;
-    chatContainer.appendChild(messageDiv);
-    chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll to bottom
-}
-
-// Switch Language Based on User Input
-function switchLanguage(userMessage) {
-    const lowerCaseMessage = userMessage.toLowerCase();
-    if (languageOptions[lowerCaseMessage]) {
-        userLanguage = languageOptions[lowerCaseMessage];
-        displayMessage(responses[userLanguage]["switch_language"], "bot");
-        return true;
-    }
-    return false;
-}
-
-// Fetch Nearby Hospitals Based on User Location
+// Fetch Nearby Hospitals Based on User Location (Updated to handle new conditions)
 function fetchNearbyHospitals(condition) {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -200,7 +149,7 @@ function fetchNearbyHospitals(condition) {
     }
 }
 
-// Process User Input and Respond
+// Process User Input and Respond (Updated to handle new conditions)
 function processUserInput() {
     const userMessage = userInput.value.trim().toLowerCase();
     if (!userMessage) return;
@@ -213,7 +162,7 @@ function processUserInput() {
         return;
     }
 
-    // Check for disease or symptoms
+    // Check for disease or symptoms including the new ones
     for (const [key, value] of Object.entries(healthConditions)) {
         if (userMessage.includes(key)) {
             fetchNearbyHospitals(value);
@@ -228,11 +177,3 @@ function processUserInput() {
         displayMessage(responses[userLanguage]["default"], "bot");
     }
 }
-
-// Add Event Listeners
-sendBtn.addEventListener("click", processUserInput);
-userInput.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") {
-        processUserInput();
-    }
-});
