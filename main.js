@@ -110,73 +110,85 @@ const hospitals = {
     ]
 };
 
-// Multilingual Responses
-const responses = {
-    "en": {
-        "hello": "Hello! How can I assist you today?",
-        "hi": "Hi there! How may I help you?",
-        "thanks": "You're welcome! Let me know if you need further assistance.",
-        "thank you": "You're welcome! Stay healthy.",
-        "sorry": "No worries! How can I assist you?",
-        "language": "Which language do you prefer? (English, Hindi, Bengali)",
-        "ask_disease": "Please mention your health concern so I can suggest suitable doctors and hospitals.",
-        "doctor_recommendation": "Based on your concern, here are some recommended doctors:",
-        "hospital_recommendation": "Here are some hospitals near you specializing in this field:"
-    },
-    "hi": {
-        "hello": "नमस्ते! मैं आपकी कैसे सहायता कर सकता हूँ?",
-        "hi": "नमस्ते! मैं आपकी क्या मदद कर सकता हूँ?",
-        "thanks": "आपका स्वागत है! मुझे बताएं कि और कोई सहायता चाहिए।",
-        "thank you": "धन्यवाद! स्वस्थ रहिए।",
-        "sorry": "कोई बात नहीं! मैं आपकी किस प्रकार सहायता कर सकता हूँ?",
-        "language": "आप कौन सी भाषा पसंद करते हैं? (अंग्रेज़ी, हिंदी, बंगाली)",
-        "ask_disease": "कृपया अपनी समस्या बताएं ताकि मैं उपयुक्त डॉक्टरों और अस्पतालों का सुझाव दे सकूं।",
-        "doctor_recommendation": "आपकी समस्या के अनुसार, यहाँ कुछ अनुशंसित डॉक्टर हैं:",
-        "hospital_recommendation": "यहाँ आपके निकटतम अस्पताल हैं जो इस क्षेत्र में विशेषज्ञता रखते हैं:"
-    },
-    "bn": {
-        "hello": "হ্যালো! আমি কীভাবে আপনাকে সাহায্য করতে পারি?",
-        "hi": "হ্যালো! আমি কিভাবে সাহায্য করতে পারি?",
-        "thanks": "আপনার স্বাগতম! আরও সাহায্যের প্রয়োজন হলে আমাকে জানান।",
-        "thank you": "ধন্যবাদ! সুস্থ থাকুন।",
-        "sorry": "কোনো সমস্যা নেই! আমি কীভাবে সাহায্য করতে পারি?",
-        "language": "আপনি কোন ভাষা পছন্দ করেন? (ইংরেজি, হিন্দি, বাংলা)",
-        "ask_disease": "আপনার সমস্যার কথা উল্লেখ করুন যাতে আমি উপযুক্ত ডাক্তার এবং হাসপাতাল সুপারিশ করতে পারি।",
-        "doctor_recommendation": "আপনার সমস্যার ভিত্তিতে, এখানে কিছু সুপারিশকৃত ডাক্তার আছেন:",
-        "hospital_recommendation": "এখানে আপনার কাছাকাছি কিছু হাসপাতাল রয়েছে যা এই ক্ষেত্রে বিশেষজ্ঞ:"
-    }
-};
+// Chatbot Initialization
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("send-btn").addEventListener("click", processUserInput);
+    document.getElementById("user-input").addEventListener("keypress", (event) => {
+        if (event.key === "Enter") processUserInput();
+    });
+});
 
-// Process user input
+// Process User Input
 function processUserInput() {
-    const userInput = document.getElementById("user-input").value.trim().toLowerCase();
-    if (!userInput) return;
+    const userInputField = document.getElementById("user-input");
+    const userText = userInputField.value.trim().toLowerCase();
 
-    displayMessage(userInput, "user");
-    document.getElementById("user-input").value = "";
+    if (!userText) return;
 
-    if (userInput.includes("hindi")) {
+    displayMessage(userText, "user");
+    userInputField.value = "";
+
+    // Language Switching
+    if (userText.includes("hindi")) {
         selectedLanguage = "hi";
-        displayMessage(responses[selectedLanguage]["language"], "bot");
+        displayMessage("अब से मैं हिंदी में जवाब दूंगा।", "bot");
         return;
-    } else if (userInput.includes("bengali")) {
+    } else if (userText.includes("bengali")) {
         selectedLanguage = "bn";
-        displayMessage(responses[selectedLanguage]["language"], "bot");
+        displayMessage("এখন থেকে আমি বাংলায় উত্তর দেব।", "bot");
         return;
-    } else if (userInput.includes("english")) {
+    } else if (userText.includes("english")) {
         selectedLanguage = "en";
-        displayMessage(responses[selectedLanguage]["language"], "bot");
+        displayMessage("I will now respond in English.", "bot");
         return;
     }
 
+    // Health Condition Detection
     for (const keyword in healthConditions) {
-        if (userInput.includes(keyword)) {
-            displayMessage(responses[selectedLanguage]["doctor_recommendation"], "bot");
-            fetchDoctors(healthConditions[keyword]);
-            fetchNearbyHospitals(healthConditions[keyword]);
+        if (userText.includes(keyword)) {
+            const specialization = healthConditions[keyword];
+            displayMessage(`Based on your concern, here are some recommended doctors:`, "bot");
+            fetchDoctors(specialization);
+            fetchNearbyHospitals(specialization);
             return;
         }
     }
 
-    displayMessage(responses[selectedLanguage]["ask_disease"], "bot");
+    // Default response
+    displayMessage("Please mention your health concern so I can suggest suitable doctors and hospitals.", "bot");
+}
+
+// Display Messages in Chat
+function displayMessage(message, sender) {
+    const chatContainer = document.getElementById("chat-container");
+    if (!chatContainer) return;
+
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add(sender === "user" ? "user-message" : "bot-message");
+    messageDiv.textContent = message;
+    chatContainer.appendChild(messageDiv);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+// Fetch Doctor Details
+function fetchDoctors(specialization) {
+    const doctorList = doctors[specialization] || [];
+    if (doctorList.length > 0) {
+        const doctorMessage = doctorList.map(doc => `👨‍⚕️ ${doc.name} (Fee: ${doc.fee})`).join("\n");
+        displayMessage(doctorMessage, "bot");
+    } else {
+        displayMessage("Sorry, no doctors available for this specialization at the moment.", "bot");
+    }
+}
+
+// Fetch Nearby Hospitals Based on Specialization
+function fetchNearbyHospitals(specialization) {
+    const hospitalList = hospitals[specialization] || [];
+    if (hospitalList.length > 0) {
+        displayMessage("Here are some hospitals specializing in this field:", "bot");
+        const hospitalMessage = hospitalList.join("\n");
+        displayMessage(hospitalMessage, "bot");
+    } else {
+        displayMessage("Sorry, no hospitals found for this specialization.", "bot");
+    }
 }
