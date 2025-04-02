@@ -19,7 +19,7 @@ const healthConditions = {
     "women": { specialist: "Gynecologist", key: "women_issue" }
 };
 
-// Example Doctor Recommendations (can be expanded)
+// Doctor Recommendations
 const doctors = {
     "Cardiologist": ["Dr. Rajesh Sharma", "Dr. Sunita Verma"],
     "Orthopedic": ["Dr. Anil Kumar", "Dr. Rakesh Mehta"],
@@ -31,35 +31,7 @@ const doctors = {
     "Gynecologist": ["Dr. Ananya Ghosh", "Dr. Shweta Nair"]
 };
 
-// Function to detect user's location for hospitals
-function findNearbyHospitals() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            async (position) => {
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
-
-                appendMessage("bot", responses[userLanguage]["location"]);
-
-                // Fetch hospitals using web tool
-                const query = "hospitals near me";
-                const searchResults = await web.search(query);
-                
-                if (searchResults && searchResults.length > 0) {
-                    let hospitalList = searchResults.slice(0, 3).map((hospital, index) => `${index + 1}. ${hospital.title}`).join("<br>");
-                    appendMessage("bot", `Here are some nearby hospitals:<br>${hospitalList}`);
-                } else {
-                    appendMessage("bot", "Sorry, I couldn't find nearby hospitals.");
-                }
-            },
-            () => appendMessage("bot", "Unable to detect your location.")
-        );
-    } else {
-        appendMessage("bot", "Geolocation is not supported in your browser.");
-    }
-}
-
-// Ensure Chatbot Initializes Properly
+// Ensure chatbot initializes properly
 document.addEventListener("DOMContentLoaded", () => {
     const sendButton = document.getElementById("send-btn");
     const userInput = document.getElementById("user-input");
@@ -70,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    console.log("Chatbot initialized successfully.");
+    console.log("✅ Chatbot initialized successfully.");
 
     sendButton.addEventListener("click", processUserInput);
     userInput.addEventListener("keypress", (event) => {
@@ -88,14 +60,14 @@ function processUserInput() {
 
     if (!userMessage) return;
 
-    console.log("User input received:", userMessage);
+    console.log("💬 User input received:", userMessage);
 
     appendMessage("user", userMessage);
-    userInputField.value = ""; // Clear input field after sending
+    userInputField.value = ""; // Clear input field
 
     setTimeout(() => {
         generateBotResponse(userMessage);
-    }, 500); // Adding slight delay for natural interaction
+    }, 500); // Adding slight delay for a natural interaction
 }
 
 // Function to Append Messages to Chat
@@ -112,10 +84,11 @@ function appendMessage(sender, message) {
 // Function to Generate Chatbot Response
 function generateBotResponse(userInput) {
     const lowerInput = userInput.toLowerCase();
-    let botResponse = responses[userLanguage]["default"];
+    let botResponse = "I'm sorry, I didn't understand that. Can you please rephrase?";
 
+    // Language Selection
     if (lowerInput.includes("language")) {
-        botResponse = responses[userLanguage]["language"];
+        botResponse = "I can assist you in multiple languages. Which language do you prefer? (English, Hindi, Bengali)";
     } else if (lowerInput.includes("english")) {
         userLanguage = "en";
         botResponse = "Language set to English.";
@@ -125,16 +98,24 @@ function generateBotResponse(userInput) {
     } else if (lowerInput.includes("bengali") || lowerInput.includes("bangla")) {
         userLanguage = "bn";
         botResponse = "ভাষা বাংলায় পরিবর্তন করা হয়েছে।";
-    } else {
-        // Check if input matches a health issue
+    } 
+    // Greeting Responses
+    else if (lowerInput.includes("hello") || lowerInput.includes("hi")) {
+        botResponse = "Hello! How can I assist you today?";
+    } else if (lowerInput.includes("thanks") || lowerInput.includes("thank you")) {
+        botResponse = "You're welcome! Stay healthy.";
+    } else if (lowerInput.includes("sorry")) {
+        botResponse = "No worries! How can I assist you?";
+    } 
+    // Health Issue Recognition
+    else {
         for (let key in healthConditions) {
             if (lowerInput.includes(key)) {
                 const condition = healthConditions[key];
                 const specialist = condition.specialist;
                 const doctorList = doctors[specialist] || ["No doctor found"];
 
-                botResponse = `${responses[userLanguage]["ask_disease"]}<br>
-                You should see a **${specialist}**.<br>
+                botResponse = `You should see a **${specialist}**.<br>
                 Recommended doctors:<br>${doctorList.join("<br>")}`;
 
                 // Find nearby hospitals
@@ -145,4 +126,32 @@ function generateBotResponse(userInput) {
     }
 
     appendMessage("bot", botResponse);
+}
+
+// Function to Detect User's Location and Find Nearby Hospitals
+function findNearbyHospitals() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                appendMessage("bot", "Fetching your current location to find nearby hospitals...");
+
+                // Fetch hospitals using web tool
+                const query = "hospitals near me";
+                const searchResults = await web.search(query);
+                
+                if (searchResults && searchResults.length > 0) {
+                    let hospitalList = searchResults.slice(0, 3).map((hospital, index) => `${index + 1}. ${hospital.title}`).join("<br>");
+                    appendMessage("bot", `Here are some nearby hospitals:<br>${hospitalList}`);
+                } else {
+                    appendMessage("bot", "Sorry, I couldn't find nearby hospitals.");
+                }
+            },
+            () => appendMessage("bot", "Unable to detect your location.")
+        );
+    } else {
+        appendMessage("bot", "Geolocation is not supported in your browser.");
+    }
 }
