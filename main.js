@@ -1,3 +1,6 @@
+// Default language is English
+let selectedLanguage = "en";
+
 // Health Conditions Mapping
 const healthConditions = {
     "heart": "heart_disease",
@@ -16,9 +19,6 @@ const healthConditions = {
     "women": "women_issue"
 };
 
-// Default language is English
-let selectedLanguage = "en";
-
 // Multilingual Responses (English, Hindi, Bengali)
 const responses = {
     "en": {
@@ -27,10 +27,8 @@ const responses = {
         "thanks": "You're welcome! Let me know if you need further assistance.",
         "thank you": "You're welcome! Stay healthy.",
         "sorry": "No worries! How can I assist you?",
-        "location": "Fetching your current location to find nearby clinics and hospitals...",
-        "clinic": "Searching for clinics near your location. Please wait...",
         "language": "I can assist you in multiple languages. Which language do you prefer? (English, Hindi, Bengali)",
-        "hospital": "Searching for nearby hospitals for medical tests and checkups...",
+        "hospital": "Searching for nearby hospitals...",
         "ask_disease": "Please mention your disease or symptoms so I can suggest suitable doctors and hospitals.",
         "default": "I'm sorry, I didn't understand that. Can you please rephrase?",
         "heart_disease": "For heart-related issues, you may consult a Cardiologist. Fetching nearby hospitals...",
@@ -44,26 +42,15 @@ const responses = {
     },
     "hi": {
         "hello": "नमस्ते! मैं आपकी कैसे सहायता कर सकता हूँ?",
-        "hi": "नमस्कार! मैं आपकी किस प्रकार सहायता कर सकता हूँ?",
-        "thanks": "आपका स्वागत है! मुझे बताएं कि और कोई सहायता चाहिए।",
-        "thank you": "धन्यवाद! स्वस्थ रहिए।",
-        "sorry": "कोई बात नहीं! मैं आपकी किस प्रकार सहायता कर सकता हूँ?",
-        "location": "मैं आपके स्थान का पता लगा रहा हूँ ताकि निकटतम क्लिनिक या अस्पताल खोज सकूं।",
-        "clinic": "मैं आपके स्थान के निकट क्लिनिक खोज रहा हूँ। कृपया प्रतीक्षा करें...",
-        "hospital": "चिकित्सा परीक्षणों और जांच के लिए निकटतम अस्पताल खोज रहा हूँ...",
+        "hospital": "निकटतम अस्पताल खोज रहा हूँ...",
         "ask_disease": "कृपया अपना रोग या लक्षण बताएं ताकि मैं उपयुक्त डॉक्टरों और अस्पतालों का सुझाव दे सकूं।",
-        "default": "मुझे क्षमा करें, मैं इसे समझ नहीं पाया। क्या आप इसे दोहरा सकते हैं?",
-        "heart_disease": "हृदय से जुड़ी समस्याओं के लिए, आप किसी हृदय रोग विशेषज्ञ से परामर्श करें।"
+        "default": "मुझे क्षमा करें, मैं इसे समझ नहीं पाया। क्या आप इसे दोहरा सकते हैं?"
     },
     "bn": {
         "hello": "হ্যালো! আমি কীভাবে আপনাকে সাহায্য করতে পারি?",
-        "hi": "নমস্কার! আমি কীভাবে সাহায্য করতে পারি?",
-        "thanks": "আপনার স্বাগতম! আরও সাহায্যের প্রয়োজন হলে আমাকে জানান।",
-        "thank you": "ধন্যবাদ! সুস্থ থাকুন।",
-        "sorry": "কোনো সমস্যা নেই! আমি কীভাবে সাহায্য করতে পারি?",
-        "location": "আপনার অবস্থান সনাক্ত করছি যাতে কাছের হাসপাতাল বা ক্লিনিক খুঁজে বের করা যায়।",
-        "clinic": "আপনার অবস্থানের কাছাকাছি ক্লিনিক খুঁজছি। অনুগ্রহ করে অপেক্ষা করুন...",
-        "hospital": "চিকিৎসা পরীক্ষা এবং চেকআপের জন্য কাছের হাসপাতাল খুঁজছি..."
+        "hospital": "নিকটবর্তী হাসপাতাল খুঁজছি...",
+        "ask_disease": "আপনার রোগ বা লক্ষণ উল্লেখ করুন যাতে আমি উপযুক্ত ডাক্তার এবং হাসপাতাল সুপারিশ করতে পারি।",
+        "default": "দুঃখিত, আমি এটি বুঝতে পারিনি। দয়া করে পুনরায় বলুন।"
     }
 };
 
@@ -98,9 +85,19 @@ function processUserInput() {
     userInputField.value = "";
 
     // Check if user requested a language change
-    if (userText.includes("hindi")) selectedLanguage = "hi";
-    else if (userText.includes("bengali")) selectedLanguage = "bn";
-    else if (userText.includes("english")) selectedLanguage = "en";
+    if (userText.includes("hindi")) {
+        selectedLanguage = "hi";
+        displayMessage("अब से मैं हिंदी में जवाब दूंगा।", "bot");
+        return;
+    } else if (userText.includes("bengali")) {
+        selectedLanguage = "bn";
+        displayMessage("এখন থেকে আমি বাংলায় উত্তর দেব।", "bot");
+        return;
+    } else if (userText.includes("english")) {
+        selectedLanguage = "en";
+        displayMessage("I will now respond in English.", "bot");
+        return;
+    }
 
     // Look for predefined responses
     let botResponse = responses[selectedLanguage][userText] || responses[selectedLanguage]["default"];
@@ -126,27 +123,37 @@ function displayMessage(message, sender) {
     chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
-// Fetch nearby hospitals
+// Fetch nearby hospitals based on user's live location
 function fetchNearbyHospitals() {
     if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(async (position) => {
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
 
-            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
-            const data = await response.json();
-            const locationName = data.display_name;
+            displayMessage("Fetching hospitals near your location...", "bot");
 
-            displayMessage(`Fetching hospitals near ${locationName}...`, "bot");
+            try {
+                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+                const data = await response.json();
+                const locationName = data.display_name;
 
-            // Dummy hospital response (replace with actual API if needed)
-            const hospitalList = [
-                "Apollo Gleneagles Hospital, Kolkata",
-                "Woodlands Multispeciality Hospital, Kolkata",
-                "Desun Hospital, Kolkata"
-            ];
+                // Get actual hospitals nearby
+                const hospitalSearch = await fetch(`https://overpass-api.de/api/interpreter?data=[out:json];node[amenity=hospital](around:5000,${lat},${lon});out;`);
+                const hospitalData = await hospitalSearch.json();
+                
+                let hospitals = hospitalData.elements.map(h => h.tags.name).filter(name => name).slice(0, 5);
+                
+                if (hospitals.length === 0) {
+                    hospitals = ["No hospitals found nearby."];
+                }
 
-            displayMessage(`Recommended Hospitals:\n${hospitalList.join("\n")}`, "bot");
+                displayMessage(`Nearby hospitals in ${locationName}:\n${hospitals.join("\n")}`, "bot");
+            } catch (error) {
+                displayMessage("Unable to fetch nearby hospitals. Please try again later.", "bot");
+                console.error("Error fetching hospitals:", error);
+            }
+        }, () => {
+            displayMessage("Unable to access your location. Please enable location services.", "bot");
         });
     } else {
         displayMessage("Geolocation is not supported by your browser.", "bot");
