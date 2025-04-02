@@ -224,3 +224,66 @@ li {
     border-radius: 5px;
     border: 1px solid #ddd;
 }
+/* ============================
+   Subscription Plan Styling
+=============================== */
+#services {
+    padding: 20px;
+    text-align: center;
+}
+
+/* Service Boxes with Gold Flex */
+.service-box {
+    background-color: #003153; /* Prussian Blue */
+    border: 2px solid gold;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(255, 215, 0, 0.5);
+    text-align: center;
+}
+
+/* Service Box Headings */
+.service-box h3 {
+    color: gold;
+    text-shadow: 0 0 10px gold;
+}
+
+/* Service Box List */
+.service-box ul {
+    list-style-type: none;
+    padding: 0;
+    color: white;
+}
+
+.service-box ul li {
+    padding: 5px 0;
+}
+
+/* Subscription & Consultation Buttons */
+.service-box button {
+    background: gold;
+    color: #003153;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.service-box button:hover {
+    background: #FFD700;
+    color: black;
+    box-shadow: 0 0 10px gold;
+}
+
+/* Consultation Price Display */
+#consultation-price {
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    margin-top: 10px;
+}
