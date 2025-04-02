@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PharmCare Services</title>
-    <link rel="stylesheet" href="style.css"> <!-- Link your CSS -->
+    <link rel="stylesheet" href="style.css"> <!-- Linking external CSS -->
 </head>
-<body style="background-color: #003153; color: white;">
+<body>
 
     <!-- Header Section -->
     <header>
@@ -20,16 +20,16 @@
         </nav>
     </header>
 
-    <!-- Main Content Section -->
+    <!-- Main Content -->
     <main>
         <section id="services">
             <h2>Our Services</h2>
-            <p>PharmCare offers a range of healthcare services to support your well-being, from free trials to premium consultations.We offer teleconsultation, e-prescriptions, health monitoring, multilingual support,  fast services. We provide cost effective services and also can tell your nearest clinic or hospitals for conducting medical tests.</p>
+            <p>PharmCare provides a variety of healthcare services.We offer teleconsultation, e-prescriptions, health monitoring, multilingual support,  fast services. We provide cost effective services and also can tell your nearest clinic or hospitals for conducting medical tests. Choose a plan that suits your needs.</p>
 
-            <!-- Free Trial Box -->
+            <!-- Free Trial -->
             <div class="service-box">
                 <h3>Free Trial</h3>
-                <p>Get started with a free trial to experience our basic healthcare services.</p>
+                <p>Experience PharmCare with a free trial.</p>
                 <ul>
                     <li>1 Free Consultation</li>
                     <li>Basic Health Reports</li>
@@ -38,10 +38,10 @@
                 <button onclick="subscribe('free')">Start Free Trial</button>
             </div>
 
-            <!-- Subscription Box -->
+            <!-- Subscription Plan -->
             <div class="service-box">
                 <h3>Subscription Plan</h3>
-                <p>Unlock discounted consultation prices (₹100-₹150 off per consultation) and priority services.</p>
+                <p>Get discounted consultations (₹100-₹150 off) and priority access.</p>
                 <ul>
                     <li>Unlimited Consultations</li>
                     <li>Advanced Health Reports</li>
@@ -50,25 +50,21 @@
                 <button onclick="subscribe('premium')">Subscribe Now</button>
             </div>
 
-            <!-- Consultation Box -->
+            <!-- Consultation -->
             <div class="service-box">
                 <h3>Consultation</h3>
-                <p>Book a one-time consultation with our expert doctors.</p>
-                <ul>
-                    <li>General Physician</li>
-                    <li>Specialist Consultations</li>
-                    <li>Emergency Telemedicine</li>
-                </ul>
+                <p>Book an expert consultation at a reduced price with a subscription.</p>
+                <p id="consultation-price">Regular Price: ₹500</p>
                 <button onclick="subscribe('consultation')">Book a Consultation</button>
             </div>
         </section>
     </main>
 
-    <!-- Footer Section -->
+    <!-- Footer -->
     <footer>
         <p>&copy; 2025 PharmCare. All rights reserved.</p>
     </footer>
 
-    <script src="subscription.js"></script> <!-- Link to Subscription Script -->
+    <script src="subscriptions.js"></script> <!-- Linking JavaScript -->
 </body>
 </html>
