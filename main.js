@@ -59,11 +59,11 @@ const doctors = {
 
 // Hardcoded Hospital Data based on Approximate Locations
 const hospitals = [
-    { name: { en: "City Hospital", hi: "सिटी अस्पताल", bn: "সিটি হাসপাতাল" }, latRange: [22.50, 22.60], lonRange: [88.30, 88.40], address: "Park Street, Kolkata" },
-    { name: { en: "Metro Care Hospital", hi: "मेट्रो केयर अस्पताल", bn: "মেট্রো কেয়ার হাসপাতাল" }, latRange: [28.60, 28.70], lonRange: [77.10, 77.20], address: "Connaught Place, Delhi" },
-    { name: { en: "Green Cross Medical", hi: "ग्रीन क्रॉस मेडिकल", bn: "গ্রীন ক্রস মেডিক্যাল" }, latRange: [19.00, 19.10], lonRange: [72.80, 72.90], address: "Andheri, Mumbai" },
-    { name: { en: "Sunrise Hospital", hi: "सनराइज अस्पताल", bn: "সানরাইজ হাসপাতাল" }, latRange: [13.00, 13.10], lonRange: [77.50, 77.60], address: "MG Road, Bangalore" },
-    { name: { en: "Apollo Clinic", hi: "अपोलो क्लिनिक", bn: "অ্যাপোলো ক্লিনিক" }, latRange: [17.40, 17.50], lonRange: [78.40, 78.50], address: "Banjara Hills, Hyderabad" }
+    { name: { en: "City Hospital", hi: "सिटी अस्पताल", bn: "সিটি হাসপাতাল" }, lat: 22.57, lon: 88.36, address: "Park Street, Kolkata" },
+    { name: { en: "Metro Care Hospital", hi: "मेट्रो केयर अस्पताल", bn: "মেট্রো কেয়ার হাসপাতাল" }, lat: 28.64, lon: 77.18, address: "Connaught Place, Delhi" },
+    { name: { en: "Green Cross Medical", hi: "ग्रीन क्रॉस मेडिकल", bn: "গ্রীন ক্রস মেডিক্যাল" }, lat: 19.08, lon: 72.87, address: "Andheri, Mumbai" },
+    { name: { en: "Sunrise Hospital", hi: "सनराइज अस्पताल", bn: "সানরাইজ হাসপাতাল" }, lat: 12.97, lon: 77.59, address: "MG Road, Bangalore" },
+    { name: { en: "Apollo Clinic", hi: "अपोलो क्लिनिक", bn: "অ্যাপোলো ক্লিনিক" }, lat: 17.44, lon: 78.45, address: "Banjara Hills, Hyderabad" }
 ];
 
 // Multilingual Responses
@@ -141,7 +141,14 @@ function fetchDoctors(specialization) {
 function fetchNearbyHospitals() {
     navigator.geolocation.getCurrentPosition((position) => {
         let userLat = position.coords.latitude, userLon = position.coords.longitude;
-        let nearbyHospitals = hospitals.filter(h => userLat >= h.latRange[0] && userLat <= h.latRange[1] && userLon >= h.lonRange[0] && userLon <= h.lonRange[1]);
-        displayMessage(nearbyHospitals.length ? nearbyHospitals.map(h => `${h.name[selectedLanguage]} - ${h.address}`).join("\n") : "No hospitals found.", "bot");
+        let nearestHospital = hospitals.reduce((prev, curr) => {
+            let prevDist = Math.hypot(userLat - prev.lat, userLon - prev.lon);
+            let currDist = Math.hypot(userLat - curr.lat, userLon - curr.lon);
+            return currDist < prevDist ? curr : prev;
+        });
+
+        displayMessage(`${nearestHospital.name[selectedLanguage]} - ${nearestHospital.address}`, "bot");
+    }, () => {
+        displayMessage("Unable to fetch location. Please enable location services.", "bot");
     });
 }
