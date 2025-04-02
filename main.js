@@ -1,7 +1,20 @@
-// Store user's selected language (default: English)
+// Default Language (English)
 let userLanguage = "en";
 
-// Health Conditions Mapping
+// Language Keywords Mapping
+const languageMapping = {
+    "english": "en",
+    "hindi": "hi",
+    "hindi me": "hi",
+    "hindi mein": "hi",
+    "bengali": "bn",
+    "bangla": "bn",
+    "বাংলা": "bn",
+    "ইংরেজি": "en",
+    "हिंदी": "hi"
+};
+
+// Health Conditions and Specialist Mapping
 const healthConditions = {
     "heart": { specialist: "Cardiologist", key: "heart_disease" },
     "bones": { specialist: "Orthopedic", key: "bone_issue" },
@@ -39,27 +52,25 @@ const responses = {
     },
     "hi": {
         "greeting": "नमस्ते! मैं आपकी कैसे सहायता कर सकता हूँ?",
-        "thanks": "आपका स्वागत है! स्वस्थ रहें।",
-        "sorry": "कोई बात नहीं! मैं आपकी किस प्रकार सहायता कर सकता हूँ?",
-        "language": "मैं कई भाषाओं में सहायता कर सकता हूँ। आप किस भाषा को प्राथमिकता देते हैं? (अंग्रेजी, हिंदी, बंगाली)",
-        "location": "आपका स्थान खोज रहा हूँ ताकि निकटतम अस्पताल मिल सके...",
+        "thanks": "आपका स्वागत है! स्वस्थ रहिए।",
+        "sorry": "कोई बात नहीं! मैं आपकी कैसे सहायता कर सकता हूँ?",
+        "location": "मैं आपके स्थान का पता लगा रहा हूँ ताकि निकटतम अस्पताल खोज सकूँ...",
         "hospital": "चिकित्सा परीक्षणों और जांच के लिए निकटतम अस्पताल खोज रहा हूँ...",
-        "ask_disease": "कृपया अपना रोग या लक्षण बताएं ताकि मैं उपयुक्त डॉक्टरों और अस्पतालों का सुझाव दे सकूं।",
-        "default": "मुझे क्षमा करें, मैं इसे समझ नहीं पाया। कृपया दोहराएँ।"
+        "ask_disease": "कृपया अपनी बीमारी या लक्षण बताएं ताकि मैं उपयुक्त डॉक्टर और अस्पताल सुझा सकूं।",
+        "default": "मुझे क्षमा करें, मैं इसे समझ नहीं पाया। क्या आप इसे दोहरा सकते हैं?"
     },
     "bn": {
-        "greeting": "নমস্কার! আমি কীভাবে সাহায্য করতে পারি?",
+        "greeting": "হ্যালো! আমি কীভাবে আপনাকে সাহায্য করতে পারি?",
         "thanks": "আপনার স্বাগতম! সুস্থ থাকুন।",
         "sorry": "কোনো সমস্যা নেই! আমি কীভাবে সাহায্য করতে পারি?",
-        "language": "আমি একাধিক ভাষায় সহায়তা করতে পারি। আপনি কোন ভাষা পছন্দ করেন? (ইংরেজি, হিন্দি, বাংলা)",
-        "location": "আপনার অবস্থান খুঁজছি যাতে কাছের হাসপাতাল খুঁজে পাওয়া যায়...",
-        "hospital": "চিকিৎসা পরীক্ষার জন্য কাছের হাসপাতাল খুঁজছি...",
+        "location": "আপনার অবস্থান সনাক্ত করছি যাতে কাছের হাসপাতাল খুঁজে বের করা যায়...",
+        "hospital": "চিকিৎসার জন্য কাছাকাছি হাসপাতাল খুঁজছি...",
         "ask_disease": "আপনার রোগ বা লক্ষণ উল্লেখ করুন যাতে আমি উপযুক্ত ডাক্তার ও হাসপাতাল সুপারিশ করতে পারি।",
-        "default": "দুঃখিত, আমি এটি বুঝতে পারিনি। অনুগ্রহ করে পুনরায় বলুন।"
+        "default": "দুঃখিত, আমি এটি বুঝতে পারিনি। দয়া করে পুনরায় বলুন।"
     }
 };
 
-// Ensure chatbot initializes properly
+// Initialize chatbot
 document.addEventListener("DOMContentLoaded", () => {
     console.log("✅ Chatbot script loaded successfully.");
 
@@ -83,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("✅ Chatbot event listeners initialized.");
 });
 
-// Function to Process User Input
+// Process User Input
 function processUserInput() {
     const userInputField = document.getElementById("user-input");
     const userMessage = userInputField.value.trim();
@@ -97,10 +108,10 @@ function processUserInput() {
 
     setTimeout(() => {
         generateBotResponse(userMessage);
-    }, 500); // Slight delay for a natural interaction
+    }, 500);
 }
 
-// Function to Append Messages to Chat
+// Append Messages to Chat
 function appendMessage(sender, message) {
     const chatContainer = document.getElementById("chat-container");
     const messageDiv = document.createElement("div");
@@ -108,70 +119,62 @@ function appendMessage(sender, message) {
     messageDiv.classList.add(sender === "user" ? "user-message" : "bot-message");
     messageDiv.innerHTML = message;
     chatContainer.appendChild(messageDiv);
-    chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll to latest message
-
-    console.log(`✅ Message appended: [${sender}] ${message}`);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
-// Function to Generate Chatbot Response
+// Generate Bot Response
 function generateBotResponse(userInput) {
     const lowerInput = userInput.toLowerCase();
     let botResponse = responses[userLanguage]["default"];
 
-    // Language Selection
-    if (lowerInput.includes("language")) {
-        botResponse = responses[userLanguage]["language"];
-    } else if (lowerInput.includes("english")) {
-        userLanguage = "en";
-        botResponse = "Language set to English.";
-    } else if (lowerInput.includes("hindi")) {
-        userLanguage = "hi";
-        botResponse = "भाषा हिंदी में बदल दी गई।";
-    } else if (lowerInput.includes("bengali") || lowerInput.includes("bangla")) {
-        userLanguage = "bn";
-        botResponse = "ভাষা বাংলায় পরিবর্তন করা হয়েছে।";
-    } 
-    // Greeting Responses
-    else if (lowerInput.includes("hello") || lowerInput.includes("hi")) {
-        botResponse = responses[userLanguage]["greeting"];
-    } else if (lowerInput.includes("thanks") || lowerInput.includes("thank you")) {
-        botResponse = responses[userLanguage]["thanks"];
-    } else if (lowerInput.includes("sorry")) {
-        botResponse = responses[userLanguage]["sorry"];
-    } 
-    // Health Issue Recognition
-    else {
-        for (let key in healthConditions) {
-            if (lowerInput.includes(key)) {
-                const condition = healthConditions[key];
-                const specialist = condition.specialist;
-                const doctorList = doctors[specialist] || ["No doctor found"];
-
-                botResponse = `আপনাকে **${specialist}** এর সাথে যোগাযোগ করতে হবে।<br>
-                সুপারিশকৃত ডাক্তার:<br>${doctorList.join("<br>")}`;
-
-                // Find nearby hospitals
-                findNearbyHospitals();
-                break;
-            }
+    // Detect Language Change
+    for (let lang in languageMapping) {
+        if (lowerInput.includes(lang)) {
+            userLanguage = languageMapping[lang];
+            botResponse = responses[userLanguage]["greeting"];
+            appendMessage("bot", botResponse);
+            return;
         }
+    }
+
+    // Detect Health Issue
+    for (let key in healthConditions) {
+        if (lowerInput.includes(key)) {
+            const condition = healthConditions[key];
+            const specialist = condition.specialist;
+            const doctorList = doctors[specialist] || ["No doctor found"];
+
+            botResponse = `${specialist} specialist recommended.<br>
+            Recommended doctors:<br>${doctorList.join("<br>")}<br>
+            Now finding hospitals...`;
+
+            appendMessage("bot", botResponse);
+            findNearbyHospitals();
+            return;
+        }
+    }
+
+    // Standard Responses
+    if (responses[userLanguage][lowerInput]) {
+        botResponse = responses[userLanguage][lowerInput];
     }
 
     appendMessage("bot", botResponse);
 }
 
-// Function to Detect User's Location and Find Nearby Hospitals
+// Fetch Nearby Hospitals with Name & Location
 async function findNearbyHospitals() {
     appendMessage("bot", responses[userLanguage]["location"]);
 
     try {
-        const searchResults = await web.search("hospitals near me");
+        const searchResults = await web.search("hospitals near me with address");
+        let hospitalList = searchResults
+            .slice(0, 3)
+            .map((hospital, index) => `${index + 1}. <strong>${hospital.title}</strong><br>📍 ${hospital.snippet}`)
+            .join("<br><br>");
 
-        if (searchResults && searchResults.length > 0) {
-            let hospitalList = searchResults.slice(0, 3).map((hospital, index) => `${index + 1}. ${hospital.title}`).join("<br>");
-            appendMessage("bot", hospitalList);
-        }
+        appendMessage("bot", `<strong>Nearby Hospitals:</strong><br>${hospitalList}`);
     } catch (error) {
-        appendMessage("bot", "Sorry, unable to fetch hospital details.");
+        appendMessage("bot", "❌ Sorry, unable to fetch hospital details.");
     }
 }
