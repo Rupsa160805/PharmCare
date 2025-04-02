@@ -6,32 +6,29 @@ const translations = {
     en: {
         doctors: "Here are some recommended doctors:",
         hospitals: "Here are some hospitals specializing in this field:",
-        noDoctors: "Sorry, no doctors available for this specialization at the moment.",
-        noHospitals: "Sorry, no hospitals found for this specialization.",
         unknown: "I didn't understand. Please mention a health issue or ask for a doctor.",
         greeting: "Hello! How can I assist you today?",
         thanks: "You're welcome! Let me know if you need any more help.",
-        sorry: "No worries! How can I assist you?"
+        sorry: "No worries! How can I assist you?",
+        languageChanged: "I will now respond in English."
     },
     hi: {
         doctors: "यहाँ कुछ अनुशंसित डॉक्टर हैं:",
         hospitals: "यहाँ इस क्षेत्र में विशेषज्ञ अस्पताल हैं:",
-        noDoctors: "माफ़ करें, इस विशेषता के लिए कोई डॉक्टर उपलब्ध नहीं हैं।",
-        noHospitals: "माफ़ करें, इस विशेषता के लिए कोई अस्पताल नहीं मिला।",
         unknown: "मैं समझ नहीं पाया। कृपया कोई स्वास्थ्य समस्या बताएं या डॉक्टर से पूछें।",
         greeting: "नमस्ते! मैं आपकी कैसे सहायता कर सकता हूँ?",
         thanks: "आपका स्वागत है! अगर आपको और मदद चाहिए तो बताइए।",
-        sorry: "कोई बात नहीं! मैं आपकी कैसे सहायता कर सकता हूँ?"
+        sorry: "कोई बात नहीं! मैं आपकी कैसे सहायता कर सकता हूँ?",
+        languageChanged: "अब से मैं हिंदी में जवाब दूंगा।"
     },
     bn: {
         doctors: "এখানে কিছু সুপারিশকৃত ডাক্তার:",
         hospitals: "এখানে এই ক্ষেত্রে বিশেষজ্ঞ হাসপাতাল রয়েছে:",
-        noDoctors: "দুঃখিত, এই বিশেষজ্ঞতার জন্য কোনো ডাক্তার পাওয়া যায়নি।",
-        noHospitals: "দুঃখিত, এই বিশেষজ্ঞতার জন্য কোনো হাসপাতাল পাওয়া যায়নি।",
         unknown: "আমি বুঝতে পারিনি। অনুগ্রহ করে কোনো স্বাস্থ্য সমস্যা উল্লেখ করুন বা ডাক্তার সম্পর্কে জিজ্ঞাসা করুন।",
         greeting: "হ্যালো! আমি কিভাবে আপনাকে সাহায্য করতে পারি?",
         thanks: "আপনাকে স্বাগতম! যদি আরও সাহায্য দরকার হয়, জানান।",
-        sorry: "কোনো সমস্যা নেই! আমি কিভাবে আপনাকে সাহায্য করতে পারি?"
+        sorry: "কোনো সমস্যা নেই! আমি কিভাবে আপনাকে সাহায্য করতে পারি?",
+        languageChanged: "এখন থেকে আমি বাংলায় উত্তর দেব।"
     }
 };
 
@@ -64,20 +61,6 @@ const doctors = {
     "Psychiatrist": [{ name: "Dr. Anirban Roy", fee: "₹1200" }, { name: "Dr. Shalini Gupta", fee: "₹1100" }]
 };
 
-// Hospitals List
-const hospitals = {
-    "Cardiologist": ["🏥 Heart Care Hospital", "🏥 Pulse Cardiac Center"],
-    "Orthopedic": ["🏥 Bone & Joint Clinic", "🏥 Ortho Plus Hospital"],
-    "Neurologist": ["🏥 Brain & Spine Institute", "🏥 Neuro Care Hospital"],
-    "Oncologist": ["🏥 Cancer Institute", "🏥 Oncology Care Center"],
-    "Dermatologist": ["🏥 Skin & Hair Clinic", "🏥 Glow Dermatology Center"],
-    "Pulmonologist": ["🏥 Respiratory Health Center", "🏥 Pulmonary Care Hospital"],
-    "Gynecologist": ["🏥 Women's Health Center", "🏥 Motherhood Hospital"],
-    "General Physician": ["🏥 MedLife Clinic", "🏥 City General Hospital"],
-    "Proctologist": ["🏥 Piles & Anorectal Clinic", "🏥 Proctology Care Center"],
-    "Psychiatrist": ["🏥 Mental Wellness Center", "🏥 Psychiatry Health Clinic"]
-};
-
 // Chatbot Initialization
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("send-btn").addEventListener("click", processUserInput);
@@ -96,11 +79,24 @@ function processUserInput() {
     userInputField.value = "";
 
     // Language Switching
-    if (userText.includes("hindi")) { selectedLanguage = "hi"; displayMessage("अब से मैं हिंदी में जवाब दूंगा।", "bot"); return; }
-    if (userText.includes("bengali")) { selectedLanguage = "bn"; displayMessage("এখন থেকে আমি বাংলায় উত্তর দেব।", "bot"); return; }
-    if (userText.includes("english")) { selectedLanguage = "en"; displayMessage("I will now respond in English.", "bot"); return; }
+    if (userText.includes("hindi")) { 
+        selectedLanguage = "hi"; 
+        displayMessage(translations[selectedLanguage].languageChanged, "bot"); 
+        return; 
+    }
+    if (userText.includes("bengali")) { 
+        selectedLanguage = "bn"; 
+        displayMessage(translations[selectedLanguage].languageChanged, "bot"); 
+        return; 
+    }
+    if (userText.includes("english")) { 
+        selectedLanguage = "en"; 
+        displayMessage(translations[selectedLanguage].languageChanged, "bot"); 
+        return; 
+    }
 
     // Health Condition Detection
+    let found = false;
     for (const keyword in healthConditions) {
         if (userText.includes(keyword)) {
             const specialization = healthConditions[keyword];
@@ -108,13 +104,46 @@ function processUserInput() {
             fetchDoctors(specialization);
             displayMessage(translations[selectedLanguage].hospitals, "bot");
             fetchHospitals(specialization);
-            return;
+            found = true;
+            break;
         }
     }
 
-    // Friendly Responses
-    if (userText.includes("hello") || userText.includes("hi")) displayMessage(translations[selectedLanguage].greeting, "bot");
-    else if (userText.includes("thanks")) displayMessage(translations[selectedLanguage].thanks, "bot");
-    else if (userText.includes("sorry")) displayMessage(translations[selectedLanguage].sorry, "bot");
-    else displayMessage(translations[selectedLanguage].unknown, "bot");
+    if (!found) {
+        if (userText.includes("hello") || userText.includes("hi")) {
+            displayMessage(translations[selectedLanguage].greeting, "bot");
+        } else if (userText.includes("thanks")) {
+            displayMessage(translations[selectedLanguage].thanks, "bot");
+        } else if (userText.includes("sorry")) {
+            displayMessage(translations[selectedLanguage].sorry, "bot");
+        } else {
+            displayMessage(translations[selectedLanguage].unknown, "bot");
+        }
+    }
+}
+
+// Display Messages
+function displayMessage(message, sender) {
+    const chatContainer = document.getElementById("chat-container");
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add(sender === "user" ? "user-message" : "bot-message");
+    messageDiv.textContent = message;
+    chatContainer.appendChild(messageDiv);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+// Fetch Doctor Details
+function fetchDoctors(specialization) {
+    const doctorList = doctors[specialization] || [];
+    if (doctorList.length > 0) {
+        displayMessage(doctorList.map(doc => `👨‍⚕️ ${doc.name} (Fee: ${doc.fee})`).join("\n"), "bot");
+    }
+}
+
+// Fetch Hospitals
+function fetchHospitals(specialization) {
+    const hospitalList = hospitals[specialization] || [];
+    if (hospitalList.length > 0) {
+        displayMessage(hospitalList.join("\n"), "bot");
+    }
 }
