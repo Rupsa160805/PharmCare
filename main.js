@@ -1,3 +1,6 @@
+// Debugging: Ensure script loads
+console.log("Chatbot script loaded successfully!");
+
 // Default language is English
 let selectedLanguage = "en";
 
@@ -5,32 +8,18 @@ let selectedLanguage = "en";
 const healthConditions = {
     "heart": "Cardiologist",
     "cardio": "Cardiologist",
-    "women": "Gynecologist",
-    "pregnancy": "Gynecologist",
-    "gynaecology": "Gynecologist",
     "bones": "Orthopedic",
     "orthopedic": "Orthopedic",
-    "joint pain": "Orthopedic",
     "nerves": "Neurologist",
     "neurology": "Neurologist",
-    "brain": "Neurologist",
-    "stroke": "Neurologist",
     "cancer": "Oncologist",
     "oncology": "Oncologist",
-    "tumor": "Oncologist",
     "skin": "Dermatologist",
     "dermatology": "Dermatologist",
-    "rash": "Dermatologist",
-    "infection": "Dermatologist",
     "pulmonary": "Pulmonologist",
-    "lungs": "Pulmonologist",
-    "breathing": "Pulmonologist",
-    "asthma": "Pulmonologist",
     "fever": "General Physician",
-    "cold": "General Physician",
-    "flu": "General Physician",
     "pain": "General Physician",
-    "cough": "General Physician"
+    "women": "Gynecologist"
 };
 
 // Doctors List with Consultation Fees
@@ -69,7 +58,7 @@ const doctors = {
     ]
 };
 
-// Multilingual Responses
+// Predefined Responses
 const responses = {
     "en": {
         "hello": "Hello! How can I assist you today?",
@@ -107,17 +96,15 @@ const responses = {
     }
 };
 
-// Chatbot Initialization
-document.addEventListener("DOMContentLoaded", () => {
+// Initialize Chatbot
+window.onload = function () {
+    console.log("Chatbot initialized.");
+
     document.getElementById("send-btn").addEventListener("click", processUserInput);
     document.getElementById("user-input").addEventListener("keypress", (event) => {
-        if (event.key === "Enter") {
-            processUserInput();
-        }
+        if (event.key === "Enter") processUserInput();
     });
-
-    console.log("Chatbot initialized.");
-});
+};
 
 function processUserInput() {
     const userInputField = document.getElementById("user-input");
@@ -149,6 +136,7 @@ function processUserInput() {
             botResponse = responses[selectedLanguage]["doctor_recommendation"];
             displayMessage(botResponse, "bot");
             fetchDoctors(healthConditions[keyword]);
+            fetchNearbyHospitals();
             return;
         }
     }
@@ -156,6 +144,7 @@ function processUserInput() {
     displayMessage(botResponse, "bot");
 }
 
+// Display Messages
 function displayMessage(message, sender) {
     const chatContainer = document.getElementById("chat-container");
     const messageDiv = document.createElement("div");
@@ -165,8 +154,16 @@ function displayMessage(message, sender) {
     chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
+// Fetch Doctor Details
 function fetchDoctors(specialization) {
     const doctorList = doctors[specialization] || [];
     let doctorMessage = doctorList.map(doc => `${doc.name} (Fee: ${doc.fee})`).join("\n");
-    displayMessage(doctorMessage || "No available doctors.", "bot");
+
+    if (!doctorMessage) doctorMessage = "No available doctors for this specialization.";
+    displayMessage(doctorMessage, "bot");
+}
+
+// Fetch Nearby Hospitals (Dummy Locations)
+function fetchNearbyHospitals() {
+    displayMessage("Nearby hospitals:\n- City Hospital\n- Metro Care\n- Green Cross Medical", "bot");
 }
