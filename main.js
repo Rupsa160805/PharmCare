@@ -114,7 +114,10 @@ const hospitals = {
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("send-btn").addEventListener("click", processUserInput);
     document.getElementById("user-input").addEventListener("keypress", (event) => {
-        if (event.key === "Enter") processUserInput();
+        if (event.key === "Enter") {
+            event.preventDefault();
+            processUserInput();
+        }
     });
 });
 
@@ -165,7 +168,7 @@ function displayMessage(message, sender) {
 
     const messageDiv = document.createElement("div");
     messageDiv.classList.add(sender === "user" ? "user-message" : "bot-message");
-    messageDiv.textContent = message;
+    messageDiv.innerHTML = message.replace(/\n/g, "<br>"); // Preserve new lines
     chatContainer.appendChild(messageDiv);
     chatContainer.scrollTop = chatContainer.scrollHeight;
 }
@@ -174,7 +177,7 @@ function displayMessage(message, sender) {
 function fetchDoctors(specialization) {
     const doctorList = doctors[specialization] || [];
     if (doctorList.length > 0) {
-        const doctorMessage = doctorList.map(doc => `👨‍⚕️ ${doc.name} (Fee: ${doc.fee})`).join("\n");
+        const doctorMessage = doctorList.map(doc => `👨‍⚕️ <b>${doc.name}</b> (Fee: ${doc.fee})`).join("<br>");
         displayMessage(doctorMessage, "bot");
     } else {
         displayMessage("Sorry, no doctors available for this specialization at the moment.", "bot");
@@ -186,7 +189,7 @@ function fetchNearbyHospitals(specialization) {
     const hospitalList = hospitals[specialization] || [];
     if (hospitalList.length > 0) {
         displayMessage("Here are some hospitals specializing in this field:", "bot");
-        const hospitalMessage = hospitalList.join("\n");
+        const hospitalMessage = hospitalList.map(hosp => `🏥 ${hosp}`).join("<br>");
         displayMessage(hospitalMessage, "bot");
     } else {
         displayMessage("Sorry, no hospitals found for this specialization.", "bot");
