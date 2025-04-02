@@ -97,4 +97,81 @@ const responses = {
         "thanks": "আপনার স্বাগতম! আরও সাহায্যের প্রয়োজন হলে আমাকে জানান।",
         "thank you": "ধন্যবাদ! সুস্থ থাকুন।",
         "sorry": "কোনো সমস্যা নেই! আমি কীভাবে সাহায্য করতে পারি?",
-        "language": "আপনি কোন ভাষা পছন্দ করেন? (ইংরেজ
+        "language": "আপনি কোন ভাষা পছন্দ করেন? (ইংরেজি, হিন্দি, বাংলা)",
+        "ask_disease": "আপনার সমস্যার কথা উল্লেখ করুন যাতে আমি উপযুক্ত ডাক্তার এবং হাসপাতাল সুপারিশ করতে পারি।",
+        "doctor_recommendation": "আপনার সমস্যার ভিত্তিতে, এখানে কিছু সুপারিশকৃত ডাক্তার আছেন:",
+        "hospital_recommendation": "এখানে আপনার কাছাকাছি কিছু হাসপাতাল রয়েছে যা এই ক্ষেত্রে বিশেষজ্ঞ:"
+    }
+};
+
+// Chatbot Initialization
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("✅ Chatbot initialized.");
+    document.getElementById("send-btn").addEventListener("click", processUserInput);
+    document.getElementById("user-input").addEventListener("keypress", (event) => {
+        if (event.key === "Enter") processUserInput();
+    });
+});
+
+function processUserInput() {
+    const userInputField = document.getElementById("user-input");
+    const userText = userInputField.value.trim().toLowerCase();
+
+    if (!userText) return;
+
+    displayMessage(userText, "user");
+    userInputField.value = "";
+
+    if (userText.includes("hindi")) {
+        selectedLanguage = "hi";
+        displayMessage("अब से मैं हिंदी में जवाब दूंगा।", "bot");
+        return;
+    } else if (userText.includes("bengali")) {
+        selectedLanguage = "bn";
+        displayMessage("এখন থেকে আমি বাংলায় উত্তর দেব।", "bot");
+        return;
+    } else if (userText.includes("english")) {
+        selectedLanguage = "en";
+        displayMessage("I will now respond in English.", "bot");
+        return;
+    }
+
+    let botResponse = responses[selectedLanguage][userText] || responses[selectedLanguage]["ask_disease"];
+
+    for (const keyword in healthConditions) {
+        if (userText.includes(keyword)) {
+            botResponse = responses[selectedLanguage]["doctor_recommendation"];
+            displayMessage(botResponse, "bot");
+            const specialization = healthConditions[keyword];
+            fetchDoctors(specialization);
+            fetchNearbyHospitals(specialization);
+            return;
+        }
+    }
+
+    displayMessage(botResponse, "bot");
+}
+
+// Display Messages in Chat
+function displayMessage(message, sender) {
+    const chatContainer = document.getElementById("chat-container");
+    if (!chatContainer) return;
+
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add(sender === "user" ? "user-message" : "bot-message");
+    messageDiv.textContent = message;
+    chatContainer.appendChild(messageDiv);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+// Fetch Doctor Details
+function fetchDoctors(specialization) {
+    const doctorList = doctors[specialization] || [];
+    displayMessage(doctorList.map(doc => `${doc.name} (Fee: ${doc.fee})`).join("\n"), "bot");
+}
+
+// Fetch Nearby Hospitals Based on Specialization
+function fetchNearbyHospitals(specialization) {
+    displayMessage(responses[selectedLanguage]["hospital_recommendation"], "bot");
+    displayMessage(hospitals[specialization].join("\n"), "bot");
+}
