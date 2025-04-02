@@ -1,4 +1,3 @@
-// Debugging: Ensure script loads
 console.log("Chatbot script loaded successfully!");
 
 // Default language is English
@@ -58,16 +57,16 @@ const doctors = {
     ]
 };
 
-// Hospital Data based on Approximate Location Ranges
+// Hardcoded Hospital Data based on Approximate Locations
 const hospitals = [
-    { name: "City Hospital", latRange: [22.50, 22.60], lonRange: [88.30, 88.40], address: "Park Street, Kolkata" },
-    { name: "Metro Care Hospital", latRange: [28.60, 28.70], lonRange: [77.10, 77.20], address: "Connaught Place, Delhi" },
-    { name: "Green Cross Medical", latRange: [19.00, 19.10], lonRange: [72.80, 72.90], address: "Andheri, Mumbai" },
-    { name: "Sunrise Hospital", latRange: [13.00, 13.10], lonRange: [77.50, 77.60], address: "MG Road, Bangalore" },
-    { name: "Apollo Clinic", latRange: [17.40, 17.50], lonRange: [78.40, 78.50], address: "Banjara Hills, Hyderabad" }
+    { name: { en: "City Hospital", hi: "सिटी अस्पताल", bn: "সিটি হাসপাতাল" }, latRange: [22.50, 22.60], lonRange: [88.30, 88.40], address: "Park Street, Kolkata" },
+    { name: { en: "Metro Care Hospital", hi: "मेट्रो केयर अस्पताल", bn: "মেট্রো কেয়ার হাসপাতাল" }, latRange: [28.60, 28.70], lonRange: [77.10, 77.20], address: "Connaught Place, Delhi" },
+    { name: { en: "Green Cross Medical", hi: "ग्रीन क्रॉस मेडिकल", bn: "গ্রীন ক্রস মেডিক্যাল" }, latRange: [19.00, 19.10], lonRange: [72.80, 72.90], address: "Andheri, Mumbai" },
+    { name: { en: "Sunrise Hospital", hi: "सनराइज अस्पताल", bn: "সানরাইজ হাসপাতাল" }, latRange: [13.00, 13.10], lonRange: [77.50, 77.60], address: "MG Road, Bangalore" },
+    { name: { en: "Apollo Clinic", hi: "अपोलो क्लिनिक", bn: "অ্যাপোলো ক্লিনিক" }, latRange: [17.40, 17.50], lonRange: [78.40, 78.50], address: "Banjara Hills, Hyderabad" }
 ];
 
-// Predefined Responses
+// Multilingual Responses
 const responses = {
     "en": {
         "hello": "Hello! How can I assist you today?",
@@ -75,24 +74,41 @@ const responses = {
         "thanks": "You're welcome! Let me know if you need further assistance.",
         "thank you": "You're welcome! Stay healthy.",
         "sorry": "No worries! How can I assist you?",
-        "language": "I can assist you in multiple languages. Which language do you prefer? (English, Hindi, Bengali)",
         "hospital": "Searching for nearby hospitals...",
         "ask_disease": "Please mention your health concern so I can suggest suitable doctors and hospitals.",
-        "default": "I'm sorry, I didn't understand that. Can you please rephrase?",
         "doctor_recommendation": "Based on your concern, here are some recommended doctors:"
+    },
+    "hi": {
+        "hello": "नमस्ते! मैं आपकी कैसे सहायता कर सकता हूँ?",
+        "hi": "नमस्कार! मैं आपकी क्या मदद कर सकता हूँ?",
+        "thanks": "आपका स्वागत है! कोई और सहायता चाहिए?",
+        "thank you": "धन्यवाद! स्वस्थ रहिए।",
+        "sorry": "कोई बात नहीं! मैं आपकी कैसे सहायता कर सकता हूँ?",
+        "hospital": "निकटतम अस्पताल खोज रहा हूँ...",
+        "ask_disease": "कृपया अपनी समस्या बताएं ताकि मैं उपयुक्त डॉक्टरों और अस्पतालों का सुझाव दे सकूं।",
+        "doctor_recommendation": "आपकी समस्या के अनुसार, यहाँ कुछ अनुशंसित डॉक्टर हैं:"
+    },
+    "bn": {
+        "hello": "হ্যালো! আমি কীভাবে আপনাকে সাহায্য করতে পারি?",
+        "hi": "নমস্কার! আমি কীভাবে সাহায্য করতে পারি?",
+        "thanks": "আপনার স্বাগতম! আরও সাহায্যের প্রয়োজন হলে আমাকে জানান।",
+        "thank you": "ধন্যবাদ! সুস্থ থাকুন।",
+        "sorry": "কোনো সমস্যা নেই! আমি কীভাবে সাহায্য করতে পারি?",
+        "hospital": "নিকটবর্তী হাসপাতাল খুঁজছি...",
+        "ask_disease": "আপনার সমস্যার কথা উল্লেখ করুন যাতে আমি উপযুক্ত ডাক্তার এবং হাসপাতাল সুপারিশ করতে পারি।",
+        "doctor_recommendation": "আপনার সমস্যার ভিত্তিতে, এখানে কিছু সুপারিশকৃত ডাক্তার আছেন:"
     }
 };
 
 // Initialize Chatbot
-window.onload = function () {
-    console.log("Chatbot initialized.");
-
+document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("send-btn").addEventListener("click", processUserInput);
     document.getElementById("user-input").addEventListener("keypress", (event) => {
         if (event.key === "Enter") processUserInput();
     });
-};
+});
 
+// Process User Input
 function processUserInput() {
     const userInputField = document.getElementById("user-input");
     const userText = userInputField.value.trim().toLowerCase();
@@ -111,54 +127,21 @@ function processUserInput() {
         }
     }
 
-    let botResponse = responses[selectedLanguage][userText] || responses[selectedLanguage]["default"];
-    displayMessage(botResponse, "bot");
+    displayMessage(responses[selectedLanguage][userText] || responses[selectedLanguage]["default"], "bot");
 }
 
-// Display Messages
-function displayMessage(message, sender) {
-    const chatContainer = document.getElementById("chat-container");
-    const messageDiv = document.createElement("div");
-    messageDiv.classList.add(sender === "user" ? "user-message" : "bot-message");
-    messageDiv.textContent = message;
-    chatContainer.appendChild(messageDiv);
-    chatContainer.scrollTop = chatContainer.scrollHeight;
-}
-
-// Fetch Doctor Details
+// Fetch Doctors
 function fetchDoctors(specialization) {
     const doctorList = doctors[specialization] || [];
     let doctorMessage = doctorList.map(doc => `${doc.name} (Fee: ${doc.fee})`).join("\n");
-
-    if (!doctorMessage) doctorMessage = "No available doctors for this specialization.";
-    displayMessage(doctorMessage, "bot");
+    displayMessage(doctorMessage || "No available doctors.", "bot");
 }
 
-// Fetch Nearby Hospitals using Live Location
+// Fetch Nearby Hospitals
 function fetchNearbyHospitals() {
-    if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition((position) => {
-            let userLat = position.coords.latitude;
-            let userLon = position.coords.longitude;
-
-            console.log(`User Location: ${userLat}, ${userLon}`);
-
-            let nearbyHospitals = hospitals.filter(hospital => 
-                userLat >= hospital.latRange[0] && userLat <= hospital.latRange[1] &&
-                userLon >= hospital.lonRange[0] && userLon <= hospital.lonRange[1]
-            );
-
-            if (nearbyHospitals.length > 0) {
-                let hospitalMessage = "Nearby hospitals:\n" +
-                    nearbyHospitals.map(h => `${h.name} - ${h.address}`).join("\n");
-                displayMessage(hospitalMessage, "bot");
-            } else {
-                displayMessage("No hospitals found in your immediate vicinity.", "bot");
-            }
-        }, () => {
-            displayMessage("Unable to access your location. Please enable location services.", "bot");
-        });
-    } else {
-        displayMessage("Geolocation is not supported by your browser.", "bot");
-    }
+    navigator.geolocation.getCurrentPosition((position) => {
+        let userLat = position.coords.latitude, userLon = position.coords.longitude;
+        let nearbyHospitals = hospitals.filter(h => userLat >= h.latRange[0] && userLat <= h.latRange[1] && userLon >= h.lonRange[0] && userLon <= h.lonRange[1]);
+        displayMessage(nearbyHospitals.length ? nearbyHospitals.map(h => `${h.name[selectedLanguage]} - ${h.address}`).join("\n") : "No hospitals found.", "bot");
+    });
 }
