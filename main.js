@@ -1,21 +1,15 @@
-// Store the user's selected language (default: English)
+// Store user's selected language (default: English)
 let userLanguage = "en";
 
 // Health Conditions Mapping
 const healthConditions = {
     "heart": { specialist: "Cardiologist", key: "heart_disease" },
-    "cardio": { specialist: "Cardiologist", key: "heart_disease" },
     "bones": { specialist: "Orthopedic", key: "bone_issue" },
-    "orthopedic": { specialist: "Orthopedic", key: "bone_issue" },
     "nerves": { specialist: "Neurologist", key: "nerve_issue" },
-    "neurology": { specialist: "Neurologist", key: "nerve_issue" },
     "cancer": { specialist: "Oncologist", key: "cancer_issue" },
-    "oncology": { specialist: "Oncologist", key: "cancer_issue" },
     "skin": { specialist: "Dermatologist", key: "skin_issue" },
-    "dermatology": { specialist: "Dermatologist", key: "skin_issue" },
     "pulmonary": { specialist: "Pulmonologist", key: "pulmonary_issue" },
     "fever": { specialist: "General Physician", key: "general_physician_issue" },
-    "pain": { specialist: "General Physician", key: "general_physician_issue" },
     "women": { specialist: "Gynecologist", key: "women_issue" }
 };
 
@@ -31,18 +25,52 @@ const doctors = {
     "Gynecologist": ["Dr. Ananya Ghosh", "Dr. Shweta Nair"]
 };
 
+// Multilingual Responses
+const responses = {
+    "en": {
+        "greeting": "Hello! How can I assist you today?",
+        "thanks": "You're welcome! Stay healthy.",
+        "sorry": "No worries! How can I assist you?",
+        "language": "I can assist you in multiple languages. Which language do you prefer? (English, Hindi, Bengali)",
+        "location": "Fetching your location to find nearby hospitals...",
+        "hospital": "Searching for nearby hospitals for medical tests and checkups...",
+        "ask_disease": "Please mention your disease or symptoms so I can suggest suitable doctors and hospitals.",
+        "default": "I'm sorry, I didn't understand that. Can you please rephrase?"
+    },
+    "hi": {
+        "greeting": "नमस्ते! मैं आपकी कैसे सहायता कर सकता हूँ?",
+        "thanks": "आपका स्वागत है! स्वस्थ रहें।",
+        "sorry": "कोई बात नहीं! मैं आपकी किस प्रकार सहायता कर सकता हूँ?",
+        "language": "मैं कई भाषाओं में सहायता कर सकता हूँ। आप किस भाषा को प्राथमिकता देते हैं? (अंग्रेजी, हिंदी, बंगाली)",
+        "location": "आपका स्थान खोज रहा हूँ ताकि निकटतम अस्पताल मिल सके...",
+        "hospital": "चिकित्सा परीक्षणों और जांच के लिए निकटतम अस्पताल खोज रहा हूँ...",
+        "ask_disease": "कृपया अपना रोग या लक्षण बताएं ताकि मैं उपयुक्त डॉक्टरों और अस्पतालों का सुझाव दे सकूं।",
+        "default": "मुझे क्षमा करें, मैं इसे समझ नहीं पाया। कृपया दोहराएँ।"
+    },
+    "bn": {
+        "greeting": "নমস্কার! আমি কীভাবে সাহায্য করতে পারি?",
+        "thanks": "আপনার স্বাগতম! সুস্থ থাকুন।",
+        "sorry": "কোনো সমস্যা নেই! আমি কীভাবে সাহায্য করতে পারি?",
+        "language": "আমি একাধিক ভাষায় সহায়তা করতে পারি। আপনি কোন ভাষা পছন্দ করেন? (ইংরেজি, হিন্দি, বাংলা)",
+        "location": "আপনার অবস্থান খুঁজছি যাতে কাছের হাসপাতাল খুঁজে পাওয়া যায়...",
+        "hospital": "চিকিৎসা পরীক্ষার জন্য কাছের হাসপাতাল খুঁজছি...",
+        "ask_disease": "আপনার রোগ বা লক্ষণ উল্লেখ করুন যাতে আমি উপযুক্ত ডাক্তার ও হাসপাতাল সুপারিশ করতে পারি।",
+        "default": "দুঃখিত, আমি এটি বুঝতে পারিনি। অনুগ্রহ করে পুনরায় বলুন।"
+    }
+};
+
 // Ensure chatbot initializes properly
 document.addEventListener("DOMContentLoaded", () => {
+    console.log("✅ Chatbot script loaded successfully.");
+
     const sendButton = document.getElementById("send-btn");
     const userInput = document.getElementById("user-input");
     const chatContainer = document.getElementById("chat-container");
 
     if (!sendButton || !userInput || !chatContainer) {
-        console.error("Error: Missing chatbot elements in HTML.");
+        console.error("❌ Error: Missing chatbot elements in HTML.");
         return;
     }
-
-    console.log("✅ Chatbot initialized successfully.");
 
     sendButton.addEventListener("click", processUserInput);
     userInput.addEventListener("keypress", (event) => {
@@ -51,6 +79,8 @@ document.addEventListener("DOMContentLoaded", () => {
             processUserInput();
         }
     });
+
+    console.log("✅ Chatbot event listeners initialized.");
 });
 
 // Function to Process User Input
@@ -67,7 +97,7 @@ function processUserInput() {
 
     setTimeout(() => {
         generateBotResponse(userMessage);
-    }, 500); // Adding slight delay for a natural interaction
+    }, 500); // Slight delay for a natural interaction
 }
 
 // Function to Append Messages to Chat
@@ -79,16 +109,18 @@ function appendMessage(sender, message) {
     messageDiv.innerHTML = message;
     chatContainer.appendChild(messageDiv);
     chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll to latest message
+
+    console.log(`✅ Message appended: [${sender}] ${message}`);
 }
 
 // Function to Generate Chatbot Response
 function generateBotResponse(userInput) {
     const lowerInput = userInput.toLowerCase();
-    let botResponse = "I'm sorry, I didn't understand that. Can you please rephrase?";
+    let botResponse = responses[userLanguage]["default"];
 
     // Language Selection
     if (lowerInput.includes("language")) {
-        botResponse = "I can assist you in multiple languages. Which language do you prefer? (English, Hindi, Bengali)";
+        botResponse = responses[userLanguage]["language"];
     } else if (lowerInput.includes("english")) {
         userLanguage = "en";
         botResponse = "Language set to English.";
@@ -101,11 +133,11 @@ function generateBotResponse(userInput) {
     } 
     // Greeting Responses
     else if (lowerInput.includes("hello") || lowerInput.includes("hi")) {
-        botResponse = "Hello! How can I assist you today?";
+        botResponse = responses[userLanguage]["greeting"];
     } else if (lowerInput.includes("thanks") || lowerInput.includes("thank you")) {
-        botResponse = "You're welcome! Stay healthy.";
+        botResponse = responses[userLanguage]["thanks"];
     } else if (lowerInput.includes("sorry")) {
-        botResponse = "No worries! How can I assist you?";
+        botResponse = responses[userLanguage]["sorry"];
     } 
     // Health Issue Recognition
     else {
@@ -115,8 +147,8 @@ function generateBotResponse(userInput) {
                 const specialist = condition.specialist;
                 const doctorList = doctors[specialist] || ["No doctor found"];
 
-                botResponse = `You should see a **${specialist}**.<br>
-                Recommended doctors:<br>${doctorList.join("<br>")}`;
+                botResponse = `আপনাকে **${specialist}** এর সাথে যোগাযোগ করতে হবে।<br>
+                সুপারিশকৃত ডাক্তার:<br>${doctorList.join("<br>")}`;
 
                 // Find nearby hospitals
                 findNearbyHospitals();
@@ -129,29 +161,17 @@ function generateBotResponse(userInput) {
 }
 
 // Function to Detect User's Location and Find Nearby Hospitals
-function findNearbyHospitals() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            async (position) => {
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
+async function findNearbyHospitals() {
+    appendMessage("bot", responses[userLanguage]["location"]);
 
-                appendMessage("bot", "Fetching your current location to find nearby hospitals...");
+    try {
+        const searchResults = await web.search("hospitals near me");
 
-                // Fetch hospitals using web tool
-                const query = "hospitals near me";
-                const searchResults = await web.search(query);
-                
-                if (searchResults && searchResults.length > 0) {
-                    let hospitalList = searchResults.slice(0, 3).map((hospital, index) => `${index + 1}. ${hospital.title}`).join("<br>");
-                    appendMessage("bot", `Here are some nearby hospitals:<br>${hospitalList}`);
-                } else {
-                    appendMessage("bot", "Sorry, I couldn't find nearby hospitals.");
-                }
-            },
-            () => appendMessage("bot", "Unable to detect your location.")
-        );
-    } else {
-        appendMessage("bot", "Geolocation is not supported in your browser.");
+        if (searchResults && searchResults.length > 0) {
+            let hospitalList = searchResults.slice(0, 3).map((hospital, index) => `${index + 1}. ${hospital.title}`).join("<br>");
+            appendMessage("bot", hospitalList);
+        }
+    } catch (error) {
+        appendMessage("bot", "Sorry, unable to fetch hospital details.");
     }
 }
