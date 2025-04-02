@@ -58,6 +58,15 @@ const doctors = {
     ]
 };
 
+// Hospital Data based on Approximate Location Ranges
+const hospitals = [
+    { name: "City Hospital", latRange: [22.50, 22.60], lonRange: [88.30, 88.40], address: "Park Street, Kolkata" },
+    { name: "Metro Care Hospital", latRange: [28.60, 28.70], lonRange: [77.10, 77.20], address: "Connaught Place, Delhi" },
+    { name: "Green Cross Medical", latRange: [19.00, 19.10], lonRange: [72.80, 72.90], address: "Andheri, Mumbai" },
+    { name: "Sunrise Hospital", latRange: [13.00, 13.10], lonRange: [77.50, 77.60], address: "MG Road, Bangalore" },
+    { name: "Apollo Clinic", latRange: [17.40, 17.50], lonRange: [78.40, 78.50], address: "Banjara Hills, Hyderabad" }
+];
+
 // Predefined Responses
 const responses = {
     "en": {
@@ -71,28 +80,6 @@ const responses = {
         "ask_disease": "Please mention your health concern so I can suggest suitable doctors and hospitals.",
         "default": "I'm sorry, I didn't understand that. Can you please rephrase?",
         "doctor_recommendation": "Based on your concern, here are some recommended doctors:"
-    },
-    "hi": {
-        "hello": "नमस्ते! मैं आपकी कैसे सहायता कर सकता हूँ?",
-        "thanks": "आपका स्वागत है! मुझे बताएं कि और कोई सहायता चाहिए।",
-        "thank you": "धन्यवाद! स्वस्थ रहिए।",
-        "sorry": "कोई बात नहीं! मैं आपकी किस प्रकार सहायता कर सकता हूँ?",
-        "language": "मैं कई भाषाओं में आपकी सहायता कर सकता हूँ। आप किस भाषा को पसंद करते हैं? (अंग्रेजी, हिंदी, बंगाली)",
-        "hospital": "निकटतम अस्पताल खोज रहा हूँ...",
-        "ask_disease": "कृपया अपनी समस्या बताएं ताकि मैं उपयुक्त डॉक्टरों और अस्पतालों का सुझाव दे सकूं।",
-        "default": "मुझे क्षमा करें, मैं इसे समझ नहीं पाया। क्या आप इसे दोहरा सकते हैं?",
-        "doctor_recommendation": "आपकी समस्या के अनुसार, यहाँ कुछ अनुशंसित डॉक्टर हैं:"
-    },
-    "bn": {
-        "hello": "হ্যালো! আমি কীভাবে আপনাকে সাহায্য করতে পারি?",
-        "thanks": "আপনার স্বাগতম! আরও সাহায্যের প্রয়োজন হলে আমাকে জানান।",
-        "thank you": "ধন্যবাদ! সুস্থ থাকুন।",
-        "sorry": "কোনো সমস্যা নেই! আমি কীভাবে সাহায্য করতে পারি?",
-        "language": "আমি একাধিক ভাষায় আপনাকে সহায়তা করতে পারি। আপনি কোন ভাষা পছন্দ করেন? (ইংরেজি, হিন্দি, বাংলা)",
-        "hospital": "নিকটবর্তী হাসপাতাল খুঁজছি...",
-        "ask_disease": "আপনার সমস্যার কথা উল্লেখ করুন যাতে আমি উপযুক্ত ডাক্তার এবং হাসপাতাল সুপারিশ করতে পারি।",
-        "default": "দুঃখিত, আমি এটি বুঝতে পারিনি। দয়া করে পুনরায় বলুন।",
-        "doctor_recommendation": "আপনার সমস্যার ভিত্তিতে, এখানে কিছু সুপারিশকৃত ডাক্তার আছেন:"
     }
 };
 
@@ -115,32 +102,16 @@ function processUserInput() {
     displayMessage(userText, "user");
     userInputField.value = "";
 
-    if (userText.includes("hindi")) {
-        selectedLanguage = "hi";
-        displayMessage("अब से मैं हिंदी में जवाब दूंगा।", "bot");
-        return;
-    } else if (userText.includes("bengali")) {
-        selectedLanguage = "bn";
-        displayMessage("এখন থেকে আমি বাংলায় উত্তর দেব।", "bot");
-        return;
-    } else if (userText.includes("english")) {
-        selectedLanguage = "en";
-        displayMessage("I will now respond in English.", "bot");
-        return;
-    }
-
-    let botResponse = responses[selectedLanguage][userText] || responses[selectedLanguage]["default"];
-
     for (const keyword in healthConditions) {
         if (userText.includes(keyword)) {
-            botResponse = responses[selectedLanguage]["doctor_recommendation"];
-            displayMessage(botResponse, "bot");
+            displayMessage(responses[selectedLanguage]["doctor_recommendation"], "bot");
             fetchDoctors(healthConditions[keyword]);
             fetchNearbyHospitals();
             return;
         }
     }
 
+    let botResponse = responses[selectedLanguage][userText] || responses[selectedLanguage]["default"];
     displayMessage(botResponse, "bot");
 }
 
@@ -163,7 +134,31 @@ function fetchDoctors(specialization) {
     displayMessage(doctorMessage, "bot");
 }
 
-// Fetch Nearby Hospitals (Dummy Locations)
+// Fetch Nearby Hospitals using Live Location
 function fetchNearbyHospitals() {
-    displayMessage("Nearby hospitals:\n- City Hospital\n- Metro Care\n- Green Cross Medical", "bot");
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition((position) => {
+            let userLat = position.coords.latitude;
+            let userLon = position.coords.longitude;
+
+            console.log(`User Location: ${userLat}, ${userLon}`);
+
+            let nearbyHospitals = hospitals.filter(hospital => 
+                userLat >= hospital.latRange[0] && userLat <= hospital.latRange[1] &&
+                userLon >= hospital.lonRange[0] && userLon <= hospital.lonRange[1]
+            );
+
+            if (nearbyHospitals.length > 0) {
+                let hospitalMessage = "Nearby hospitals:\n" +
+                    nearbyHospitals.map(h => `${h.name} - ${h.address}`).join("\n");
+                displayMessage(hospitalMessage, "bot");
+            } else {
+                displayMessage("No hospitals found in your immediate vicinity.", "bot");
+            }
+        }, () => {
+            displayMessage("Unable to access your location. Please enable location services.", "bot");
+        });
+    } else {
+        displayMessage("Geolocation is not supported by your browser.", "bot");
+    }
 }
