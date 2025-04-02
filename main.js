@@ -146,6 +146,8 @@ async function fetchNearbyHospitals() {
                     data.results.slice(0, 5).forEach(hospital => {
                         let hospitalInfo = `${hospital.name} - ${hospital.vicinity}`;
                         if (hospital.rating) hospitalInfo += ` (Rating: ${hospital.rating}⭐)`;
+                        if (hospital.formatted_phone_number) hospitalInfo += `\nContact: ${hospital.formatted_phone_number}`;
+
                         displayMessage(hospitalInfo, "bot");
                     });
                 } else {
