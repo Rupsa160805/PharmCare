@@ -12,10 +12,18 @@ const healthConditions = {
     "cancer": "Oncologist",
     "oncology": "Oncologist",
     "skin": "Dermatologist",
-    "dermatology": "Dermatologist",
+    "pimples": "Dermatologist",
+    "acne": "Dermatologist",
+    "rashes": "Dermatologist",
+    "eczema": "Dermatologist",
+    "allergy": "Dermatologist",
+    "psoriasis": "Dermatologist",
+    "piles": "Proctologist",
+    "hemorrhoids": "Proctologist",
     "pulmonary": "Pulmonologist",
     "lungs": "Pulmonologist",
     "breathing": "Pulmonologist",
+    "asthma": "Pulmonologist",
     "fever": "General Physician",
     "pain": "General Physician",
     "women": "Gynecologist",
@@ -55,6 +63,10 @@ const doctors = {
     "General Physician": [
         { name: "Dr. Ramesh Patil", fee: "₹400" },
         { name: "Dr. Priya Malhotra", fee: "₹450" }
+    ],
+    "Proctologist": [
+        { name: "Dr. Amit Sen", fee: "₹1000" },
+        { name: "Dr. Sunita Nair", fee: "₹950" }
     ]
 };
 
@@ -91,6 +103,10 @@ const hospitals = {
     "General Physician": [
         "🏥 MedLife Clinic, High Street",
         "🏥 City General Hospital, Downtown"
+    ],
+    "Proctologist": [
+        "🏥 Piles & Anorectal Clinic, City Hospital",
+        "🏥 Proctology Care Center, East Side"
     ]
 };
 
@@ -131,50 +147,36 @@ const responses = {
     }
 };
 
-// Chatbot Initialization
-document.addEventListener("DOMContentLoaded", () => {
-    console.log("✅ Chatbot initialized.");
-    document.getElementById("send-btn").addEventListener("click", processUserInput);
-    document.getElementById("user-input").addEventListener("keypress", (event) => {
-        if (event.key === "Enter") processUserInput();
-    });
-});
-
+// Process user input
 function processUserInput() {
-    const userInputField = document.getElementById("user-input");
-    const userText = userInputField.value.trim().toLowerCase();
+    const userInput = document.getElementById("user-input").value.trim().toLowerCase();
+    if (!userInput) return;
 
-    if (!userText) return;
+    displayMessage(userInput, "user");
+    document.getElementById("user-input").value = "";
 
-    displayMessage(userText, "user");
-    userInputField.value = "";
-
-    if (userText.includes("hindi")) {
+    if (userInput.includes("hindi")) {
         selectedLanguage = "hi";
-        displayMessage("अब से मैं हिंदी में जवाब दूंगा।", "bot");
+        displayMessage(responses[selectedLanguage]["language"], "bot");
         return;
-    } else if (userText.includes("bengali")) {
+    } else if (userInput.includes("bengali")) {
         selectedLanguage = "bn";
-        displayMessage("এখন থেকে আমি বাংলায় উত্তর দেব।", "bot");
+        displayMessage(responses[selectedLanguage]["language"], "bot");
         return;
-    } else if (userText.includes("english")) {
+    } else if (userInput.includes("english")) {
         selectedLanguage = "en";
-        displayMessage("I will now respond in English.", "bot");
+        displayMessage(responses[selectedLanguage]["language"], "bot");
         return;
     }
 
-    let botResponse = responses[selectedLanguage][userText] || responses[selectedLanguage]["ask_disease"];
-
     for (const keyword in healthConditions) {
-        if (userText.includes(keyword)) {
-            botResponse = responses[selectedLanguage]["doctor_recommendation"];
-            displayMessage(botResponse, "bot");
-            const specialization = healthConditions[keyword];
-            fetchDoctors(specialization);
-            fetchNearbyHospitals(specialization);
+        if (userInput.includes(keyword)) {
+            displayMessage(responses[selectedLanguage]["doctor_recommendation"], "bot");
+            fetchDoctors(healthConditions[keyword]);
+            fetchNearbyHospitals(healthConditions[keyword]);
             return;
         }
     }
 
-    displayMessage(botResponse, "bot");
+    displayMessage(responses[selectedLanguage]["ask_disease"], "bot");
 }
