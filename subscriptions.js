@@ -1,42 +1,32 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const freeTrialBtn = document.getElementById("free-trial-btn");
-    const premiumBtn = document.getElementById("premium-subscribe-btn");
-    const consultationBtn = document.getElementById("consultation-btn");
+function subscribe(plan) {
+    if (plan === "free") {
+        alert("You have started a Free Trial!");
+        window.location.href = "/subscribe/free";
+    } else if (plan === "premium") {
+        alert("Thank you for subscribing! Your consultation price is now ₹100-₹150 less.");
+        localStorage.setItem("subscription", "premium");
+        updatePrice(); // Update price after subscription
+        window.location.href = "/subscribe/premium";
+    } else if (plan === "consultation") {
+        let isSubscribed = localStorage.getItem("subscription") === "premium";
+        let basePrice = 500;
+        let discount = isSubscribed ? Math.floor(Math.random() * (150 - 100 + 1)) + 100 : 0;
+        let finalPrice = basePrice - discount;
 
-    if (freeTrialBtn) {
-        freeTrialBtn.addEventListener("click", function () {
-            fetch("http://localhost:3000/subscribe/free-trial", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" }
-            })
-            .then(response => response.json())
-            .then(data => alert(data.message))
-            .catch(error => console.error("Error:", error));
-        });
+        alert(`Consultation booked! Price: ₹${finalPrice}`);
+        window.location.href = "/book-consultation";
     }
+}
 
-    if (premiumBtn) {
-        premiumBtn.addEventListener("click", function () {
-            fetch("http://localhost:3000/subscribe/premium", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ paymentToken: "dummy_token" }) // Replace with actual payment method
-            })
-            .then(response => response.json())
-            .then(data => alert(data.message))
-            .catch(error => console.error("Error:", error));
-        });
-    }
+// Function to Update Consultation Price
+function updatePrice() {
+    let isSubscribed = localStorage.getItem("subscription") === "premium";
+    let basePrice = 500;
+    let discount = isSubscribed ? Math.floor(Math.random() * (150 - 100 + 1)) + 100 : 0;
+    let finalPrice = basePrice - discount;
 
-    if (consultationBtn) {
-        consultationBtn.addEventListener("click", function () {
-            fetch("http://localhost:3000/book-consultation", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" }
-            })
-            .then(response => response.json())
-            .then(data => alert(data.message))
-            .catch(error => console.error("Error:", error));
-        });
-    }
-});
+    document.getElementById("consultation-price").innerText = `Price: ₹${finalPrice}`;
+}
+
+// Ensure price updates when the page loads
+document.addEventListener("DOMContentLoaded", updatePrice);
