@@ -146,15 +146,15 @@ function processUserInput() {
         return;
     }
 
-    // Health Condition Detection
-    for (const keyword in healthConditions) {
-        if (userText.includes(keyword)) {
-            const specialization = healthConditions[keyword];
-            displayMessage(`Based on your concern, here are some recommended doctors:`, "bot");
-            fetchDoctors(specialization);
-            fetchNearbyHospitals(specialization);
-            return;
-        }
+    // Health Condition Detection (Detect issue ANYWHERE in input)
+    let foundKeyword = Object.keys(healthConditions).find(keyword => userText.includes(keyword));
+
+    if (foundKeyword) {
+        const specialization = healthConditions[foundKeyword];
+        displayMessage(`Based on your concern (${foundKeyword}), here are some recommended doctors:`, "bot");
+        fetchDoctors(specialization);
+        fetchNearbyHospitals(specialization);
+        return;
     }
 
     // Default response
