@@ -5,19 +5,19 @@ let selectedLanguage = "en";
 const healthConditions = {
     "heart": "Cardiologist", "cardio": "Cardiologist", "blood pressure": "Cardiologist",
     "hypertension": "Cardiologist", "bp": "Cardiologist",
-    "bones": "Orthopedic", "orthopedic": "Orthopedic",
-    "nerves": "Neurologist", "neurology": "Neurologist",
-    "cancer": "Oncologist", "oncology": "Oncologist",
+    "bones": "Orthopedic", "fracture": "Orthopedic", "joint pain": "Orthopedic",
+    "nerves": "Neurologist", "neurology": "Neurologist", "migraine": "Neurologist",
+    "cancer": "Oncologist", "tumor": "Oncologist",
     "skin": "Dermatologist", "pimples": "Dermatologist", "acne": "Dermatologist",
     "rashes": "Dermatologist", "eczema": "Dermatologist", "allergy": "Dermatologist",
     "psoriasis": "Dermatologist",
-    "piles": "Proctologist", "hemorrhoids": "Proctologist",
+    "piles": "Proctologist", "hemorrhoids": "Proctologist", "anal bleeding": "Proctologist",
     "pulmonary": "Pulmonologist", "lungs": "Pulmonologist", "breathing": "Pulmonologist",
-    "asthma": "Pulmonologist",
-    "fever": "General Physician", "pain": "General Physician",
-    "women": "Gynecologist", "pregnancy": "Gynecologist",
-    "mental": "Psychiatrist", "depression": "Psychiatrist",
-    "anxiety": "Psychiatrist", "stress": "Psychiatrist"
+    "asthma": "Pulmonologist", "cough": "Pulmonologist",
+    "fever": "General Physician", "pain": "General Physician", "headache": "General Physician",
+    "women": "Gynecologist", "pregnancy": "Gynecologist", "period": "Gynecologist",
+    "mental": "Psychiatrist", "depression": "Psychiatrist", "anxiety": "Psychiatrist",
+    "stress": "Psychiatrist", "insomnia": "Psychiatrist"
 };
 
 // Doctors List with Fees
@@ -51,27 +51,27 @@ const hospitals = {
 // Multilingual Responses
 const responses = {
     "en": {
-        "hello": "Hello! How can I assist you?",
-        "thanks": "You're welcome!",
-        "sorry": "No problem!",
-        "ask_disease": "Please mention your health concern.",
-        "doctor_recommendation": "Here are some recommended doctors:",
-        "hospital_recommendation": "Here are some hospitals specializing in this field:"
+        "hello": "Hello! How can I assist you today? 😊",
+        "thanks": "You're welcome! Take care. 😊",
+        "sorry": "No worries! Let me know how I can help. 😊",
+        "ask_disease": "Please mention your health concern so I can assist you.",
+        "doctor_recommendation": "Here are some recommended doctors for you:",
+        "hospital_recommendation": "Here are some hospitals that specialize in this field:"
     },
     "hi": {
-        "hello": "नमस्ते! मैं आपकी कैसे सहायता कर सकता हूँ?",
-        "thanks": "आपका स्वागत है!",
-        "sorry": "कोई समस्या नहीं!",
+        "hello": "नमस्ते! मैं आपकी कैसे सहायता कर सकता हूँ? 😊",
+        "thanks": "आपका स्वागत है! ध्यान रखें। 😊",
+        "sorry": "कोई बात नहीं! बताइए, मैं आपकी कैसे मदद कर सकता हूँ? 😊",
         "ask_disease": "कृपया अपनी स्वास्थ्य समस्या बताएं।",
-        "doctor_recommendation": "यहाँ कुछ अनुशंसित डॉक्टर हैं:",
+        "doctor_recommendation": "आपके लिए अनुशंसित डॉक्टर यहाँ हैं:",
         "hospital_recommendation": "यहाँ कुछ संबंधित अस्पताल हैं:"
     },
     "bn": {
-        "hello": "হ্যালো! আমি কিভাবে সাহায্য করতে পারি?",
-        "thanks": "আপনার স্বাগতম!",
-        "sorry": "সমস্যা নেই!",
+        "hello": "হ্যালো! আমি কিভাবে সাহায্য করতে পারি? 😊",
+        "thanks": "আপনার স্বাগতম! ভালো থাকুন। 😊",
+        "sorry": "কোন সমস্যা নেই! বলুন, আমি কিভাবে সাহায্য করতে পারি? 😊",
         "ask_disease": "আপনার স্বাস্থ্য সমস্যাটি উল্লেখ করুন।",
-        "doctor_recommendation": "এখানে কিছু পরামর্শিত ডাক্তার আছেন:",
+        "doctor_recommendation": "আপনার জন্য সুপারিশকৃত ডাক্তার এখানে:",
         "hospital_recommendation": "এখানে কিছু সংশ্লিষ্ট হাসপাতাল রয়েছে:"
     }
 };
@@ -94,15 +94,15 @@ function processUserInput() {
 
     if (userInput.includes("hindi")) {
         selectedLanguage = "hi";
-        displayMessage("अब से मैं हिंदी में जवाब दूंगा।", "bot");
+        displayMessage("अब से मैं हिंदी में जवाब दूंगा। 😊", "bot");
         return;
     } else if (userInput.includes("bengali")) {
         selectedLanguage = "bn";
-        displayMessage("এখন থেকে আমি বাংলায় উত্তর দেব।", "bot");
+        displayMessage("এখন থেকে আমি বাংলায় উত্তর দেব। 😊", "bot");
         return;
     } else if (userInput.includes("english")) {
         selectedLanguage = "en";
-        displayMessage("I will now respond in English.", "bot");
+        displayMessage("I will now respond in English. 😊", "bot");
         return;
     }
 
