@@ -13,7 +13,7 @@ const healthConditions = {
     "pulmonary": "Pulmonologist", "lungs": "Pulmonologist", "breathing": "Pulmonologist", "asthma": "Pulmonologist",
     "fever": "General Physician", "cold": "General Physician", "cough": "General Physician", "flu": "General Physician",
     "pain": "General Physician", "women": "Gynecologist", "pregnancy": "Gynecologist",
-    "mental": "Psychiatrist", "depression": "Psychiatrist", "anxiety": "Psychiatrist", "stress": "Psychiatrist"
+    "mental": "Psychiatrist", "depression": "Psychiatrist", "anxiety": "Psychiatrist", "stress": "Psychiatrist", "trauma": "Psychiatrist"
 };
 
 // Doctors List with Consultation Fees
@@ -44,34 +44,6 @@ const hospitals = {
     "Psychiatrist": ["🏥 Mind Wellness Center, Urban Area", "🏥 Mental Health Institute, Oak Avenue"]
 };
 
-// Multilingual Responses
-const responses = {
-    "en": {
-        "hello": "Hello! How can I assist you today?",
-        "thanks": "You're welcome! 😊 Stay healthy!",
-        "sorry": "No worries! I'm here to help. 🤗",
-        "ask_disease": "Please mention your health concern so I can suggest suitable doctors and hospitals.",
-        "doctor_recommendation": "Here are some recommended doctors:",
-        "hospital_recommendation": "Here are some hospitals specializing in this field:"
-    },
-    "hi": {
-        "hello": "नमस्ते! मैं आपकी कैसे सहायता कर सकता हूँ?",
-        "thanks": "कोई बात नहीं! 😊 स्वस्थ रहें!",
-        "sorry": "कोई चिंता नहीं! मैं आपकी मदद करने के लिए यहाँ हूँ। 🤗",
-        "ask_disease": "कृपया अपनी समस्या बताएं ताकि मैं उपयुक्त डॉक्टरों और अस्पतालों का सुझाव दे सकूं।",
-        "doctor_recommendation": "यहाँ कुछ अनुशंसित डॉक्टर हैं:",
-        "hospital_recommendation": "यहाँ आपके निकटतम अस्पताल हैं जो इस क्षेत्र में विशेषज्ञता रखते हैं:"
-    },
-    "bn": {
-        "hello": "হ্যালো! আমি কীভাবে আপনাকে সাহায্য করতে পারি?",
-        "thanks": "কোন সমস্যা নেই! 😊 সুস্থ থাকুন!",
-        "sorry": "কোন চিন্তা নেই! আমি সাহায্যের জন্য আছি। 🤗",
-        "ask_disease": "আপনার সমস্যার কথা উল্লেখ করুন যাতে আমি উপযুক্ত ডাক্তার এবং হাসপাতাল সুপারিশ করতে পারি।",
-        "doctor_recommendation": "এখানে কিছু সুপারিশকৃত ডাক্তার আছেন:",
-        "hospital_recommendation": "এখানে আপনার কাছাকাছি কিছু হাসপাতাল রয়েছে যা এই ক্ষেত্রে বিশেষজ্ঞ:"
-    }
-};
-
 // Chatbot Initialization
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("send-btn").addEventListener("click", processUserInput);
@@ -89,25 +61,56 @@ function processUserInput() {
     displayMessage(userText, "user");
     userInputField.value = "";
 
-    // Handle Language Change
-    if (userText.includes("hindi")) { selectedLanguage = "hi"; displayMessage("अब से मैं हिंदी में जवाब दूंगा।", "bot"); return; }
-    if (userText.includes("bengali")) { selectedLanguage = "bn"; displayMessage("এখন থেকে আমি বাংলায় উত্তর দেব।", "bot"); return; }
-    if (userText.includes("english")) { selectedLanguage = "en"; displayMessage("I will now respond in English.", "bot"); return; }
-
-    // Handle Polite Responses
-    if (userText.includes("thank")) { displayMessage(responses[selectedLanguage]["thanks"], "bot"); return; }
-    if (userText.includes("sorry")) { displayMessage(responses[selectedLanguage]["sorry"], "bot"); return; }
-
-    // Detect Health Issue
+    // Detect Health Issue **Anywhere** in the Text
     for (const keyword in healthConditions) {
         if (userText.includes(keyword)) {
             const specialization = healthConditions[keyword];
-            displayMessage(responses[selectedLanguage]["doctor_recommendation"], "bot");
+            displayMessage(`Based on your concern, here are some recommended doctors:`, "bot");
             fetchDoctors(specialization);
             fetchNearbyHospitals(specialization);
             return;
         }
     }
 
-    displayMessage(responses[selectedLanguage]["ask_disease"], "bot");
+    // Handle Polite Responses
+    if (userText.includes("thank")) { displayMessage("You're welcome! 😊 Stay healthy!", "bot"); return; }
+    if (userText.includes("sorry")) { displayMessage("No worries! I'm here to help. 🤗", "bot"); return; }
+
+    // Default response if no keywords match
+    displayMessage("Please mention your health concern so I can suggest suitable doctors and hospitals.", "bot");
+}
+
+// Display Messages in Chat
+function displayMessage(message, sender) {
+    const chatContainer = document.getElementById("chat-container");
+    if (!chatContainer) return;
+
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add(sender === "user" ? "user-message" : "bot-message");
+    messageDiv.textContent = message;
+    chatContainer.appendChild(messageDiv);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+// Fetch Doctor Details
+function fetchDoctors(specialization) {
+    const doctorList = doctors[specialization] || [];
+    if (doctorList.length > 0) {
+        const doctorMessage = doctorList.map(doc => `👨‍⚕️ ${doc.name} (Fee: ${doc.fee})`).join("\n");
+        displayMessage(doctorMessage, "bot");
+    } else {
+        displayMessage("Sorry, no doctors available for this specialization at the moment.", "bot");
+    }
+}
+
+// Fetch Nearby Hospitals Based on Specialization
+function fetchNearbyHospitals(specialization) {
+    const hospitalList = hospitals[specialization] || [];
+    if (hospitalList.length > 0) {
+        displayMessage("Here are some hospitals specializing in this field:", "bot");
+        const hospitalMessage = hospitalList.join("\n");
+        displayMessage(hospitalMessage, "bot");
+    } else {
+        displayMessage("Sorry, no hospitals found for this specialization.", "bot");
+    }
 }
