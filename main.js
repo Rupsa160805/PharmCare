@@ -1,7 +1,7 @@
 // Default language is English
 let selectedLanguage = "en";
 
-// Health Conditions Mapping (Mapped to Specializations)
+// Health Conditions Mapping to Specializations
 const healthConditions = {
     "heart": "Cardiologist",
     "cardio": "Cardiologist",
@@ -19,7 +19,7 @@ const healthConditions = {
     "women": "Gynecologist"
 };
 
-// Doctor List with Consultation Fees
+// Doctors List with Consultation Fees
 const doctors = {
     "Cardiologist": [
         { name: "Dr. Rajesh Sharma", fee: "₹800" },
