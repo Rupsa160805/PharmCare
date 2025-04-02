@@ -144,7 +144,11 @@ async function fetchNearbyHospitals() {
                     displayMessage(responses[selectedLanguage]["hospital_recommendation"], "bot");
 
                     data.results.slice(0, 5).forEach(hospital => {
-                        displayMessage(`${hospital.name} - ${hospital.vicinity}`, "bot");
+                        let hospitalInfo = `${hospital.name} - ${hospital.vicinity}`;
+                        if (hospital.rating) hospitalInfo += ` (Rating: ${hospital.rating}⭐)`;
+                        if (hospital.formatted_phone_number) hospitalInfo += `\nContact: ${hospital.formatted_phone_number}`;
+
+                        displayMessage(hospitalInfo, "bot");
                     });
                 } else {
                     displayMessage("No hospitals found nearby.", "bot");
