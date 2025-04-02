@@ -14,9 +14,12 @@ const healthConditions = {
     "skin": "Dermatologist",
     "dermatology": "Dermatologist",
     "pulmonary": "Pulmonologist",
+    "lungs": "Pulmonologist",
+    "breathing": "Pulmonologist",
     "fever": "General Physician",
     "pain": "General Physician",
-    "women": "Gynecologist"
+    "women": "Gynecologist",
+    "pregnancy": "Gynecologist"
 };
 
 // Doctors List with Consultation Fees
@@ -32,6 +35,18 @@ const doctors = {
     "Neurologist": [
         { name: "Dr. Alok Verma", fee: "₹1000" },
         { name: "Dr. Sneha Kapoor", fee: "₹950" }
+    ],
+    "Oncologist": [
+        { name: "Dr. Rajiv Menon", fee: "₹1500" },
+        { name: "Dr. Neha Agarwal", fee: "₹1400" }
+    ],
+    "Dermatologist": [
+        { name: "Dr. Sanjay Bose", fee: "₹600" },
+        { name: "Dr. Payal Gupta", fee: "₹650" }
+    ],
+    "Pulmonologist": [
+        { name: "Dr. Arvind Iyer", fee: "₹900" },
+        { name: "Dr. Kiran Das", fee: "₹850" }
     ],
     "Gynecologist": [
         { name: "Dr. Kavita Sharma", fee: "₹900" },
@@ -56,6 +71,18 @@ const hospitals = {
     "Neurologist": [
         "🏥 Brain & Spine Institute, Lake Road",
         "🏥 Neuro Care Hospital, Tech Park"
+    ],
+    "Oncologist": [
+        "🏥 Cancer Institute, South Block",
+        "🏥 Oncology Care Center, West End"
+    ],
+    "Dermatologist": [
+        "🏥 Skin & Hair Clinic, Midtown",
+        "🏥 Glow Dermatology Center, Central Plaza"
+    ],
+    "Pulmonologist": [
+        "🏥 Respiratory Health Center, Green Valley",
+        "🏥 Pulmonary Care Hospital, Elm Street"
     ],
     "Gynecologist": [
         "🏥 Women's Health Center, Green Lane",
@@ -150,28 +177,4 @@ function processUserInput() {
     }
 
     displayMessage(botResponse, "bot");
-}
-
-// Display Messages in Chat
-function displayMessage(message, sender) {
-    const chatContainer = document.getElementById("chat-container");
-    if (!chatContainer) return;
-
-    const messageDiv = document.createElement("div");
-    messageDiv.classList.add(sender === "user" ? "user-message" : "bot-message");
-    messageDiv.textContent = message;
-    chatContainer.appendChild(messageDiv);
-    chatContainer.scrollTop = chatContainer.scrollHeight;
-}
-
-// Fetch Doctor Details
-function fetchDoctors(specialization) {
-    const doctorList = doctors[specialization] || [];
-    displayMessage(doctorList.map(doc => `${doc.name} (Fee: ${doc.fee})`).join("\n"), "bot");
-}
-
-// Fetch Nearby Hospitals Based on Specialization
-function fetchNearbyHospitals(specialization) {
-    displayMessage(responses[selectedLanguage]["hospital_recommendation"], "bot");
-    displayMessage(hospitals[specialization].join("\n"), "bot");
 }
