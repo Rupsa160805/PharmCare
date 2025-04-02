@@ -3,38 +3,91 @@ let selectedLanguage = "en";
 
 // Health Conditions Mapping to Specializations
 const healthConditions = {
-    "heart": "Cardiologist", "cardio": "Cardiologist", "blood pressure": "Cardiologist",
-    "hypertension": "Cardiologist", "bp": "Cardiologist",
-    "bones": "Orthopedic", "fracture": "Orthopedic", "joint pain": "Orthopedic",
-    "nerves": "Neurologist", "neurology": "Neurologist", "migraine": "Neurologist",
-    "cancer": "Oncologist", "tumor": "Oncologist",
-    "skin": "Dermatologist", "pimples": "Dermatologist", "acne": "Dermatologist",
-    "rashes": "Dermatologist", "eczema": "Dermatologist", "allergy": "Dermatologist",
+    "heart": "Cardiologist",
+    "cardio": "Cardiologist",
+    "blood pressure": "Cardiologist",
+    "bp": "Cardiologist",
+    "bones": "Orthopedic",
+    "fracture": "Orthopedic",
+    "joint": "Orthopedic",
+    "orthopedic": "Orthopedic",
+    "nerves": "Neurologist",
+    "neurology": "Neurologist",
+    "brain": "Neurologist",
+    "cancer": "Oncologist",
+    "tumor": "Oncologist",
+    "oncology": "Oncologist",
+    "skin": "Dermatologist",
+    "pimples": "Dermatologist",
+    "acne": "Dermatologist",
+    "rashes": "Dermatologist",
+    "eczema": "Dermatologist",
+    "allergy": "Dermatologist",
     "psoriasis": "Dermatologist",
-    "piles": "Proctologist", "hemorrhoids": "Proctologist", "anal bleeding": "Proctologist",
-    "pulmonary": "Pulmonologist", "lungs": "Pulmonologist", "breathing": "Pulmonologist",
-    "asthma": "Pulmonologist", "cough": "Pulmonologist",
-    "fever": "General Physician", "pain": "General Physician", "headache": "General Physician",
-    "women": "Gynecologist", "pregnancy": "Gynecologist", "period": "Gynecologist",
-    "mental": "Psychiatrist", "depression": "Psychiatrist", "anxiety": "Psychiatrist",
-    "stress": "Psychiatrist", "insomnia": "Psychiatrist"
+    "piles": "Proctologist",
+    "hemorrhoids": "Proctologist",
+    "pulmonary": "Pulmonologist",
+    "lungs": "Pulmonologist",
+    "breathing": "Pulmonologist",
+    "asthma": "Pulmonologist",
+    "fever": "General Physician",
+    "cold": "General Physician",
+    "cough": "General Physician",
+    "pain": "General Physician",
+    "women": "Gynecologist",
+    "pregnancy": "Gynecologist",
+    "mental": "Psychiatrist",
+    "anxiety": "Psychiatrist",
+    "depression": "Psychiatrist",
+    "stress": "Psychiatrist",
+    "sleep": "Psychiatrist",
 };
 
-// Doctors List with Fees
+// Doctors List with Consultation Fees
 const doctors = {
-    "Cardiologist": [{ name: "Dr. Rajesh Sharma", fee: "₹800" }, { name: "Dr. Anjali Mehta", fee: "₹900" }],
-    "Orthopedic": [{ name: "Dr. Vikram Das", fee: "₹700" }, { name: "Dr. Riya Sen", fee: "₹750" }],
-    "Neurologist": [{ name: "Dr. Alok Verma", fee: "₹1000" }, { name: "Dr. Sneha Kapoor", fee: "₹950" }],
-    "Oncologist": [{ name: "Dr. Rajiv Menon", fee: "₹1500" }, { name: "Dr. Neha Agarwal", fee: "₹1400" }],
-    "Dermatologist": [{ name: "Dr. Sanjay Bose", fee: "₹600" }, { name: "Dr. Payal Gupta", fee: "₹650" }],
-    "Pulmonologist": [{ name: "Dr. Arvind Iyer", fee: "₹900" }, { name: "Dr. Kiran Das", fee: "₹850" }],
-    "Gynecologist": [{ name: "Dr. Kavita Sharma", fee: "₹900" }, { name: "Dr. Poonam Das", fee: "₹850" }],
-    "General Physician": [{ name: "Dr. Ramesh Patil", fee: "₹400" }, { name: "Dr. Priya Malhotra", fee: "₹450" }],
-    "Proctologist": [{ name: "Dr. Amit Sen", fee: "₹1000" }, { name: "Dr. Sunita Nair", fee: "₹950" }],
-    "Psychiatrist": [{ name: "Dr. Sameer Bhattacharya", fee: "₹1200" }, { name: "Dr. Meera Kapoor", fee: "₹1150" }]
+    "Cardiologist": [
+        { name: "Dr. Rajesh Sharma", fee: "₹800" },
+        { name: "Dr. Anjali Mehta", fee: "₹900" }
+    ],
+    "Orthopedic": [
+        { name: "Dr. Vikram Das", fee: "₹700" },
+        { name: "Dr. Riya Sen", fee: "₹750" }
+    ],
+    "Neurologist": [
+        { name: "Dr. Alok Verma", fee: "₹1000" },
+        { name: "Dr. Sneha Kapoor", fee: "₹950" }
+    ],
+    "Oncologist": [
+        { name: "Dr. Rajiv Menon", fee: "₹1500" },
+        { name: "Dr. Neha Agarwal", fee: "₹1400" }
+    ],
+    "Dermatologist": [
+        { name: "Dr. Sanjay Bose", fee: "₹600" },
+        { name: "Dr. Payal Gupta", fee: "₹650" }
+    ],
+    "Pulmonologist": [
+        { name: "Dr. Arvind Iyer", fee: "₹900" },
+        { name: "Dr. Kiran Das", fee: "₹850" }
+    ],
+    "Gynecologist": [
+        { name: "Dr. Kavita Sharma", fee: "₹900" },
+        { name: "Dr. Poonam Das", fee: "₹850" }
+    ],
+    "General Physician": [
+        { name: "Dr. Ramesh Patil", fee: "₹400" },
+        { name: "Dr. Priya Malhotra", fee: "₹450" }
+    ],
+    "Proctologist": [
+        { name: "Dr. Amit Sen", fee: "₹1000" },
+        { name: "Dr. Sunita Nair", fee: "₹950" }
+    ],
+    "Psychiatrist": [
+        { name: "Dr. Anirban Roy", fee: "₹1200" },
+        { name: "Dr. Shalini Gupta", fee: "₹1100" }
+    ]
 };
 
-// Hospitals by Specialization
+// Hospitals Categorized by Specialization
 const hospitals = {
     "Cardiologist": ["🏥 Heart Care Hospital", "🏥 Pulse Cardiac Center"],
     "Orthopedic": ["🏥 Bone & Joint Clinic", "🏥 Ortho Plus Hospital"],
@@ -45,35 +98,7 @@ const hospitals = {
     "Gynecologist": ["🏥 Women's Health Center", "🏥 Motherhood Hospital"],
     "General Physician": ["🏥 MedLife Clinic", "🏥 City General Hospital"],
     "Proctologist": ["🏥 Piles & Anorectal Clinic", "🏥 Proctology Care Center"],
-    "Psychiatrist": ["🏥 Mind & Wellness Center", "🏥 Serenity Mental Health Clinic"]
-};
-
-// Multilingual Responses
-const responses = {
-    "en": {
-        "hello": "Hello! How can I assist you today? 😊",
-        "thanks": "You're welcome! Take care. 😊",
-        "sorry": "No worries! Let me know how I can help. 😊",
-        "ask_disease": "Please mention your health concern so I can assist you.",
-        "doctor_recommendation": "Here are some recommended doctors for you:",
-        "hospital_recommendation": "Here are some hospitals that specialize in this field:"
-    },
-    "hi": {
-        "hello": "नमस्ते! मैं आपकी कैसे सहायता कर सकता हूँ? 😊",
-        "thanks": "आपका स्वागत है! ध्यान रखें। 😊",
-        "sorry": "कोई बात नहीं! बताइए, मैं आपकी कैसे मदद कर सकता हूँ? 😊",
-        "ask_disease": "कृपया अपनी स्वास्थ्य समस्या बताएं।",
-        "doctor_recommendation": "आपके लिए अनुशंसित डॉक्टर यहाँ हैं:",
-        "hospital_recommendation": "यहाँ कुछ संबंधित अस्पताल हैं:"
-    },
-    "bn": {
-        "hello": "হ্যালো! আমি কিভাবে সাহায্য করতে পারি? 😊",
-        "thanks": "আপনার স্বাগতম! ভালো থাকুন। 😊",
-        "sorry": "কোন সমস্যা নেই! বলুন, আমি কিভাবে সাহায্য করতে পারি? 😊",
-        "ask_disease": "আপনার স্বাস্থ্য সমস্যাটি উল্লেখ করুন।",
-        "doctor_recommendation": "আপনার জন্য সুপারিশকৃত ডাক্তার এখানে:",
-        "hospital_recommendation": "এখানে কিছু সংশ্লিষ্ট হাসপাতাল রয়েছে:"
-    }
+    "Psychiatrist": ["🏥 Mental Wellness Center", "🏥 Psychiatry Health Clinic"]
 };
 
 // Chatbot Initialization
@@ -86,58 +111,75 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Process User Input
 function processUserInput() {
-    let userInput = document.getElementById("user-input").value.trim().toLowerCase();
-    if (!userInput) return;
+    const userInputField = document.getElementById("user-input");
+    const userText = userInputField.value.trim().toLowerCase();
 
-    displayMessage(userInput, "user");
-    document.getElementById("user-input").value = "";
+    if (!userText) return;
 
-    if (userInput.includes("hindi")) {
+    displayMessage(userText, "user");
+    userInputField.value = "";
+
+    // Language Switching
+    if (userText.includes("hindi")) {
         selectedLanguage = "hi";
-        displayMessage("अब से मैं हिंदी में जवाब दूंगा। 😊", "bot");
+        displayMessage("अब से मैं हिंदी में जवाब दूंगा।", "bot");
         return;
-    } else if (userInput.includes("bengali")) {
+    } else if (userText.includes("bengali")) {
         selectedLanguage = "bn";
-        displayMessage("এখন থেকে আমি বাংলায় উত্তর দেব। 😊", "bot");
+        displayMessage("এখন থেকে আমি বাংলায় উত্তর দেব।", "bot");
         return;
-    } else if (userInput.includes("english")) {
+    } else if (userText.includes("english")) {
         selectedLanguage = "en";
-        displayMessage("I will now respond in English. 😊", "bot");
+        displayMessage("I will now respond in English.", "bot");
         return;
     }
 
-    for (let keyword in healthConditions) {
-        if (userInput.includes(keyword)) {
-            let specialization = healthConditions[keyword];
-            displayMessage(responses[selectedLanguage]["doctor_recommendation"], "bot");
+    // Check for Health Issues in Input
+    for (const keyword in healthConditions) {
+        if (userText.includes(keyword)) {
+            const specialization = healthConditions[keyword];
+            displayMessage(`Here are some recommended doctors for ${specialization}:`, "bot");
             fetchDoctors(specialization);
-            fetchHospitals(specialization);
+            fetchNearbyHospitals(specialization);
             return;
         }
     }
 
-    if (userInput.includes("thanks") || userInput.includes("thank you")) {
-        displayMessage(responses[selectedLanguage]["thanks"], "bot");
-    } else if (userInput.includes("sorry")) {
-        displayMessage(responses[selectedLanguage]["sorry"], "bot");
-    } else {
-        displayMessage(responses[selectedLanguage]["ask_disease"], "bot");
+    // Friendly Responses
+    if (userText.includes("hello") || userText.includes("hi")) {
+        displayMessage("Hello! How can I assist you today?", "bot");
+        return;
     }
+    if (userText.includes("thanks") || userText.includes("thank you")) {
+        displayMessage("You're welcome! Let me know if you need any more help.", "bot");
+        return;
+    }
+    if (userText.includes("sorry")) {
+        displayMessage("No worries! How can I assist you?", "bot");
+        return;
+    }
+
+    // Default Response
+    displayMessage("I didn't understand. Please mention a health issue or ask for a doctor.", "bot");
+}
+
+// Display Messages in Chat
+function displayMessage(message, sender) {
+    const chatContainer = document.getElementById("chat-container");
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add(sender === "user" ? "user-message" : "bot-message");
+    messageDiv.textContent = message;
+    chatContainer.appendChild(messageDiv);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
 // Fetch Doctor Details
 function fetchDoctors(specialization) {
-    let doctorList = doctors[specialization] || [];
-    if (doctorList.length > 0) {
-        displayMessage(doctorList.map(d => `👨‍⚕️ ${d.name} (Fee: ${d.fee})`).join("\n"), "bot");
-    }
+    displayMessage(doctors[specialization].map(doc => `👨‍⚕️ ${doc.name} (Fee: ${doc.fee})`).join("\n"), "bot");
 }
 
-// Fetch Hospitals
-function fetchHospitals(specialization) {
-    let hospitalList = hospitals[specialization] || [];
-    if (hospitalList.length > 0) {
-        displayMessage(responses[selectedLanguage]["hospital_recommendation"], "bot");
-        displayMessage(hospitalList.join("\n"), "bot");
-    }
+// Fetch Nearby Hospitals
+function fetchNearbyHospitals(specialization) {
+    displayMessage("Here are some hospitals for this specialization:", "bot");
+    displayMessage(hospitals[specialization].join("\n"), "bot");
 }
