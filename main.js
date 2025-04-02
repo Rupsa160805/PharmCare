@@ -177,3 +177,7 @@ function processUserInput() {
         displayMessage(responses[userLanguage]["default"], "bot");
     }
 }
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("send-button").addEventListener("click", processUserInput);
+    console.log("Chatbot initialized.");
+});
