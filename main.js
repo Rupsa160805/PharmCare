@@ -1,4 +1,4 @@
-// Additional Health Conditions and their Responses
+// Health Conditions Mapping
 const healthConditions = {
     "heart": "heart_disease",
     "cardio": "heart_disease",
@@ -10,13 +10,13 @@ const healthConditions = {
     "oncology": "cancer_issue",
     "skin": "skin_issue",
     "dermatology": "skin_issue",
-    "pulmonary": "pulmonary_issue",   // Added pulmonary condition
-    "fever": "general_physician_issue", // Added fever/general physician condition
-    "pain": "general_physician_issue",  // Added pain/general physician condition
-    "women": "women_issue"            // Added women issues condition
+    "pulmonary": "pulmonary_issue",
+    "fever": "general_physician_issue",
+    "pain": "general_physician_issue",
+    "women": "women_issue"
 };
 
-// Additional Responses in Multiple Languages
+// Multilingual Responses (English, Hindi, Bengali)
 const responses = {
     "en": {
         "hello": "Hello! How can I assist you today?",
@@ -24,20 +24,12 @@ const responses = {
         "thanks": "You're welcome! Let me know if you need further assistance.",
         "thank you": "You're welcome! Stay healthy.",
         "sorry": "No worries! How can I assist you?",
-        "location": "I'm fetching your current location to find the nearest clinic or hospital.",
-        "clinic": "I’m searching for clinics near your location. Please wait a moment...",
+        "location": "Fetching your current location to find nearby clinics and hospitals...",
+        "clinic": "Searching for clinics near your location. Please wait...",
         "language": "I can assist you in multiple languages. Which language do you prefer? (English, Hindi, Bengali, etc.)",
         "hospital": "Searching for nearby hospitals for medical tests and checkups...",
         "ask_disease": "Please mention your disease or symptoms so I can suggest suitable doctors and hospitals.",
         "default": "I'm sorry, I didn't understand that. Can you please rephrase?",
-        "take_care": "Take care! Let me know if you need any assistance.",
-        "checkup": "You should consider scheduling a health checkup along with consultation for better care.",
-        "location_confirm": "Got it! I'm fetching nearby hospitals and clinics now. Please wait a moment...",
-        "doctors_found": "Here are the doctors and hospitals I found based on your condition:",
-        "location_error": "I'm unable to retrieve your location. Please allow location access.",
-        "switch_language": "Language switched successfully. How may I assist you now?",
-        "language_error": "Sorry, I currently support English, Hindi, and Bengali. Please choose one.",
-        "ask_location": "Please enable location services so I can suggest nearby hospitals.",
         "heart_disease": "For heart-related issues, you may consult a Cardiologist. Fetching nearby hospitals...",
         "bone_issue": "For bone problems, an Orthopedic specialist would be helpful. Fetching nearby hospitals...",
         "nerve_issue": "For nerve issues, I recommend consulting a Neurologist. Fetching nearby hospitals...",
@@ -55,26 +47,17 @@ const responses = {
         "sorry": "कोई बात नहीं! मैं आपकी किस प्रकार सहायता कर सकता हूँ?",
         "location": "मैं आपके स्थान का पता लगा रहा हूँ ताकि निकटतम क्लिनिक या अस्पताल खोज सकूं।",
         "clinic": "मैं आपके स्थान के निकट क्लिनिक खोज रहा हूँ। कृपया प्रतीक्षा करें...",
-        "language": "मैं कई भाषाओं में सहायता कर सकता हूँ। आप कौन सी भाषा पसंद करते हैं? (अंग्रेजी, हिंदी, बांग्ला, आदि)",
         "hospital": "चिकित्सा परीक्षणों और जांच के लिए निकटतम अस्पताल खोज रहा हूँ...",
         "ask_disease": "कृपया अपना रोग या लक्षण बताएं ताकि मैं उपयुक्त डॉक्टरों और अस्पतालों का सुझाव दे सकूं।",
         "default": "मुझे क्षमा करें, मैं इसे समझ नहीं पाया। क्या आप इसे दोहरा सकते हैं?",
-        "take_care": "अपना ख्याल रखें! यदि कोई सहायता चाहिए तो मुझे बताएं।",
-        "checkup": "बेहतर देखभाल के लिए आपको एक स्वास्थ्य जांच निर्धारित करनी चाहिए।",
-        "location_confirm": "समझ गया! निकटतम अस्पतालों और क्लीनिक की जानकारी प्राप्त कर रहा हूँ। कृपया प्रतीक्षा करें...",
-        "doctors_found": "यहाँ आपके रोग के आधार पर मैंने डॉक्टर और अस्पताल ढूंढे हैं:",
-        "location_error": "मैं आपका स्थान प्राप्त करने में असमर्थ हूँ। कृपया स्थान की अनुमति दें।",
-        "switch_language": "भाषा सफलतापूर्वक बदली गई। अब मैं आपकी कैसे सहायता कर सकता हूँ?",
-        "language_error": "मुझे क्षमा करें, फिलहाल मैं केवल अंग्रेजी, हिंदी, और बांग्ला में सहायता कर सकता हूँ।",
-        "ask_location": "कृपया स्थान सेवाएं सक्षम करें ताकि मैं निकटतम अस्पतालों का सुझाव दे सकूं।",
-        "heart_disease": "हृदय से जुड़ी समस्याओं के लिए, आप किसी हृदय रोग विशेषज्ञ से परामर्श करें। निकटतम अस्पतालों की जानकारी ला रहा हूँ...",
-        "bone_issue": "हड्डियों की समस्याओं के लिए, किसी अस्थि रोग विशेषज्ञ से परामर्श करें। निकटतम अस्पतालों की जानकारी ला रहा हूँ...",
-        "nerve_issue": "नसों की समस्याओं के लिए, किसी न्यूरोलॉजिस्ट से मिलें। निकटतम अस्पताल खोज रहा हूँ...",
-        "cancer_issue": "कैंसर के मामलों में, एक ऑन्कोलॉजिस्ट से परामर्श करें। निकटतम अस्पताल खोज रहा हूँ...",
-        "skin_issue": "त्वचा संबंधी समस्याओं के लिए, त्वचा विशेषज्ञ से मिलें। निकटतम अस्पताल खोज रहा हूँ...",
-        "pulmonary_issue": "पुल्मोनरी समस्याओं के लिए, आपको एक पल्मोनोलॉजिस्ट से परामर्श करना चाहिए। निकटतम अस्पताल खोज रहा हूँ...",
-        "general_physician_issue": "बुखार या सामान्य दर्द के लिए, आपको एक सामान्य चिकित्सक से मिलना चाहिए। निकटतम अस्पताल खोज रहा हूँ...",
-        "women_issue": "महिलाओं के स्वास्थ्य समस्याओं के लिए, आप एक गायनकोलॉजिस्ट से परामर्श कर सकती हैं। निकटतम अस्पताल खोज रहा हूँ..."
+        "heart_disease": "हृदय से जुड़ी समस्याओं के लिए, आप किसी हृदय रोग विशेषज्ञ से परामर्श करें।",
+        "bone_issue": "हड्डियों की समस्याओं के लिए, किसी अस्थि रोग विशेषज्ञ से परामर्श करें।",
+        "nerve_issue": "नसों की समस्याओं के लिए, किसी न्यूरोलॉजिस्ट से मिलें।",
+        "cancer_issue": "कैंसर के मामलों में, एक ऑन्कोलॉजिस्ट से परामर्श करें।",
+        "skin_issue": "त्वचा संबंधी समस्याओं के लिए, त्वचा विशेषज्ञ से मिलें।",
+        "pulmonary_issue": "पुल्मोनरी समस्याओं के लिए, आपको एक पल्मोनोलॉजिस्ट से परामर्श करना चाहिए।",
+        "general_physician_issue": "बुखार या सामान्य दर्द के लिए, आपको एक सामान्य चिकित्सक से मिलना चाहिए।",
+        "women_issue": "महिलाओं के स्वास्थ्य समस्याओं के लिए, आप एक गायनकोलॉजिस्ट से परामर्श कर सकती हैं।"
     },
     "bn": {
         "hello": "হ্যালো! আমি কীভাবে আপনাকে সাহায্য করতে পারি?",
@@ -84,100 +67,30 @@ const responses = {
         "sorry": "কোনো সমস্যা নেই! আমি কীভাবে সাহায্য করতে পারি?",
         "location": "আপনার অবস্থান সনাক্ত করছি যাতে কাছের হাসপাতাল বা ক্লিনিক খুঁজে বের করা যায়।",
         "clinic": "আপনার অবস্থানের কাছাকাছি ক্লিনিক খুঁজছি। অনুগ্রহ করে অপেক্ষা করুন...",
-        "language": "আমি একাধিক ভাষায় সাহায্য করতে পারি। আপনি কোন ভাষা পছন্দ করেন? (ইংরেজি, হিন্দি, বাংলা, ইত্যাদি)",
         "hospital": "চিকিৎসা পরীক্ষা এবং চেকআপের জন্য কাছের হাসপাতাল খুঁজছি...",
         "ask_disease": "আপনার রোগ বা লক্ষণ উল্লেখ করুন যাতে আমি উপযুক্ত ডাক্তার এবং হাসপাতাল সুপারিশ করতে পারি।",
         "default": "দুঃখিত, আমি এটি বুঝতে পারিনি। দয়া করে পুনরায় বলুন।",
-        "take_care": "ভাল থাকুন! প্রয়োজনে আমাকে জানান।",
-        "checkup": "ভাল যত্নের জন্য একটি স্বাস্থ্য পরীক্ষা করার পরামর্শ দিচ্ছি।",
-        "location_confirm": "বুঝেছি! নিকটস্থ হাসপাতাল ও ক্লিনিক খুঁজছি। অনুগ্রহ করে অপেক্ষা করুন...",
-        "doctors_found": "আপনার পরিস্থিতির উপর ভিত্তি করে আমি যে ডাক্তার ও হাসপাতাল পেয়েছি:",
-        "location_error": "আমি আপনার অবস্থান সনাক্ত করতে পারছি না। দয়া করে অবস্থানের অনুমতি দিন।",
-        "switch_language": "ভাষা সফলভাবে পরিবর্তিত হয়েছে। এখন আমি কীভাবে সাহায্য করতে পারি?",
-        "language_error": "দুঃখিত, আমি বর্তমানে শুধুমাত্র ইংরেজি, হিন্দি এবং বাংলা সমর্থন করি।",
-        "ask_location": "অনুগ্রহ করে অবস্থান পরিষেবা সক্রিয় করুন যাতে আমি নিকটবর্তী হাসপাতালগুলি সুপারিশ করতে পারি।",
-        "heart_disease": "হৃদরোগ সংক্রান্ত সমস্যার জন্য, আপনাকে একজন কার্ডিওলজিস্টের পরামর্শ নিতে হবে। কাছের হাসপাতাল খুঁজছি...",
-        "bone_issue": "হাড়ের সমস্যার জন্য একজন অর্থোপেডিক বিশেষজ্ঞের সাথে যোগাযোগ করুন। কাছাকাছি হাসপাতাল খুঁজছি...",
-        "nerve_issue": "স্নায়বিক সমস্যার জন্য একজন নিউরোলজিস্টের পরামর্শ নিন। কাছের হাসপাতালের সন্ধান করছি...",
-        "cancer_issue": "ক্যান্সার রোগের জন্য অনকোলজিস্টের পরামর্শ নিন। কাছের হাসপাতালের তথ্য আনছি...",
-        "skin_issue": "ত্বক সংক্রান্ত সমস্যার জন্য, একজন চর্মরোগ বিশেষজ্ঞের পরামর্শ নিন। নিকটবর্তী হাসপাতালের তালিকা আনছি...",
-        "pulmonary_issue": "পালমোনারি সমস্যার জন্য, আপনাকে একজন পালমোনোলজিস্টের পরামর্শ নিতে হবে। নিকটবর্তী হাসপাতাল খুঁজছি...",
-        "general_physician_issue": "জ্বর বা সাধারণ ব্যথার জন্য, আপনাকে একজন সাধারণ চিকিৎসকের কাছে যেতে হবে। নিকটবর্তী হাসপাতাল খুঁজছি...",
-        "women_issue": "মহিলাদের স্বাস্থ্য সমস্যার জন্য, আপনাকে একজন গাইনোকোলজিস্টের পরামর্শ নিতে হবে। নিকটবর্তী হাসপাতাল খুঁজছি..."
+        "heart_disease": "হৃদরোগ সংক্রান্ত সমস্যার জন্য, আপনাকে একজন কার্ডিওলজিস্টের পরামর্শ নিতে হবে।",
+        "bone_issue": "হাড়ের সমস্যার জন্য একজন অর্থোপেডিক বিশেষজ্ঞের সাথে যোগাযোগ করুন।",
+        "nerve_issue": "স্নায়বিক সমস্যার জন্য একজন নিউরোলজিস্টের পরামর্শ নিন।",
+        "cancer_issue": "ক্যান্সার রোগের জন্য অনকোলজিস্টের পরামর্শ নিন।",
+        "skin_issue": "ত্বক সংক্রান্ত সমস্যার জন্য, একজন চর্মরোগ বিশেষজ্ঞের পরামর্শ নিন।",
+        "pulmonary_issue": "পালমোনারি সমস্যার জন্য, আপনাকে একজন পালমোনোলজিস্টের পরামর্শ নিতে হবে।",
+        "general_physician_issue": "জ্বর বা সাধারণ ব্যথার জন্য, আপনাকে একজন সাধারণ চিকিৎসকের কাছে যেতে হবে।",
+        "women_issue": "মহিলাদের স্বাস্থ্য সমস্যার জন্য, আপনাকে একজন গাইনোকোলজিস্টের পরামর্শ নিতে হবে।"
     }
 };
 
-// Updated Doctor and Hospital Suggestions for the New Conditions
-const doctorHospitalList = {
-    "heart_disease": ["Dr. Amit Sharma (Cardiologist) - City Heart Clinic", "Carewell Hospital, Sector 12"],
-    "bone_issue": ["Dr. Rakesh Verma (Orthopedic) - Bone & Joint Care", "Ortho Life Hospital, Sector 22"],
-    "nerve_issue": ["Dr. Priya Kapoor (Neurologist) - NeuroCare Clinic", "Mind & Nerve Hospital, Sector 18"],
-    "cancer_issue": ["Dr. Anjali Mehta (Oncologist) - Cancer Care Institute", "LifeLine Cancer Hospital, Sector 32"],
-    "skin_issue": ["Dr. Sanjay Das (Dermatologist) - Skin Glow Clinic", "Derma Health Hospital, Sector 45"],
-    "pulmonary_issue": ["Dr. Ravi Kumar (Pulmonologist) - PulmoCare Clinic", "Respiratory Health Hospital, Sector 10"], // Pulmonary specialists
-    "general_physician_issue": ["Dr. Neha Gupta (General Physician) - HealthCare Clinic", "City General Hospital, Sector 5"], // General physician for fever/pain
-    "women_issue": ["Dr. Priya Sen (Gynecologist) - Women's Care Clinic", "Women Health Hospital, Sector 20"] // Gynecologist for women's health
-};
+// Ensure Chatbot Initializes Properly
+document.addEventListener("DOMContentLoaded", () => {
+    const sendButton = document.getElementById("send-button");
+    const userInput = document.getElementById("user-input");
 
-// Fetch Nearby Hospitals Based on User Location (Updated to handle new conditions)
-function fetchNearbyHospitals(condition) {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
-
-                displayMessage(responses[userLanguage][condition], "bot");
-
-                // Show Suggested Doctors and Hospitals
-                const hospitalList = doctorHospitalList[condition] || [];
-                if (hospitalList.length > 0) {
-                    displayMessage(responses[userLanguage]["doctors_found"], "bot");
-                    hospitalList.forEach((hospital) => {
-                        displayMessage(hospital, "bot");
-                    });
-                } else {
-                    displayMessage(responses[userLanguage]["location_error"], "bot");
-                }
-            },
-            () => {
-                displayMessage(responses[userLanguage]["location_error"], "bot");
-            }
-        );
-    } else {
-        displayMessage(responses[userLanguage]["location_error"], "bot");
-    }
-}
-
-// Process User Input and Respond (Updated to handle new conditions)
-function processUserInput() {
-    const userMessage = userInput.value.trim().toLowerCase();
-    if (!userMessage) return;
-
-    displayMessage(userMessage, "user");
-    userInput.value = "";
-
-    // Handle language switching
-    if (switchLanguage(userMessage)) {
+    if (!sendButton || !userInput) {
+        console.error("Error: Some chatbot elements are missing in HTML.");
         return;
     }
 
-    // Check for disease or symptoms including the new ones
-    for (const [key, value] of Object.entries(healthConditions)) {
-        if (userMessage.includes(key)) {
-            fetchNearbyHospitals(value);
-            return;
-        }
-    }
-
-    // Handle basic responses
-    if (responses[userLanguage][userMessage]) {
-        displayMessage(responses[userLanguage][userMessage], "bot");
-    } else {
-        displayMessage(responses[userLanguage]["default"], "bot");
-    }
-}
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("send-button").addEventListener("click", processUserInput);
+    sendButton.addEventListener("click", processUserInput);
     console.log("Chatbot initialized.");
 });
