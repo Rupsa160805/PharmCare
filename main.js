@@ -142,8 +142,5 @@ function fetchDoctors(specialization) {
 
 // Fetch Hospitals
 function fetchHospitals(specialization) {
-    const hospitalList = hospitals[specialization] || [];
-    if (hospitalList.length > 0) {
-        displayMessage(hospitalList.join("\n"), "bot");
-    }
+    displayMessage("🏥 " + (specialization === "Cardiologist" ? "Heart Care Hospital" : "City Hospital"), "bot");
 }
