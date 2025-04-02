@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PharmCare Services</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Make sure to link your styles -->
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your stylesheet -->
 </head>
 <body>
     <!-- Header Section -->
     <header>
         <nav>
-            <!-- Navigation Links (Home, About, Contact, etc.) -->
             <ul>
                 <li><a href="index.html">Home</a></li>
                 <li><a href="about.html">About</a></li>
@@ -24,7 +23,19 @@
     <main>
         <section id="services">
             <h2>Our Services</h2>
-            <p>PharmCare offers a range of healthcare services to help you stay healthy, whether you're looking for basic consultations or advanced health tracking.</p>
+            <p>PharmCare offers a range of healthcare services to help you stay healthy, whether you're looking for basic consultations or advanced health tracking.We offer teleconsultation, e-prescriptions, health monitoring, multilingual support,  fast services. We provide cost effective services and also can tell your nearest clinic or hospitals for conducting medical tests.</p>
+
+            <!-- Free Trial -->
+            <div class="service">
+                <h3>Free Trial</h3>
+                <ul>
+                    <li>7-day access to basic features</li>
+                    <li>One free doctor consultation</li>
+                    <li>Basic health recommendations</li>
+                </ul>
+                <p>Experience PharmCare for free before choosing a subscription plan.</p>
+                <button id="free-trial-btn">Start Free Trial</button>
+            </div>
 
             <!-- Free Plan Services -->
             <div class="service">
@@ -35,7 +46,7 @@
                     <li>Limited health recommendations</li>
                 </ul>
                 <p>With our Free Plan, you can access basic healthcare services. Start by subscribing now!</p>
-                <button onclick="window.location.href='/subscribe/free'">Subscribe Free</button>
+                <button id="subscribe-free-btn">Subscribe Free</button>
             </div>
 
             <!-- Premium Plan Services -->
@@ -48,15 +59,27 @@
                     <li>Full access to all premium features</li>
                 </ul>
                 <p>Unlock the full range of services with our Premium Plan. Enjoy unlimited consultations, enhanced health tracking, and more.</p>
-                <button onclick="window.location.href='/subscribe/premium'">Subscribe Premium</button>
+                <button id="subscribe-premium-btn">Subscribe Premium</button>
+            </div>
+
+            <!-- Consultation Booking -->
+            <div class="service">
+                <h3>Doctor Consultation</h3>
+                <ul>
+                    <li>Book an appointment with a specialist</li>
+                    <li>Get medical advice via video call</li>
+                    <li>Prescription and health recommendations</li>
+                </ul>
+                <p>Need a consultation? Book an appointment with a doctor at your convenience.</p>
+                <button id="consultation-btn">Book Consultation</button>
             </div>
 
             <!-- Additional Service Info -->
             <div class="service-info">
                 <h3>How to Choose the Right Plan?</h3>
-                <p>If you're new to PharmCare, the Free Plan is a great way to get started and access essential services. However, if you need unlimited consultations, priority support, and advanced tools, our Premium Plan is the best option for you.</p>
-                <a href="/subscribe/free" class="cta-link">Try Free Plan</a>
-                <a href="/subscribe/premium" class="cta-link">Upgrade to Premium</a>
+                <p>If you're new to PharmCare, the Free Trial is a great way to get started. For those needing unlimited consultations and advanced features, the Premium Plan is the best choice.</p>
+                <a href="#" id="try-free-link" class="cta-link">Try Free Trial</a>
+                <a href="#" id="upgrade-premium-link" class="cta-link">Upgrade to Premium</a>
             </div>
         </section>
     </main>
@@ -65,5 +88,7 @@
     <footer>
         <p>&copy; 2025 PharmCare. All rights reserved.</p>
     </footer>
+
+    <script src="subscriptions.js"></script> <!-- JavaScript for subscription functionality -->
 </body>
 </html>
