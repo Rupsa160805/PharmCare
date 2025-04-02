@@ -11,7 +11,8 @@ const healthConditions = {
     "rashes": "Dermatologist", "eczema": "Dermatologist", "allergy": "Dermatologist",
     "psoriasis": "Dermatologist", "piles": "Proctologist", "hemorrhoids": "Proctologist",
     "pulmonary": "Pulmonologist", "lungs": "Pulmonologist", "breathing": "Pulmonologist", "asthma": "Pulmonologist",
-    "fever": "General Physician", "pain": "General Physician", "women": "Gynecologist", "pregnancy": "Gynecologist",
+    "fever": "General Physician", "cold": "General Physician", "cough": "General Physician", "flu": "General Physician",
+    "pain": "General Physician", "women": "Gynecologist", "pregnancy": "Gynecologist",
     "mental": "Psychiatrist", "depression": "Psychiatrist", "anxiety": "Psychiatrist", "stress": "Psychiatrist"
 };
 
