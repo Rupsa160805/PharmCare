@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Chatbot | Telemedicine Platform</title>
-    <link rel="stylesheet" href="style-chatbot.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -24,6 +24,16 @@
     <main>
         <h1>Welcome to AI Chatbot</h1>
         <p>Tell us about your problem and location. We’ll help you find the nearest clinic or hospital and offer multilingual support.</p>
+
+        <!-- Language Selection -->
+        <label for="language">Select Language:</label>
+        <select id="language">
+            <option value="en">English</option>
+            <option value="hi">Hindi</option>
+            <option value="bn">Bengali</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+        </select>
 
         <!-- Chat Container -->
         <div class="chat-container" id="chat-container">
