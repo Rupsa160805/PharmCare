@@ -112,7 +112,7 @@ function processUserInput() {
     if (!found) {
         if (userText.includes("hello") || userText.includes("hi")) {
             displayMessage(translations[selectedLanguage].greeting, "bot");
-        } else if (userText.includes("thanks")) {
+        } else if (userText.includes("thanks") || userText.includes("thank you")) {
             displayMessage(translations[selectedLanguage].thanks, "bot");
         } else if (userText.includes("sorry")) {
             displayMessage(translations[selectedLanguage].sorry, "bot");
