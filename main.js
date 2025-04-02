@@ -1,105 +1,47 @@
 // Default language is English
 let selectedLanguage = "en";
 
-// Health Conditions Mapping to Specializations
-const healthConditions = {
-    "heart": "Cardiologist",
-    "cardio": "Cardiologist",
-    "blood pressure": "Cardiologist",
-    "bp": "Cardiologist",
-    "bones": "Orthopedic",
-    "fracture": "Orthopedic",
-    "joint": "Orthopedic",
-    "orthopedic": "Orthopedic",
-    "nerves": "Neurologist",
-    "neurology": "Neurologist",
-    "brain": "Neurologist",
-    "cancer": "Oncologist",
-    "tumor": "Oncologist",
-    "oncology": "Oncologist",
-    "skin": "Dermatologist",
-    "pimples": "Dermatologist",
-    "acne": "Dermatologist",
-    "rashes": "Dermatologist",
-    "eczema": "Dermatologist",
-    "allergy": "Dermatologist",
-    "psoriasis": "Dermatologist",
-    "piles": "Proctologist",
-    "hemorrhoids": "Proctologist",
-    "pulmonary": "Pulmonologist",
-    "lungs": "Pulmonologist",
-    "breathing": "Pulmonologist",
-    "asthma": "Pulmonologist",
-    "fever": "General Physician",
-    "cold": "General Physician",
-    "cough": "General Physician",
-    "pain": "General Physician",
-    "women": "Gynecologist",
-    "pregnancy": "Gynecologist",
-    "mental": "Psychiatrist",
-    "anxiety": "Psychiatrist",
-    "depression": "Psychiatrist",
-    "stress": "Psychiatrist",
-    "sleep": "Psychiatrist",
+// Translations for multilingual support
+const translations = {
+    en: {
+        greeting: "Hello! How can I assist you today? 😊",
+        thanks: "You're welcome! Let me know if you need any more help. 🤗",
+        sorry: "No worries! How can I assist you? 😊",
+        switchEnglish: "I will now respond in English.",
+        switchHindi: "अब से मैं हिंदी में जवाब दूंगा।",
+        switchBengali: "এখন থেকে আমি বাংলায় উত্তর দেব।",
+        doctorIntro: "Here are some recommended doctors for",
+        hospitalIntro: "Here are some hospitals for this specialization:",
+        notUnderstood: "I didn't understand. Please mention a health issue or ask for a doctor."
+    },
+    hi: {
+        greeting: "नमस्ते! मैं आज आपकी कैसे मदद कर सकता हूँ? 😊",
+        thanks: "आपका स्वागत है! मुझे बताइए कि क्या मैं और मदद कर सकता हूँ। 🤗",
+        sorry: "कोई बात नहीं! मैं आपकी कैसे सहायता कर सकता हूँ? 😊",
+        switchEnglish: "अब मैं अंग्रेज़ी में उत्तर दूँगा।",
+        switchHindi: "अब से मैं हिंदी में जवाब दूंगा।",
+        switchBengali: "अब से मैं बंगाली में उत्तर दूँगा।",
+        doctorIntro: "यहाँ कुछ अनुशंसित डॉक्टर हैं",
+        hospitalIntro: "इस विशेषज्ञता के लिए कुछ अस्पताल हैं:",
+        notUnderstood: "मुझे समझ नहीं आया। कृपया किसी स्वास्थ्य समस्या का उल्लेख करें या डॉक्टर से पूछें।"
+    },
+    bn: {
+        greeting: "হ্যালো! আমি আজ আপনাকে কীভাবে সাহায্য করতে পারি? 😊",
+        thanks: "আপনার স্বাগতম! আমাকে জানান যদি আরও সাহায্য প্রয়োজন হয়। 🤗",
+        sorry: "কোনও সমস্যা নেই! আমি আপনাকে কীভাবে সাহায্য করতে পারি? 😊",
+        switchEnglish: "আমি এখন ইংরেজিতে উত্তর দেব।",
+        switchHindi: "আমি এখন হিন্দিতে উত্তর দেব।",
+        switchBengali: "এখন থেকে আমি বাংলায় উত্তর দেব।",
+        doctorIntro: "এখানে কিছু সুপারিশকৃত ডাক্তার আছেন",
+        hospitalIntro: "এই বিশেষায়নের জন্য কিছু হাসপাতাল:",
+        notUnderstood: "আমি বুঝতে পারিনি। অনুগ্রহ করে একটি স্বাস্থ্য সমস্যা উল্লেখ করুন বা ডাক্তার সম্পর্কে জিজ্ঞাসা করুন।"
+    }
 };
 
-// Doctors List with Consultation Fees
-const doctors = {
-    "Cardiologist": [
-        { name: "Dr. Rajesh Sharma", fee: "₹800" },
-        { name: "Dr. Anjali Mehta", fee: "₹900" }
-    ],
-    "Orthopedic": [
-        { name: "Dr. Vikram Das", fee: "₹700" },
-        { name: "Dr. Riya Sen", fee: "₹750" }
-    ],
-    "Neurologist": [
-        { name: "Dr. Alok Verma", fee: "₹1000" },
-        { name: "Dr. Sneha Kapoor", fee: "₹950" }
-    ],
-    "Oncologist": [
-        { name: "Dr. Rajiv Menon", fee: "₹1500" },
-        { name: "Dr. Neha Agarwal", fee: "₹1400" }
-    ],
-    "Dermatologist": [
-        { name: "Dr. Sanjay Bose", fee: "₹600" },
-        { name: "Dr. Payal Gupta", fee: "₹650" }
-    ],
-    "Pulmonologist": [
-        { name: "Dr. Arvind Iyer", fee: "₹900" },
-        { name: "Dr. Kiran Das", fee: "₹850" }
-    ],
-    "Gynecologist": [
-        { name: "Dr. Kavita Sharma", fee: "₹900" },
-        { name: "Dr. Poonam Das", fee: "₹850" }
-    ],
-    "General Physician": [
-        { name: "Dr. Ramesh Patil", fee: "₹400" },
-        { name: "Dr. Priya Malhotra", fee: "₹450" }
-    ],
-    "Proctologist": [
-        { name: "Dr. Amit Sen", fee: "₹1000" },
-        { name: "Dr. Sunita Nair", fee: "₹950" }
-    ],
-    "Psychiatrist": [
-        { name: "Dr. Anirban Roy", fee: "₹1200" },
-        { name: "Dr. Shalini Gupta", fee: "₹1100" }
-    ]
-};
-
-// Hospitals Categorized by Specialization
-const hospitals = {
-    "Cardiologist": ["🏥 Heart Care Hospital", "🏥 Pulse Cardiac Center"],
-    "Orthopedic": ["🏥 Bone & Joint Clinic", "🏥 Ortho Plus Hospital"],
-    "Neurologist": ["🏥 Brain & Spine Institute", "🏥 Neuro Care Hospital"],
-    "Oncologist": ["🏥 Cancer Institute", "🏥 Oncology Care Center"],
-    "Dermatologist": ["🏥 Skin & Hair Clinic", "🏥 Glow Dermatology Center"],
-    "Pulmonologist": ["🏥 Respiratory Health Center", "🏥 Pulmonary Care Hospital"],
-    "Gynecologist": ["🏥 Women's Health Center", "🏥 Motherhood Hospital"],
-    "General Physician": ["🏥 MedLife Clinic", "🏥 City General Hospital"],
-    "Proctologist": ["🏥 Piles & Anorectal Clinic", "🏥 Proctology Care Center"],
-    "Psychiatrist": ["🏥 Mental Wellness Center", "🏥 Psychiatry Health Clinic"]
-};
+// Function to get translated text based on selected language
+function translate(key) {
+    return translations[selectedLanguage][key];
+}
 
 // Chatbot Initialization
 document.addEventListener("DOMContentLoaded", () => {
@@ -122,23 +64,23 @@ function processUserInput() {
     // Language Switching
     if (userText.includes("hindi")) {
         selectedLanguage = "hi";
-        displayMessage("अब से मैं हिंदी में जवाब दूंगा।", "bot");
+        displayMessage(translate("switchHindi"), "bot");
         return;
     } else if (userText.includes("bengali")) {
         selectedLanguage = "bn";
-        displayMessage("এখন থেকে আমি বাংলায় উত্তর দেব।", "bot");
+        displayMessage(translate("switchBengali"), "bot");
         return;
     } else if (userText.includes("english")) {
         selectedLanguage = "en";
-        displayMessage("I will now respond in English.", "bot");
+        displayMessage(translate("switchEnglish"), "bot");
         return;
     }
 
-    // Check for Health Issues in Input
+    // Detect Health Issues
     for (const keyword in healthConditions) {
         if (userText.includes(keyword)) {
             const specialization = healthConditions[keyword];
-            displayMessage(`Here are some recommended doctors for ${specialization}:`, "bot");
+            displayMessage(`${translate("doctorIntro")} ${specialization}:`, "bot");
             fetchDoctors(specialization);
             fetchNearbyHospitals(specialization);
             return;
@@ -147,20 +89,20 @@ function processUserInput() {
 
     // Friendly Responses
     if (userText.includes("hello") || userText.includes("hi")) {
-        displayMessage("Hello! How can I assist you today?", "bot");
+        displayMessage(translate("greeting"), "bot");
         return;
     }
     if (userText.includes("thanks") || userText.includes("thank you")) {
-        displayMessage("You're welcome! Let me know if you need any more help.", "bot");
+        displayMessage(translate("thanks"), "bot");
         return;
     }
     if (userText.includes("sorry")) {
-        displayMessage("No worries! How can I assist you?", "bot");
+        displayMessage(translate("sorry"), "bot");
         return;
     }
 
     // Default Response
-    displayMessage("I didn't understand. Please mention a health issue or ask for a doctor.", "bot");
+    displayMessage(translate("notUnderstood"), "bot");
 }
 
 // Display Messages in Chat
@@ -180,6 +122,6 @@ function fetchDoctors(specialization) {
 
 // Fetch Nearby Hospitals
 function fetchNearbyHospitals(specialization) {
-    displayMessage("Here are some hospitals for this specialization:", "bot");
+    displayMessage(translate("hospitalIntro"), "bot");
     displayMessage(hospitals[specialization].join("\n"), "bot");
 }
