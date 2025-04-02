@@ -163,15 +163,7 @@ function fetchDoctors(specialization) {
 }
 
 // Fetch Nearby Hospitals
-function fetchNearbyHospitals() {
-    if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(async (position) => {
-            displayMessage("Fetching hospitals near your location...", "bot");
-            // API call logic (same as before)
-        }, () => {
-            displayMessage("Unable to access your location. Please enable location services.", "bot");
-        });
-    } else {
-        displayMessage("Geolocation is not supported by your browser.", "bot");
-    }
+async function fetchNearbyHospitals() {
+    displayMessage("Fetching hospitals near your location...", "bot");
+    // Call API to fetch hospital details
 }
