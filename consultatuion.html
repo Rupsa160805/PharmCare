@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultation Booking</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let finalPrice = localStorage.getItem("finalConsultationPrice") || "Calculating...";
+            document.getElementById("confirmed-price").innerText = `Price: ₹${finalPrice}`;
+        });
+
+        function confirmBooking() {
+            alert("Your consultation has been successfully booked!");
+            window.location.href = "index.html"; // Redirect to home or dashboard
+        }
+    </script>
+</head>
+<body>
+    <h2>Consultation Confirmation</h2>
+    <p id="confirmed-price">Price: Calculating...</p>
+    <button onclick="confirmBooking()">Confirm Booking</button>
+</body>
+</html>
