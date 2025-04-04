@@ -192,8 +192,12 @@
             const category = selectedDoctor[0];
             const index = selectedDoctor[1];
 
-            // Redirect with selected doctor details
-            window.location.href = `consultation.html?category=${category}&index=${index}`;
+            // Save selected doctor details in localStorage
+            localStorage.setItem("selectedDoctorCategory", category);
+            localStorage.setItem("selectedDoctorIndex", index);
+
+            // Redirect to consultation page
+            window.location.href = "consultation.html";
         });
 
         document.getElementById("free-trial-btn").addEventListener("click", function() {
