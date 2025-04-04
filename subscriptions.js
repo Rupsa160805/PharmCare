@@ -1,5 +1,6 @@
 // Store subscription status
 let subscriptionType = localStorage.getItem("subscriptionType") || "none";
+let freeTrialCount = parseInt(localStorage.getItem("freeTrialCount")) || 5; // Free trial consultations left
 
 // Doctor fees data
 const doctorFees = {
@@ -18,8 +19,14 @@ const doctorFees = {
 // Function to handle subscription
 function subscribe(type) {
     if (type === "free") {
-        alert("✅ You have activated the Free Trial. You get 5 free consultations.");
-        subscriptionType = "free";
+        if (subscriptionType === "free") {
+            alert("⚠️ You are already on the Free Trial.");
+        } else {
+            alert("✅ You have activated the Free Trial. You get 5 free consultations.");
+            subscriptionType = "free";
+            freeTrialCount = 5; // Reset free trial count
+            localStorage.setItem("freeTrialCount", freeTrialCount);
+        }
     } else if (type === "premium") {
         alert("🎉 You have subscribed to the Premium Plan! Your consultation fee is now discounted by 40%.");
         subscriptionType = "premium";
@@ -31,8 +38,11 @@ function subscribe(type) {
 function updateConsultationPrice(doctorCategory, doctorIndex) {
     let consultationFee = doctorFees[doctorCategory][doctorIndex].fee;
 
-    // Apply 40% discount if the user has a premium subscription
-    if (subscriptionType === "premium") {
+    if (subscriptionType === "free" && freeTrialCount > 0) {
+        consultationFee = 0; // Free trial applies
+        freeTrialCount--; // Reduce free consultations left
+        localStorage.setItem("freeTrialCount", freeTrialCount);
+    } else if (subscriptionType === "premium") {
         consultationFee = consultationFee * 0.6; // 40% discount
     }
 
