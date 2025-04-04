@@ -5,14 +5,81 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PharmCare Services</title>
     <link rel="stylesheet" href="style.css"> <!-- Linking external CSS -->
+    <style>
+        /* Ensure Nav Bar Has Gold Flex Buttons */
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #003153; /* Prussian Blue */
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        nav li {
+            list-style: none;
+            margin: 0 15px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: gold;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 10px 15px;
+            background-color: rgba(255, 215, 0, 0.2); /* Light Gold Background */
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            background-color: gold;
+            color: #003153; /* Prussian Blue */
+        }
+
+        /* Style Services Section */
+        #services {
+            background-color: #003153; /* Prussian Blue */
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            margin: 20px;
+        }
+
+        .service-box {
+            background-color: #003153; /* Prussian Blue */
+            border: 2px solid gold;
+            padding: 15px;
+            margin: 15px auto;
+            width: 80%;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .gold-button {
+            background-color: gold;
+            color: #003153;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .gold-button:hover {
+            background-color: white;
+            color: #003153;
+        }
+    </style>
 </head>
 <body>
 
     <!-- Header Section -->
     <header>
         <img src="logo.jpg" alt="PharmCare Logo" id="logo"> <!-- Logo is visible -->
-       <nav class="navbar">
-           <ul>
+        <nav>
             <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About Us</a></li>
             <li><a href="services.html">Services</a></li>
@@ -21,7 +88,6 @@
             <li><a href="chatbot.html">Chatbot</a></li>
             <li><a href="multilingual.html">Multilingual</a></li>
             <li><a href="contact.html">Contact Us</a></li>
-        </ul>
         </nav>
     </header>
 
