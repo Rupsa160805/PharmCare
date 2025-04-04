@@ -52,7 +52,15 @@ function updateConsultationPrice(doctorCategory, doctorIndex) {
 }
 
 // Function to redirect to the consultation page with the correct doctor's fee
-function bookConsultation(doctorCategory, doctorIndex) {
+function bookConsultation(event) {
+    const doctorCategory = event.target.getAttribute("data-category");
+    const doctorIndex = parseInt(event.target.getAttribute("data-index"));
+
+    if (!doctorCategory || isNaN(doctorIndex)) {
+        alert("❌ Error: Doctor details not found!");
+        return;
+    }
+
     updateConsultationPrice(doctorCategory, doctorIndex);
     window.location.href = "consultation.html";
 }
@@ -76,11 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     consultationBtns.forEach((btn) => {
-        btn.addEventListener("click", function () {
-            const doctorCategory = btn.getAttribute("data-category");
-            const doctorIndex = parseInt(btn.getAttribute("data-index"));
-            bookConsultation(doctorCategory, doctorIndex);
-        });
+        btn.addEventListener("click", bookConsultation);
     });
 });
 
