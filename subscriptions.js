@@ -2,7 +2,7 @@
 let subscriptionType = localStorage.getItem("subscriptionType") || "none";
 let freeTrialCount = parseInt(localStorage.getItem("freeTrialCount")) || 5; // 5 free consultations for free trial
 
-// Doctor fees data (Actual fees)
+// Doctor fees data
 const doctorFees = {
     "Cardiologist": [{ name: "Dr. Rajesh Sharma", fee: 800 }, { name: "Dr. Anjali Mehta", fee: 900 }],
     "Orthopedic": [{ name: "Dr. Vikram Das", fee: 700 }, { name: "Dr. Riya Sen", fee: 750 }],
@@ -51,7 +51,7 @@ function updateConsultationPrice(doctorCategory, doctorIndex) {
     localStorage.setItem("selectedDoctor", JSON.stringify(doctorFees[doctorCategory][doctorIndex]));
 }
 
-// Function to redirect to consultation page with correct doctor's fee
+// Function to handle "Book Consultation" button click
 function bookConsultation(event) {
     const doctorCategory = event.target.getAttribute("data-category");
     const doctorIndex = parseInt(event.target.getAttribute("data-index"));
@@ -63,7 +63,7 @@ function bookConsultation(event) {
 
     updateConsultationPrice(doctorCategory, doctorIndex);
     
-    // Ensure proper redirection
+    // Redirect to consultation page
     window.location.href = "consultation.html";
 }
 
