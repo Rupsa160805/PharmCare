@@ -13,16 +13,16 @@ const doctorFees = {
 };
 
 // Assume chatbot sets this based on diagnosis
-let selectedSpecialist = "Cardiologist"; // You can update this dynamically from chatbot
+let selectedSpecialist = null; // Set dynamically from chatbot
 
-// Get base consultation fee for the first doctor in the specialty
+// Get base consultation fee from selected specialist
 function getConsultationFeeFromSpecialist() {
     let doctorList = doctorFees[selectedSpecialist];
     if (doctorList && doctorList.length > 0) {
         let feeStr = doctorList[0].fee.replace("₹", ""); // Remove ₹
-        return parseInt(feeStr); // Convert to number
+        return parseInt(feeStr);
     }
-    return 500; // Default fallback if nothing found
+    return null; // No fallback, return null if not found
 }
 
 function subscribe(plan) {
@@ -35,8 +35,14 @@ function subscribe(plan) {
         updatePrice(); // Update price after subscription
         window.location.href = "/subscribe/premium";
     } else if (plan === "consultation") {
-        let isSubscribed = localStorage.getItem("subscription") === "premium";
         let baseFee = getConsultationFeeFromSpecialist();
+
+        if (baseFee === null) {
+            alert("No consultation fee found. Please select a valid health issue or specialist.");
+            return;
+        }
+
+        let isSubscribed = localStorage.getItem("subscription") === "premium";
         let extraFee = 100;
         let totalFee = baseFee + extraFee;
         let finalPrice = isSubscribed ? Math.round(totalFee * 0.6) : totalFee;
@@ -47,16 +53,23 @@ function subscribe(plan) {
 }
 
 function updatePrice() {
-    let isSubscribed = localStorage.getItem("subscription") === "premium";
     let baseFee = getConsultationFeeFromSpecialist();
+
+    const priceElement = document.getElementById("consultation-price");
+
+    if (!priceElement) return;
+
+    if (baseFee === null) {
+        priceElement.innerText = `Price: Not available. Please select a valid health issue.`;
+        return;
+    }
+
+    let isSubscribed = localStorage.getItem("subscription") === "premium";
     let extraFee = 100;
     let totalFee = baseFee + extraFee;
     let finalPrice = isSubscribed ? Math.round(totalFee * 0.6) : totalFee;
 
-    const priceElement = document.getElementById("consultation-price");
-    if (priceElement) {
-        priceElement.innerText = `Price: ₹${finalPrice}`;
-    }
+    priceElement.innerText = `Price: ₹${finalPrice}`;
 }
 
 document.addEventListener("DOMContentLoaded", updatePrice);
