@@ -51,7 +51,7 @@ function updateConsultationPrice(doctorCategory, doctorIndex) {
     localStorage.setItem("selectedDoctor", JSON.stringify(doctorFees[doctorCategory][doctorIndex]));
 }
 
-// Function to redirect to the consultation page with the correct doctor's fee
+// Function to redirect to consultation page with correct doctor's fee
 function bookConsultation(event) {
     const doctorCategory = event.target.getAttribute("data-category");
     const doctorIndex = parseInt(event.target.getAttribute("data-index"));
@@ -62,6 +62,8 @@ function bookConsultation(event) {
     }
 
     updateConsultationPrice(doctorCategory, doctorIndex);
+    
+    // Ensure proper redirection
     window.location.href = "consultation.html";
 }
 
