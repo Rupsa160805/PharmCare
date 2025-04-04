@@ -1,8 +1,8 @@
-// Store subscription status
+// Get stored subscription type and free trial count
 let subscriptionType = localStorage.getItem("subscriptionType") || "none";
-let freeTrialCount = parseInt(localStorage.getItem("freeTrialCount")) || 5; // Free trial consultations left
+let freeTrialCount = parseInt(localStorage.getItem("freeTrialCount")) || 5; // 5 free consultations for free trial
 
-// Doctor fees data
+// Doctor fees data (Actual fees)
 const doctorFees = {
     "Cardiologist": [{ name: "Dr. Rajesh Sharma", fee: 800 }, { name: "Dr. Anjali Mehta", fee: 900 }],
     "Orthopedic": [{ name: "Dr. Vikram Das", fee: 700 }, { name: "Dr. Riya Sen", fee: 750 }],
@@ -56,5 +56,32 @@ function bookConsultation(doctorCategory, doctorIndex) {
     window.location.href = "consultation.html";
 }
 
-// Update consultation fee on page load
+// Attach event listeners to buttons
+document.addEventListener("DOMContentLoaded", function () {
+    const freeTrialBtn = document.getElementById("free-trial-btn");
+    const premiumBtn = document.getElementById("premium-btn");
+    const consultationBtns = document.querySelectorAll(".consultation-btn");
+
+    if (freeTrialBtn) {
+        freeTrialBtn.addEventListener("click", function () {
+            subscribe("free");
+        });
+    }
+
+    if (premiumBtn) {
+        premiumBtn.addEventListener("click", function () {
+            subscribe("premium");
+        });
+    }
+
+    consultationBtns.forEach((btn) => {
+        btn.addEventListener("click", function () {
+            const doctorCategory = btn.getAttribute("data-category");
+            const doctorIndex = parseInt(btn.getAttribute("data-index"));
+            bookConsultation(doctorCategory, doctorIndex);
+        });
+    });
+});
+
+// Store doctor fees data in localStorage
 localStorage.setItem("doctorFees", JSON.stringify(doctorFees));
