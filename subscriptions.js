@@ -46,8 +46,9 @@ function updateConsultationPrice(doctorCategory, doctorIndex) {
         consultationFee = consultationFee * 0.6; // 40% discount
     }
 
-    // Store the updated consultation fee
+    // Store the updated consultation fee and doctor details
     localStorage.setItem("consultationFee", consultationFee);
+    localStorage.setItem("selectedDoctor", JSON.stringify(doctorFees[doctorCategory][doctorIndex]));
 }
 
 // Function to redirect to the consultation page with the correct doctor's fee
