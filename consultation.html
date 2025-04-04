@@ -1,49 +1,187 @@
-<!-- consultation.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Consultation Confirmation</title>
+    <title>Consultation Booking</title>
     <style>
-        body { font-family: Arial; background-color: #f8f8f8; padding: 2em; text-align: center; }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            padding: 2em;
+            text-align: center;
+        }
+
+        /* Navigation Bar Styling */
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #003153; /* Prussian Blue */
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        nav li {
+            list-style: none;
+            margin: 0 15px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: gold;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 10px 15px;
+            background-color: rgba(255, 215, 0, 0.2); /* Light Gold Background */
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            background-color: gold;
+            color: #003153; /* Prussian Blue */
+        }
+
         .box {
             background-color: #fff;
             border: 2px solid #007b8f;
             padding: 2em;
             border-radius: 10px;
             display: inline-block;
+            text-align: left;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .gold-button {
+            background-color: gold;
+            color: #003153;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .gold-button:hover {
+            background-color: white;
+            color: #003153;
         }
     </style>
 </head>
 <body>
+
+    <!-- Navigation Bar -->
     <nav>
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="about.html">About Us</a></li>
-            <li><a href="services.html">Services</a></li>
-            <li><a href="consultation.html">Home</a></li>
-            <li><a href="doctors.html">Doctors</a></li>
-            <li><a href="hospitals.html">Hospitals</a></li>
-            <li><a href="chatbot.html">Chatbot</a></li>
-            <li><a href="multilingual.html">Multilingual</a></li>
-            <li><a href="contact.html">Contact Us</a></li>
-        </ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="doctors.html">Doctors</a></li>
+        <li><a href="hospitals.html">Hospitals</a></li>
+        <li><a href="chatbot.html">Chatbot</a></li>
+        <li><a href="multilingual.html">Multilingual</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
     </nav>
+
+    <!-- Consultation Booking Form -->
     <div class="box">
-        <h2>Consultation Confirmed!</h2>
-        <p id="confirmed-specialist">Specialist: Loading...</p>
-        <p id="confirmed-price">Price: Loading...</p>
-        <button onclick="window.location.href='index.html'">Go to Home</button>
+        <h2>Book Your Consultation</h2>
+
+        <label for="userName">Your Name:</label>
+        <input type="text" id="userName" placeholder="Enter your name">
+
+        <label for="doctorName">Doctor Name:</label>
+        <input type="text" id="doctorName" placeholder="Enter doctor's name">
+
+        <label for="specialist">Doctor Specialization:</label>
+        <select id="specialist">
+            <option value="Cardiologist">Cardiologist</option>
+            <option value="Orthopedic">Orthopedic</option>
+            <option value="Neurologist">Neurologist</option>
+            <option value="Oncologist">Oncologist</option>
+            <option value="Dermatologist">Dermatologist</option>
+            <option value="Pulmonologist">Pulmonologist</option>
+            <option value="Gynecologist">Gynecologist</option>
+            <option value="General Physician">General Physician</option>
+            <option value="Proctologist">Proctologist</option>
+            <option value="Psychiatrist">Psychiatrist</option>
+        </select>
+
+        <button class="gold-button" onclick="calculateFee()">Check Consultation Fee</button>
+
+        <p id="confirmed-price">Price: -</p>
+
+        <button class="gold-button" onclick="confirmBooking()">Confirm Consultation</button>
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            let specialist = localStorage.getItem("confirmedSpecialist") || "General Physician";
-            let price = localStorage.getItem("finalConsultationPrice") || "500";
+        // Doctor Data
+        const doctorData = {
+            "Cardiologist": [{ name: "Dr. Rajesh Sharma", fee: 800 }, { name: "Dr. Anjali Mehta", fee: 900 }],
+            "Orthopedic": [{ name: "Dr. Vikram Das", fee: 700 }, { name: "Dr. Riya Sen", fee: 750 }],
+            "Neurologist": [{ name: "Dr. Alok Verma", fee: 1000 }, { name: "Dr. Sneha Kapoor", fee: 950 }],
+            "Oncologist": [{ name: "Dr. Rajiv Menon", fee: 1500 }, { name: "Dr. Neha Agarwal", fee: 1400 }],
+            "Dermatologist": [{ name: "Dr. Sanjay Bose", fee: 600 }, { name: "Dr. Payal Gupta", fee: 650 }],
+            "Pulmonologist": [{ name: "Dr. Arvind Iyer", fee: 900 }, { name: "Dr. Kiran Das", fee: 850 }],
+            "Gynecologist": [{ name: "Dr. Kavita Sharma", fee: 900 }, { name: "Dr. Poonam Das", fee: 850 }],
+            "General Physician": [{ name: "Dr. Ramesh Patil", fee: 400 }, { name: "Dr. Priya Malhotra", fee: 450 }],
+            "Proctologist": [{ name: "Dr. Amit Sen", fee: 1000 }, { name: "Dr. Sunita Nair", fee: 950 }],
+            "Psychiatrist": [{ name: "Dr. Anirban Roy", fee: 1200 }, { name: "Dr. Shalini Gupta", fee: 1100 }]
+        };
 
-            document.getElementById("confirmed-specialist").innerText = `Specialist: ${specialist}`;
+        // Get Subscription Status
+        function isSubscribed() {
+            return localStorage.getItem("userSubscription") === "premium"; // True if subscribed
+        }
+
+        function calculateFee() {
+            const specialist = document.getElementById("specialist").value;
+            const doctorName = document.getElementById("doctorName").value.trim();
+            let price = 0;
+
+            if (doctorData[specialist]) {
+                // Find the doctor in the list
+                const doctor = doctorData[specialist].find(doc => doc.name === doctorName);
+                if (doctor) {
+                    price = doctor.fee;
+                } else {
+                    alert("Doctor not found in our database. Please check the name.");
+                    return;
+                }
+            }
+
+            // Apply Subscription Discount (₹100-₹150 off)
+            if (isSubscribed()) {
+                price -= Math.floor(Math.random() * (150 - 100 + 1) + 100); // Random ₹100-₹150 discount
+            }
+
             document.getElementById("confirmed-price").innerText = `Price: ₹${price}`;
-        });
+            localStorage.setItem("finalConsultationPrice", price);
+        }
+
+        function confirmBooking() {
+            const userName = document.getElementById("userName").value.trim();
+            const doctorName = document.getElementById("doctorName").value.trim();
+            const specialist = document.getElementById("specialist").value;
+
+            if (!userName || !doctorName) {
+                alert("Please fill all fields before confirming.");
+                return;
+            }
+
+            localStorage.setItem("confirmedUser", userName);
+            localStorage.setItem("confirmedSpecialist", `${doctorName} (${specialist})`);
+            
+            alert("Consultation booked successfully!");
+            window.location.href = "index.html"; // Redirect to Home Page
+        }
     </script>
 </body>
 </html>
