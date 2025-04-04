@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PharmCare Services</title>
-    <link rel="stylesheet" href="style.css"> <!-- Linking external CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <!-- Header Section -->
     <header>
         <nav>
-          <li><a href="index.html">Home</a></li>
+            <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About Us</a></li>
             <li><a href="services.html">Services</a></li>
             <li><a href="doctors.html">Doctors</a></li>
@@ -26,14 +26,14 @@
     <main>
         <section id="services">
             <h2>Our Services</h2>
-            <p>PharmCare provides a variety of healthcare services.We offer teleconsultation, e-prescriptions, health monitoring, multilingual support,  fast services. We provide cost effective services and also can tell your nearest clinic or hospitals for conducting medical tests. Choose a plan that suits your needs.</p>
+            <p>PharmCare provides a variety of healthcare services. We offer teleconsultation, e-prescriptions, health monitoring, multilingual support, and nearby clinic/hospital recommendations for medical tests. Choose a plan that suits your needs.</p>
 
             <!-- Free Trial -->
             <div class="service-box">
                 <h3>Free Trial</h3>
                 <p>Experience PharmCare with a free trial.</p>
                 <ul>
-                    <li>5 Free Consultation</li>
+                    <li>5 Free Consultations</li>
                     <li>Basic Health Reports</li>
                     <li>Limited Doctor Availability</li>
                 </ul>
@@ -56,7 +56,8 @@
             <div class="service-box">
                 <h3>Consultation</h3>
                 <p>Book an expert consultation at a reduced price with a subscription.</p>
-               
+                <!-- Dynamic price will be inserted here -->
+                <p id="consultation-price" style="font-weight:bold;"></p>
                 <button onclick="subscribe('consultation')">Book a Consultation</button>
             </div>
         </section>
@@ -67,6 +68,6 @@
         <p>&copy; 2025 PharmCare. All rights reserved.</p>
     </footer>
 
-    <script src="subscriptions.js"></script> <!-- Linking JavaScript -->
+    <script src="subscriptions.js"></script>
 </body>
 </html>
