@@ -127,6 +127,9 @@
         <label for="userName">Your Name:</label>
         <input type="text" id="userName" placeholder="Enter your name">
 
+        <label for="phoneNumber">Phone Number:</label>
+        <input type="tel" id="phoneNumber" placeholder="Enter your phone number" pattern="[0-9]{10}" maxlength="10">
+
         <label for="doctorName">Doctor Name:</label>
         <input type="text" id="doctorName" placeholder="Enter doctor's name">
 
@@ -166,7 +169,6 @@
             "Psychiatrist": [{ name: "Dr. Anirban Roy", fee: 1200 }, { name: "Dr. Shalini Gupta", fee: 1100 }]
         };
 
-        // Get Subscription Status
         function isSubscribed() {
             return localStorage.getItem("userSubscription") === "premium";
         }
