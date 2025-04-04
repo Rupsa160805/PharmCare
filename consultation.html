@@ -1,24 +1,36 @@
+<!-- consultation.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consultation Booking</title>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            let finalPrice = localStorage.getItem("finalConsultationPrice") || "Calculating...";
-            document.getElementById("confirmed-price").innerText = `Price: ₹${finalPrice}`;
-        });
-
-        function confirmBooking() {
-            alert("Your consultation has been successfully booked!");
-            window.location.href = "index.html"; // Redirect to home or dashboard
+    <title>Consultation Confirmation</title>
+    <style>
+        body { font-family: Arial; background-color: #f8f8f8; padding: 2em; text-align: center; }
+        .box {
+            background-color: #fff;
+            border: 2px solid #007b8f;
+            padding: 2em;
+            border-radius: 10px;
+            display: inline-block;
         }
-    </script>
+    </style>
 </head>
 <body>
-    <h2>Consultation Confirmation</h2>
-    <p id="confirmed-price">Price: Calculating...</p>
-    <button onclick="confirmBooking()">Confirm Booking</button>
+    <div class="box">
+        <h2>Consultation Confirmed!</h2>
+        <p id="confirmed-specialist">Specialist: Loading...</p>
+        <p id="confirmed-price">Price: Loading...</p>
+        <button onclick="window.location.href='index.html'">Go to Home</button>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            let specialist = localStorage.getItem("confirmedSpecialist") || "General Physician";
+            let price = localStorage.getItem("finalConsultationPrice") || "500";
+
+            document.getElementById("confirmed-specialist").innerText = `Specialist: ${specialist}`;
+            document.getElementById("confirmed-price").innerText = `Price: ₹${price}`;
+        });
+    </script>
 </body>
 </html>
