@@ -10,7 +10,7 @@
 
     <!-- Header Section -->
     <header>
-        <img src="logo.jpg" alt="PharmCare Logo" id="logo">
+        <img src="logo.jpg" alt="PharmCare Logo" id="logo"> <!-- Ensuring logo is visible -->
         <nav>
             <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About Us</a></li>
@@ -27,7 +27,7 @@
     <main>
         <section id="services">
             <h2>Our Services</h2>
-            <p>PharmCare provides a variety of healthcare services. We offer teleconsultation, e-prescriptions, health monitoring, multilingual support, and fast services.</p>
+            <p>PharmCare provides a variety of healthcare services. We offer teleconsultation, e-prescriptions, health monitoring, multilingual support, and fast services. We provide cost-effective services and can also locate the nearest clinic or hospital for medical tests. Choose a plan that suits your needs.</p>
 
             <!-- Free Trial -->
             <div class="service-box">
@@ -38,7 +38,7 @@
                     <li>Basic Health Reports</li>
                     <li>Limited Doctor Availability</li>
                 </ul>
-                <button onclick="subscribe('free')">Start Free Trial</button>
+                <button class="gold-button" onclick="subscribe('free')">Start Free Trial</button>
             </div>
 
             <!-- Subscription Plan -->
@@ -50,14 +50,14 @@
                     <li>Advanced Health Reports</li>
                     <li>Priority Doctor Access</li>
                 </ul>
-                <button onclick="subscribe('premium')">Subscribe Now</button>
+                <button class="gold-button" onclick="subscribe('premium')">Subscribe Now</button>
             </div>
 
             <!-- Consultation -->
             <div class="service-box">
                 <h3>Consultation</h3>
                 <p>Book an expert consultation at a reduced price with a subscription.</p>
-                <button onclick="bookConsultation()">Book a Consultation</button>
+                <button class="gold-button" onclick="bookConsultation()">Book a Consultation</button>
             </div>
         </section>
     </main>
