@@ -6,7 +6,8 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f8f8f8;
+            background-color: #003153; /* Prussian Blue */
+            color: white;
             padding: 2em;
             text-align: center;
         }
@@ -15,7 +16,7 @@
         nav {
             display: flex;
             justify-content: center;
-            background-color: #003153; /* Prussian Blue */
+            background-color: gold;
             padding: 10px;
             border-radius: 8px;
         }
@@ -27,29 +28,33 @@
 
         nav a {
             text-decoration: none;
-            color: gold;
+            color: #003153;
             font-size: 18px;
             font-weight: bold;
             padding: 10px 15px;
-            background-color: rgba(255, 215, 0, 0.2); /* Light Gold Background */
+            background-color: rgba(0, 49, 83, 0.2); /* Light Prussian Blue */
             border-radius: 5px;
             transition: 0.3s;
         }
 
         nav a:hover {
-            background-color: gold;
-            color: #003153; /* Prussian Blue */
+            background-color: #003153;
+            color: gold;
         }
 
+        /* Box Styling */
         .box {
-            background-color: #fff;
-            border: 2px solid #007b8f;
+            background-color: white;
+            color: #003153;
+            border: 2px solid gold;
             padding: 2em;
             border-radius: 10px;
             display: inline-block;
             text-align: left;
+            width: 40%;
         }
 
+        /* Input Fields */
         input, select {
             width: 100%;
             padding: 10px;
@@ -58,6 +63,7 @@
             border-radius: 5px;
         }
 
+        /* Gold Button Styling */
         .gold-button {
             background-color: gold;
             color: #003153;
@@ -68,11 +74,13 @@
             border-radius: 5px;
             cursor: pointer;
             transition: 0.3s;
+            width: 100%;
         }
 
         .gold-button:hover {
             background-color: white;
             color: #003153;
+            border: 2px solid gold;
         }
     </style>
 </head>
@@ -89,6 +97,8 @@
         <li><a href="multilingual.html">Multilingual</a></li>
         <li><a href="contact.html">Contact Us</a></li>
     </nav>
+
+    <br>
 
     <!-- Consultation Booking Form -->
     <div class="box">
