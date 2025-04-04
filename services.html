@@ -1,75 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PharmCare Services</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PharmCare Services</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-    <!-- Header Section -->
-    <header>
-        <nav>
-            <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="about.html">About Us</a></li>
-            <li><a href="services.html">Services</a></li>
-            <li><a href="doctors.html">Doctors</a></li>
-            <li><a href="hospitals.html">Hospitals</a></li>
-            <li><a href="chatbot.html">Chatbot</a></li>
-            <li><a href="multilingual.html">Multilingual</a></li>
-            <li><a href="contact.html">Contact Us</a></li>
-            </ul>
-        </nav>
-    </header>
+  <!-- Header Section -->
+  <header>
+    <nav class="navbar">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="doctors.html">Doctors</a></li>
+        <li><a href="hospitals.html">Hospitals</a></li>
+        <li><a href="chatbot.html">Chatbot</a></li>
+        <li><a href="multilingual.html">Multilingual</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+      </ul>
+    </nav>
+  </header>
 
-    <!-- Main Content -->
-    <main>
-        <section id="services">
-            <h2>Our Services</h2>
-            <p>PharmCare provides a variety of healthcare services. We offer teleconsultation, e-prescriptions, health monitoring, multilingual support, and nearby clinic/hospital recommendations for medical tests. Choose a plan that suits your needs.</p>
+  <!-- Main Content -->
+  <main>
+    <section id="services">
+      <h2>Our Services</h2>
+      <p>
+        PharmCare provides a variety of healthcare services. We offer
+        teleconsultation, e-prescriptions, health monitoring, multilingual
+        support, and nearby clinic/hospital recommendations for medical
+        tests. Choose a plan that suits your needs.
+      </p>
 
-            <!-- Free Trial -->
-            <div class="service-box">
-                <h3>Free Trial</h3>
-                <p>Experience PharmCare with a free trial.</p>
-                <ul>
-                    <li>5 Free Consultations</li>
-                    <li>Basic Health Reports</li>
-                    <li>Limited Doctor Availability</li>
-                </ul>
-                <button onclick="subscribe('free')">Start Free Trial</button>
-            </div>
+      <!-- Free Trial -->
+      <div class="service-box">
+        <h3>Free Trial</h3>
+        <p>Experience PharmCare with a free trial.</p>
+        <ul>
+          <li>5 Free Consultations</li>
+          <li>Basic Health Reports</li>
+          <li>Limited Doctor Availability</li>
+        </ul>
+        <button onclick="subscribe('free')">Start Free Trial</button>
+      </div>
 
-            <!-- Subscription Plan -->
-            <div class="service-box">
-                <h3>Subscription Plan</h3>
-                <p>Get discounted consultations (40% off per consultation) and priority access.</p>
-                <ul>
-                    <li>Unlimited Consultations</li>
-                    <li>Advanced Health Reports</li>
-                    <li>Priority Doctor Access</li>
-                </ul>
-                <button onclick="subscribe('premium')">Subscribe Now</button>
-            </div>
+      <!-- Subscription Plan -->
+      <div class="service-box">
+        <h3>Subscription Plan</h3>
+        <p>
+          Get discounted consultations (40% off per consultation) and
+          priority access.
+        </p>
+        <ul>
+          <li>Unlimited Consultations</li>
+          <li>Advanced Health Reports</li>
+          <li>Priority Doctor Access</li>
+        </ul>
+        <button onclick="subscribe('premium')">Subscribe Now</button>
+      </div>
 
-            <!-- Consultation -->
-            <div class="service-box">
-                <h3>Consultation</h3>
-                <p>Book an expert consultation at a reduced price with a subscription.</p>
-                <!-- Dynamic price will be inserted here -->
-                <p id="consultation-price" style="font-weight:bold;"></p>
-                <button onclick="subscribe('consultation')">Book a Consultation</button>
-            </div>
-        </section>
-    </main>
+      <!-- Consultation -->
+      <div class="service-box">
+        <h3>Consultation</h3>
+        <p>
+          Book an expert consultation at a reduced price with a
+          subscription.
+        </p>
+        <p id="consultation-price" style="font-weight: bold;"></p>
+        <button onclick="subscribe('consultation')">Book a Consultation</button>
+      </div>
+    </section>
+  </main>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 PharmCare. All rights reserved.</p>
-    </footer>
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 PharmCare. All rights reserved.</p>
+  </footer>
 
-    <script src="subscriptions.js"></script>
+  <script src="subscriptions.js"></script>
 </body>
 </html>
