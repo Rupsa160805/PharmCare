@@ -96,6 +96,18 @@
             transform: scale(0.98);
         }
 
+        /* Doctor Selection Dropdown */
+        .doctor-selection {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        select {
+            padding: 8px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
     </style>
 </head>
 <body>
@@ -130,7 +142,7 @@
                     <li>Basic Health Reports</li>
                     <li>Limited Doctor Availability</li>
                 </ul>
-                <button class="gold-button" onclick="subscribe('free')">Start Free Trial</button>
+                <button class="gold-button" id="free-trial-btn">Start Free Trial</button>
             </div>
 
             <!-- Subscription Plan -->
@@ -142,14 +154,28 @@
                     <li>Advanced Health Reports</li>
                     <li>Priority Doctor Access</li>
                 </ul>
-                <button class="gold-button" onclick="subscribe('premium')">Subscribe Now</button>
+                <button class="gold-button" id="premium-btn">Subscribe Now</button>
             </div>
 
             <!-- Consultation -->
             <div class="service-box">
                 <h3>Consultation</h3>
                 <p>Book an expert consultation at a reduced price with a subscription.</p>
-                <button class="gold-button" onclick="bookConsultation()">Book a Consultation</button>
+
+                <!-- Doctor Selection -->
+                <div class="doctor-selection">
+                    <label for="doctor-select">Choose a Doctor:</label>
+                    <select id="doctor-select">
+                        <option value="Cardiologist-0">Dr. Rajesh Sharma (Cardiologist)</option>
+                        <option value="Cardiologist-1">Dr. Anjali Mehta (Cardiologist)</option>
+                        <option value="Orthopedic-0">Dr. Vikram Das (Orthopedic)</option>
+                        <option value="Orthopedic-1">Dr. Riya Sen (Orthopedic)</option>
+                        <option value="Neurologist-0">Dr. Alok Verma (Neurologist)</option>
+                        <option value="Neurologist-1">Dr. Sneha Kapoor (Neurologist)</option>
+                    </select>
+                </div>
+
+                <button class="gold-button" id="book-consultation-btn">Book a Consultation</button>
             </div>
         </section>
     </main>
@@ -160,5 +186,23 @@
     </footer>
 
     <script src="subscriptions.js"></script> <!-- Linking JavaScript -->
+    <script>
+        document.getElementById("book-consultation-btn").addEventListener("click", function() {
+            const selectedDoctor = document.getElementById("doctor-select").value.split("-");
+            const category = selectedDoctor[0];
+            const index = selectedDoctor[1];
+
+            // Redirect with selected doctor details
+            window.location.href = `consultation.html?category=${category}&index=${index}`;
+        });
+
+        document.getElementById("free-trial-btn").addEventListener("click", function() {
+            subscribe("free");
+        });
+
+        document.getElementById("premium-btn").addEventListener("click", function() {
+            subscribe("premium");
+        });
+    </script>
 </body>
 </html>
