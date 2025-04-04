@@ -56,22 +56,34 @@
             text-align: center;
         }
 
+        /* Gold Flex Buttons */
         .gold-button {
-            background-color: gold;
+            background: linear-gradient(135deg, #FFD700, #FFC300); /* Gold gradient */
             color: #003153;
             font-size: 16px;
             font-weight: bold;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
+            padding: 12px 20px;
+            border: 2px solid gold;
+            border-radius: 8px;
             cursor: pointer;
-            transition: 0.3s;
+            transition: all 0.3s ease-in-out;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0px 4px 8px rgba(255, 215, 0, 0.5); /* Gold glow effect */
         }
 
         .gold-button:hover {
-            background-color: white;
+            background: gold;
             color: #003153;
+            box-shadow: 0px 6px 12px rgba(255, 215, 0, 0.8); /* Stronger glow on hover */
+            transform: scale(1.05); /* Slight enlargement effect */
         }
+
+        .gold-button:active {
+            transform: scale(0.98); /* Slight press effect */
+        }
+
     </style>
 </head>
 <body>
